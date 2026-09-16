@@ -1,0 +1,21 @@
+{
+  "hash": "2dd86a490169d78c3433cc4e9a39d037",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Exercise 5.2: Hypothesis testing on the pertussis example\"\nauthor: \"Lieven Clement, and Milan Malfait\"\nsubtitle: \"statOmics, Ghent University (https://statomics.github.io)\"\n---\n\n# Aim of this tutorial\n\nUpon this exercise you can\n\n\n1. conduct a statistical hypothesis test for a two group comparison in R and to interpret the results.\n2. critically evaluate the assumptions for a two sample t-test\n3. use simulations to assist you when evaluating the assumptions of a two group comparison\n4. select the correct test based on the data exploration.\n\n# Background\n\nResearchers wanted to study the immune response on pertussis.\nThey have set up an experiments with 40 rats.\n16 rats were infected with pertussis and 24 rats received a control treatment.\nResearchers measured the white blood cell concentration (WBC) in each rat (count per mm$^3$).\n\nDe data consists of two variables:\n\n- WBC: white blood cell count (counts/mm$^3$).\n- trt: treatment\n\n    - control: rat recieved control treatment\n    - pertussis: rat was infected with pertussis\n\n\n# Import the dataset\n\nLoad the libraries\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tidyverse)\n```\n:::\n\n\nData path:\n\n  `https://raw.githubusercontent.com/statOmics/PSLSData/main/wbcon.csv`\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nwbcon <- ...\n```\n:::\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nglimpse(...)\n```\n:::\n\n\n## Aim of the study\n\nThe overarching goal of this study was to assess if the white blood cell count changes upon pertussis infection. To this end, researchers randomized 40 rats\nto two treatments: A control treatment and a treatment in which the rat was infected with pertussis.\n\n# Data exploration\n\nA crucial first step in a data analysis is to visualize and to explore the raw data.\n\nThis will allow us to gain insight in the data.\n\nA secondary goal of the data exploration is to check the assumptions of the test that we will perform.\n\n## Which test will you perform to compare the white blood cell count between infected and control rats?\n\n## What are the assumptions of this test?\n\n\n## Use the appropriate plots to assess the assumptions\n\n# Assess the research question with the appropriate t-test\n\n## Analysis\n\n## Conclusion\n",
+    "supporting": [
+      "05_2_pertussis_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

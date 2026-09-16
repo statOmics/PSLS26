@@ -1,0 +1,21 @@
+{
+  "hash": "b7481ad99eaf9484df06ee5947cb2277",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Covid-19 and vegetable consumption\"\nauthor: \"Lieven Clement\"\nsubtitle: \"statOmics, Ghent University (https://statomics.github.io)\"\n---\n\n\nhttps://www.medrxiv.org/content/10.1101/2020.07.17.20155846v1\n\n![](https://github.com/statOmics/sbc20/raw/master/figures/Fonseca2020CovidVegetables.png)\n\n---\n\n![](https://github.com/statOmics/sbc20/raw/master/figures/covidVegetables6.png){width=70%}\n\n\n---\n\n![](https://github.com/statOmics/sbc20/raw/master/figures/covidVegetables.png){width=70%}\n\n\"The authors state: The negative ecological association between COVID-19 mortality and the consumption of cabbage and cucumber supports the a priori hypothesis previously reported.\nIn this hypothesis, we proposed that vegetables such as Brassica - with an antioxidant activity reducing insulin resistance - may also be associated with low COVID-19 mortality in countries.\n\"\n\n\"\nThough our results do not allow to infer causality, they do reinforce our a priory hypothesis that the ingestion of anti-oxidant foods acting on insulin intolerance may have reduced the severity of COVID-19.\n\"\n\n---\n\n![](https://github.com/statOmics/sbc20/raw/master/figures/covidVegetables4.png)\n\n---\n\n![](https://github.com/statOmics/sbc20/raw/master/figures/covidVegetables3.png)\n\n- Many hypotheses are assessed ?!\n- Causality ?!\n- Experimental design: Observational study\n- Based on the data we cannot provide recommendations at the subject level\n\n---\n\n![](https://github.com/statOmics/sbc20/raw/master/figures/covidVegetables2.png){width=70%}\n\n- Importance of Data Exploration!\n- Data does not exhibit the trend\n- Data shows evidence for two clusters: above and below 200 deaths/million\n- Model for cucumber does not model the data correctly: Overestimation of death rate for many countries e.g. Portugal, Hungary, ...\n\n---\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](./figures/fear.png){width=10% style=\"float:right; padding:10px\"}\n:::\n:::\n\n\nPapers are merged, published, and 39 times cited\n\nBousquet et al. (2021). Cabbage and fermented vegetables: From death rate heterogeneity in countries to candidates for mitigation strategies of severe COVID-19. Allergy 76:735–750.\n\n---\n\nIn the example we covered issues with three important branches in statistics\n\n1. Statistical inference\n\n  - Is there an association between  COVID-19 mortality and food consumption?\n  - Issue in study:\n      - data dredging, p-hacking, ...: when you assess many hypotheses you will allways find strong patterns by random change $\\rightarrow$ correct for multiple testing!\n      - Assumptions of the models do not hold\n      - Confounding\n\n2. Experimental design\n\n    - Confounding: countries do not only differ in consumption of a vegetable but also in may other variables (demographical, COVID measures, healty care, ...) that are associated with COVID mortality.\n\n    - Difficult to draw causal conclusions from observational studies.\n\n    - In experimental studies: randomisation! $\\rightarrow$ so that  the groups only differ in the treatment.\n\n    - Experimental studies are therefore the golden standard\n\n3. Data exploration and visualisation\n\n    - Crucial to get insight in the data!\n    - Assess model assumptions\n\n---\n",
+    "supporting": [
+      "covidVegetableConsumption_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

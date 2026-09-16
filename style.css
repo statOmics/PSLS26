@@ -29,36 +29,19 @@ pre{
   font-size: 14pt;
 }
 
-/*------------FOOTER----------*/
+/*------------TITLE BLOCK (plain style)----------*/
 
-/* To make the footer stick to the bottom */
-html {
-  position: relative;
-  min-height: 100%;
-}
-body {
-  margin-bottom: 60px;
-}
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 90%;
-    height: 60px;
-    padding: 20px 10px;
-    color: #808080;
-    margin: 3rem auto;
-    left: 50%;
-    margin-left: -45%;
-    font-size: 12px;
-    font-weight: 300;
-    text-align: center;
+/* Hide the "Author" / "Published" caption labels */
+.quarto-title-meta-heading {
+  display: none;
 }
 
-/* Divider line above footer */
-.footer hr{
-    width: 100%;
-}
-
-.tocify-extend-page {
-    height: 60px !important;
+/* Style author/subtitle like plain h4 text, not a boxed meta grid */
+.quarto-title .subtitle.lead,
+.quarto-title-meta-contents p {
+  font-size: 18pt;
+  font-weight: 400;
+  font-style: normal;
+  color: #777777;
+  margin: 0.2em 0;
 }

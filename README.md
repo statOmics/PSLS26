@@ -1,10 +1,10 @@
-# PSLS25 - Practical Statistics for the Life Sciences 2025
+# PSLS26 - Practical Statistics for the Life Sciences 2026
 
 
 Course site for Practical Statistics for the Life Sciences,
 taught at the [Gulbenkian Training Programme in Bioinformatics (GTPB)](http://gtpb.igc.gulbenkian.pt/bicourses/index.html).
 
-https://statOmics.github.io/PSLS25/
+https://statOmics.github.io/PSLS26/
 
 
 ### License

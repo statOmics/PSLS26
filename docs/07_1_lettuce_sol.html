@@ -1,67 +1,33 @@
 <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<html>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
 
-<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta name="author" content="Lieven Clement and Jeroen Gilis">
 
-
-<meta name="author" content="Lieven Clement and Jeroen Gilis" />
-
-
-<title>Exercise 7.1: ANOVA on the lettuce dataset - solution</title>
-
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
-<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<style>h1 {font-size: 34px;}
-       h1.title {font-size: 38px;}
-       h2 {font-size: 30px;}
-       h3 {font-size: 24px;}
-       h4 {font-size: 18px;}
-       h5 {font-size: 16px;}
-       h6 {font-size: 12px;}
-       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
-       pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
-<script src="site_libs/navigation-1.1/sourceembed.js"></script>
-<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
-
-
-
-<style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
-</style>
-<style type="text/css" data-origin="pandoc">
+<title>Exercise 7.1: ANOVA on the lettuce dataset - solution – PSLS26 - Practical Statistics for the Life Sciences</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -72,7 +38,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -86,856 +52,1365 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
-  {  background-color: #f8f8f8; }
+  {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ef2929; } /* Alert */
-code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #204a87; } /* Attribute */
-code span.bn { color: #0000cf; } /* BaseN */
-code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4e9a06; } /* Char */
-code span.cn { color: #8f5902; } /* Constant */
-code span.co { color: #8f5902; font-style: italic; } /* Comment */
-code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code span.dt { color: #204a87; } /* DataType */
-code span.dv { color: #0000cf; } /* DecVal */
-code span.er { color: #a40000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #0000cf; } /* Float */
-code span.fu { color: #204a87; font-weight: bold; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code span.ot { color: #8f5902; } /* Other */
-code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
-code span.ss { color: #4e9a06; } /* SpecialString */
-code span.st { color: #4e9a06; } /* String */
-code span.va { color: #000000; } /* Variable */
-code span.vs { color: #4e9a06; } /* VerbatimString */
-code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-
-.sourceCode .row {
-  width: 100%;
-}
-.sourceCode {
-  overflow-x: auto;
-}
-.code-folding-btn {
-  margin-right: -30px;
-}
 </style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    var j = 0;
-    while (j < rules.length) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
-        j++;
-        continue;
-      }
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') {
-        j++;
-        continue;
-      }
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f79c7fb6db380d32be398468f2fb58cf.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-2c9dadc89b91d1343c807e0fac51702d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
-})();
-</script>
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
-
-<style type="text/css">
-#rmd-source-code {
-  display: none;
-}
-</style>
-
-
-<link rel="stylesheet" href="style.css" type="text/css" />
-
-
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-img {
-  max-width:100%;
-}
-.tabbed-pane {
-  padding-top: 12px;
-}
-.html-widget {
-  margin-bottom: 20px;
-}
-button.code-folding-btn:focus {
-  outline: none;
-}
-summary {
-  display: list-item;
-}
-details > summary > p:only-child {
-  display: inline;
-}
-pre code {
-  padding: 0;
-}
-</style>
-
-
-<style type="text/css">
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  border-radius: 0 6px 6px 6px;
-}
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #cccccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-.dropdown-submenu:hover>a:after {
-  border-left-color: #adb5bd;
-}
-.dropdown-submenu.pull-left {
-  float: none;
-}
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  border-radius: 6px 0 6px 6px;
-}
-</style>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-// manage active state of menu based on current page
-$(document).ready(function () {
-  // active menu anchor
-  href = window.location.pathname
-  href = href.substr(href.lastIndexOf('/') + 1)
-  if (href === "")
-    href = "index.html";
-  var menuAnchor = $('a[href="' + href + '"]');
-
-  // mark the anchor link active (and if it's in a dropdown, also mark that active)
-  var dropdown = menuAnchor.closest('li.dropdown');
-  if (window.bootstrap) { // Bootstrap 4+
-    menuAnchor.addClass('active');
-    dropdown.find('> .dropdown-toggle').addClass('active');
-  } else { // Bootstrap 3
-    menuAnchor.parent().addClass('active');
-    dropdown.addClass('active');
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
   }
-
-  // Navbar adjustments
-  var navHeight = $(".navbar").first().height() + 15;
-  var style = document.createElement('style');
-  var pt = "padding-top: " + navHeight + "px; ";
-  var mt = "margin-top: -" + navHeight + "px; ";
-  var css = "";
-  // offset scroll position for anchor links (for fixed navbar)
-  for (var i = 1; i <= 6; i++) {
-    css += ".section h" + i + "{ " + pt + mt + "}\n";
-  }
-  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
-  document.head.appendChild(style);
-});
+}
+window.Quarto = {
+  typesetMath
+};
 </script>
 
-<!-- tabsets -->
-
-<style type="text/css">
-.tabset-dropdown > .nav-tabs {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "\e259";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "\e258";
-  font-family: 'Glyphicons Halflings';
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs > li.active {
-  display: block;
-}
-
-.tabset-dropdown > .nav-tabs > li > a,
-.tabset-dropdown > .nav-tabs > li > a:focus,
-.tabset-dropdown > .nav-tabs > li > a:hover {
-  border: none;
-  display: inline-block;
-  border-radius: 4px;
-  background-color: transparent;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
-  display: block;
-  float: none;
-}
-
-.tabset-dropdown > .nav-tabs > li {
-  display: none;
-}
-</style>
-
-<!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
-
-
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
-
+<link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="floating nav-fixed quarto-light">
 
-
-<div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
-
-
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html"></a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">PSLS26 - Practical Statistics for the Life Sciences</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-easel" role="img">
+</i> 
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
         <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-  </a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-chalkboard-teacher"></span>
-     
-    Topics
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="01-intro.html">1. Introduction</a>
-    </li>
-    <li>
-      <a href="02-concepts.html">2. Concepts</a>
-    </li>
-    <li>
-      <a href="03-experimentalDesign.html">3. Experimental Design I</a>
-    </li>
-    <li>
-      <a href="04-dataExploration.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference.html">5.1 Statistical Inference 1</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference-twosampleT.html">5.2 Statistical Inference 2</a>
-    </li>
-    <li>
-      <a href="06-linearRegression.html">6. Linear Regression</a>
-    </li>
-    <li>
-      <a href="07-Anova.html">7. Analysis of Variance</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression.html">8. Multiple Regression</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression-SpecificDesigns.html">8.2 Multiple Regression: Factorial Designs</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign2.html">8.3. Experimental Design II</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign3.html">8.4. Experimental Design III</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-WilcoxonMannWithney.html">9.1. Nonparametric Statistics 1</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-KruskalWallis.html">9.2. Nonparametric Statistics 2</a>
-    </li>
-    <li>
-      <a href="10-categoricalDataAnalysis.html">10. Categorical Data Analysis</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-laptop"></span>
-     
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="04_exercises.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05_exercises.html">5. Statistical inference</a>
-    </li>
-    <li>
-      <a href="06_exercises.html">6. Simple linear regression</a>
-    </li>
-    <li>
-      <a href="07_exercises.html">7. ANOVA</a>
-    </li>
-    <li>
-      <a href="08_exercises.html">8. Multiple linear regression</a>
-    </li>
-    <li>
-      <a href="09_exercises.html">9. Non-parametric statistics</a>
-    </li>
-  </ul>
-</li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
+    <a class="dropdown-item" href="./01-intro.html">
+ <span class="dropdown-text">1. Introduction</span></a>
+  </li>  
         <li>
-  <a href="http://statomics.github.io/">statOmics</a>
-</li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container -->
-</div><!--/.navbar -->
-
-<div id="header">
-
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-<li role="separator" class="divider"></li>
-<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+    <a class="dropdown-item" href="./02-concepts.html">
+ <span class="dropdown-text">2. Concepts</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-experimentalDesign.html">
+ <span class="dropdown-text">3. Experimental Design I</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-dataExploration.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference.html">
+ <span class="dropdown-text">5.1 Statistical Inference 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference-twosampleT.html">
+ <span class="dropdown-text">5.2 Statistical Inference 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06-linearRegression.html">
+ <span class="dropdown-text">6. Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07-Anova.html">
+ <span class="dropdown-text">7. Analysis of Variance</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression.html">
+ <span class="dropdown-text">8. Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression-SpecificDesigns.html">
+ <span class="dropdown-text">8.2 Multiple Regression: Factorial Designs</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign2.html">
+ <span class="dropdown-text">8.3. Experimental Design II</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign3.html">
+ <span class="dropdown-text">8.4. Experimental Design III</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-WilcoxonMannWithney.html">
+ <span class="dropdown-text">9.1. Nonparametric Statistics 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-KruskalWallis.html">
+ <span class="dropdown-text">9.2. Nonparametric Statistics 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./10-categoricalDataAnalysis.html">
+ <span class="dropdown-text">10. Categorical Data Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-exercises" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-laptop" role="img">
+</i> 
+ <span class="menu-text">Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-exercises">    
+        <li>
+    <a class="dropdown-item" href="./04_exercises.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05_exercises.html">
+ <span class="dropdown-text">5. Statistical inference</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06_exercises.html">
+ <span class="dropdown-text">6. Simple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07_exercises.html">
+ <span class="dropdown-text">7. ANOVA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08_exercises.html">
+ <span class="dropdown-text">8. Multiple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09_exercises.html">
+ <span class="dropdown-text">9. Non-parametric statistics</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="http://statomics.github.io/"> 
+<span class="menu-text">statOmics</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background"><span class="header-section-number">1</span> Background</a></li>
+  <li><a href="#the-lettuce-dataset" id="toc-the-lettuce-dataset" class="nav-link" data-scroll-target="#the-lettuce-dataset"><span class="header-section-number">2</span> The lettuce dataset</a></li>
+  <li><a href="#data-import" id="toc-data-import" class="nav-link" data-scroll-target="#data-import"><span class="header-section-number">3</span> Data import</a></li>
+  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration"><span class="header-section-number">4</span> Data exploration</a></li>
+  <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova"><span class="header-section-number">5</span> ANOVA</a>
+  <ul class="collapse">
+  <li><a href="#formulate-null-and-alternative-hypotheses" id="toc-formulate-null-and-alternative-hypotheses" class="nav-link" data-scroll-target="#formulate-null-and-alternative-hypotheses"><span class="header-section-number">5.1</span> Formulate null and alternative hypotheses</a></li>
+  <li><a href="#checking-the-assumptions-for-anova" id="toc-checking-the-assumptions-for-anova" class="nav-link" data-scroll-target="#checking-the-assumptions-for-anova"><span class="header-section-number">5.2</span> Checking the assumptions for ANOVA</a>
+  <ul class="collapse">
+  <li><a href="#assumption-of-independence" id="toc-assumption-of-independence" class="nav-link" data-scroll-target="#assumption-of-independence"><span class="header-section-number">5.2.1</span> Assumption of independence</a></li>
+  <li><a href="#assumption-of-normality" id="toc-assumption-of-normality" class="nav-link" data-scroll-target="#assumption-of-normality"><span class="header-section-number">5.2.2</span> Assumption of normality</a></li>
+  <li><a href="#assumption-of-equal-variances" id="toc-assumption-of-equal-variances" class="nav-link" data-scroll-target="#assumption-of-equal-variances"><span class="header-section-number">5.2.3</span> Assumption of equal variances</a></li>
+  </ul></li>
+  <li><a href="#modeling" id="toc-modeling" class="nav-link" data-scroll-target="#modeling"><span class="header-section-number">5.3</span> Modeling</a></li>
+  <li><a href="#post-hoc-analysis" id="toc-post-hoc-analysis" class="nav-link" data-scroll-target="#post-hoc-analysis"><span class="header-section-number">5.4</span> Post-hoc analysis</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">5.5</span> Conclusion</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Exercise 7.1: ANOVA on the lettuce dataset - solution</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<p class="subtitle lead">statOmics, Ghent University (https://statomics.github.io)</p>
 </div>
 
 
 
-<h1 class="title toc-ignore">Exercise 7.1: ANOVA on the lettuce dataset - solution</h1>
-<h4 class="author">Lieven Clement and Jeroen Gilis</h4>
-<h4 class="date">statOmics, Ghent University (<a href="https://statomics.github.io" class="uri">https://statomics.github.io</a>)</h4>
+<div class="quarto-title-meta">
 
-</div>
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lieven Clement and Jeroen Gilis </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
 
 
-<div id="background" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Background</h1>
-<p>In agriculture, it is important to have a high yield of crops. For lettuce
-plants, plants with many leaves are known to be preferred by the consumers.</p>
-<p>One way to increase the number of leaves (or better, total
-leaf weight) is by using a fertilizer. Recently, there has been
-a tendency to rely more on natural fertilizers, such as compost.
-Near Ghent, the institute of research for agriculture and fishery is testing
-new, natural fertilization methods. One of these new fertilizers is called
-biochar. Biochar is a residual product from pyrolysis, a process in which
-biomass is burned under specific conditions (such as high pressure) in order
-to produce energy. Biochar is similar to charcoal, but has some very useful
-properties, such as retaining water in the soil. It also has a positive
-influence on the soil microbiome.</p>
-</div>
-<div id="the-lettuce-dataset" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> The lettuce dataset</h1>
-<p>The researchers hypothesize that biochar, compost and
-a combination of both biochar and compost can have a different influence
-on the growth of lettuce plants. To this end, they grew up
-lettuce plants in a greenhouse. The pots were filled with
-one of four soil types;</p>
-<ol style="list-style-type: decimal">
+</header>
+
+
+<section id="background" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Background</h1>
+<p>In agriculture, it is important to have a high yield of crops. For lettuce plants, plants with many leaves are known to be preferred by the consumers.</p>
+<p>One way to increase the number of leaves (or better, total leaf weight) is by using a fertilizer. Recently, there has been a tendency to rely more on natural fertilizers, such as compost. Near Ghent, the institute of research for agriculture and fishery is testing new, natural fertilization methods. One of these new fertilizers is called biochar. Biochar is a residual product from pyrolysis, a process in which biomass is burned under specific conditions (such as high pressure) in order to produce energy. Biochar is similar to charcoal, but has some very useful properties, such as retaining water in the soil. It also has a positive influence on the soil microbiome.</p>
+</section>
+<section id="the-lettuce-dataset" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> The lettuce dataset</h1>
+<p>The researchers hypothesize that biochar, compost and a combination of both biochar and compost can have a different influence on the growth of lettuce plants. To this end, they grew up lettuce plants in a greenhouse. The pots were filled with one of four soil types;</p>
+<ol type="1">
 <li>Soil only (control)</li>
 <li>Soil supplemented with biochar (refoak)</li>
 <li>Soil supplemented with compost (compost)</li>
 <li>Soil supplemented with both biochar and compost (cobc)</li>
 </ol>
-<p>The dataset <code>freshweight_lettuce.txt</code> contains the freshweight
-(in grams) for 28 lettuce plants (7 per condition). The researchers
-want to use an ANOVA test to assess if the treatments have a different effect
-on the growth of lettuce plants. If so, they will use a post-hoc test
-(Tuckey test) to discover which specific treatments have an effect.</p>
+<p>The dataset <code>freshweight_lettuce.txt</code> contains the freshweight (in grams) for 28 lettuce plants (7 per condition). The researchers want to use an ANOVA test to assess if the treatments have a different effect on the growth of lettuce plants. If so, they will use a post-hoc test (Tuckey test) to discover which specific treatments have an effect.</p>
 <p>Load the required libraries</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>()) <span class="co"># Change ggplot2 default theme</span></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>()) <span class="co"># Change ggplot2 default theme</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div id="data-import" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Data import</h1>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>lettuce <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/statOmics/PSLSData/main/freshweight_lettuce.txt&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># Take a glimpse at the data</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">glimpse</span>(lettuce)</span></code></pre></div>
-<pre><code>## Rows: 28
-## Columns: 3
-## $ id          &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,…
-## $ treatment   &lt;chr&gt; &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;co…
-## $ freshweight &lt;dbl&gt; 38, 34, 41, 43, 43, 29, 38, 59, 64, 57, 56, 50, 64, 62, 38…</code></pre>
+</section>
+<section id="data-import" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Data import</h1>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lettuce <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/statOmics/PSLSData/main/freshweight_lettuce.txt"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a glimpse at the data</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(lettuce)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 28
+Columns: 3
+$ id          &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,…
+$ treatment   &lt;chr&gt; "control", "control", "control", "control", "control", "co…
+$ freshweight &lt;dbl&gt; 38, 34, 41, 43, 43, 29, 38, 59, 64, 57, 56, 50, 64, 62, 38…</code></pre>
+</div>
+</div>
 <p>First, we will set the <code>treatment</code> variable to a factor</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>lettuce <span class="ot">&lt;-</span> lettuce <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>    <span class="do">## Convert treatment to factor</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">as.factor</span>(treatment),</span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>    <span class="do">## Relevels such that &quot;control&quot; is the reference</span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">relevel</span>(treatment, <span class="at">ref =</span> <span class="st">&quot;control&quot;</span>)</span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lettuce <span class="ot">&lt;-</span> lettuce <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Convert treatment to factor</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">as.factor</span>(treatment),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Relevels such that "control" is the reference</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">relevel</span>(treatment, <span class="at">ref =</span> <span class="st">"control"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div id="data-exploration" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Data exploration</h1>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="do">## Count the number of observations per treatment</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>lettuce <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">count</span>(treatment)</span></code></pre></div>
+</section>
+<section id="data-exploration" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Data exploration</h1>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Count the number of observations per treatment</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>lettuce <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(treatment)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["treatment"],"name":[1],"type":["fct"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"control","2":"7"},{"1":"cobc","2":"7"},{"1":"compost","2":"7"},{"1":"refoak","2":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+</div>
+</div>
 <p>Now let’s make a boxplot displaying the freshweight of each treatment condition:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>boxplot <span class="ot">&lt;-</span> lettuce <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> treatment, <span class="at">y =</span> freshweight, <span class="at">fill =</span> treatment)) <span class="sc">+</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;RdGy&quot;</span>) <span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Boxplot of the freshweigth for each treatment condition&quot;</span>) <span class="sc">+</span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;freshweight (gram)&quot;</span>) <span class="sc">+</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>    <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">&quot;point&quot;</span>,</span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span></span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  )</span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>boxplot</span></code></pre></div>
-<p><img src="07_1_lettuce_sol_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>Note that there are no clear outliers in the data.
-We can see that the mean freshweight is very comparable
-between the control and refoak treatments and between the
-compost and cobc treatments. We can also see that the mean
-freshweight is much higher in the cobc and control treatments
-than in the control and refoak treatments. But is this
-observed difference significant?</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>boxplot <span class="ot">&lt;-</span> lettuce <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> treatment, <span class="at">y =</span> freshweight, <span class="at">fill =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"RdGy"</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Boxplot of the freshweigth for each treatment condition"</span>) <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"freshweight (gram)"</span>) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>boxplot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_1_lettuce_sol_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<div id="anova" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> ANOVA</h1>
-<p>To study if the observed difference between the
-average freshweight values of the different treatment groups
-are significant, we may perform an ANOVA.</p>
-<div id="formulate-null-and-alternative-hypotheses" class="section level2" number="5.1">
-<h2><span class="header-section-number">5.1</span> Formulate null and alternative hypotheses</h2>
-<p>The null hypothesis of ANOVA states that:
-<span class="math inline">\(H0\)</span>: The mean freshweigth is equal between the different treatment groups.</p>
-<p>The alternative hypothesis of ANOVA states that:
-<span class="math inline">\(HA\)</span>: The mean freshweigth for at least one treatment group is different
-from the mean freshweight in at least one other treatment group.</p>
 </div>
-<div id="checking-the-assumptions-for-anova" class="section level2" number="5.2">
-<h2><span class="header-section-number">5.2</span> Checking the assumptions for ANOVA</h2>
-<p>Before we may proceed with the analysis, we must make sure that all
-assumptions for ANOVA are met. ANOVA has three assumptions:</p>
-<ol style="list-style-type: decimal">
+</div>
+<p>Note that there are no clear outliers in the data. We can see that the mean freshweight is very comparable between the control and refoak treatments and between the compost and cobc treatments. We can also see that the mean freshweight is much higher in the cobc and control treatments than in the control and refoak treatments. But is this observed difference significant?</p>
+</section>
+<section id="anova" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> ANOVA</h1>
+<p>To study if the observed difference between the average freshweight values of the different treatment groups are significant, we may perform an ANOVA.</p>
+<section id="formulate-null-and-alternative-hypotheses" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="formulate-null-and-alternative-hypotheses"><span class="header-section-number">5.1</span> Formulate null and alternative hypotheses</h2>
+<p>The null hypothesis of ANOVA states that: <span class="math inline">\(H0\)</span>: The mean freshweigth is equal between the different treatment groups.</p>
+<p>The alternative hypothesis of ANOVA states that: <span class="math inline">\(HA\)</span>: The mean freshweigth for at least one treatment group is different from the mean freshweight in at least one other treatment group.</p>
+</section>
+<section id="checking-the-assumptions-for-anova" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="checking-the-assumptions-for-anova"><span class="header-section-number">5.2</span> Checking the assumptions for ANOVA</h2>
+<p>Before we may proceed with the analysis, we must make sure that all assumptions for ANOVA are met. ANOVA has three assumptions:</p>
+<ol type="1">
 <li>The observations are independent of each other (in all groups)</li>
 <li>The data (freshweigth) must be normally distributed (in all groups)</li>
 <li>The variability within all groups is similar</li>
 </ol>
-<div id="assumption-of-independence" class="section level3" number="5.2.1">
-<h3><span class="header-section-number">5.2.1</span> Assumption of independence</h3>
-<p>The first assumption is met; we started of with 28 lettuce plants and
-we randomly submitted them to one of four treatment conditions. There
-is no reason to believe that the plants display systematic differences
-between treatment groups, other than the actual treatment.</p>
-</div>
-<div id="assumption-of-normality" class="section level3" number="5.2.2">
-<h3><span class="header-section-number">5.2.2</span> Assumption of normality</h3>
+<section id="assumption-of-independence" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="assumption-of-independence"><span class="header-section-number">5.2.1</span> Assumption of independence</h3>
+<p>The first assumption is met; we started of with 28 lettuce plants and we randomly submitted them to one of four treatment conditions. There is no reason to believe that the plants display systematic differences between treatment groups, other than the actual treatment.</p>
+</section>
+<section id="assumption-of-normality" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="assumption-of-normality"><span class="header-section-number">5.2.2</span> Assumption of normality</h3>
 <p>For the second assumption, we must check normality in each group.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">ggplot</span>(lettuce, <span class="fu">aes</span>(<span class="at">sample =</span> freshweight)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="fu">aes</span>(<span class="at">col =</span> treatment), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Dark2&quot;</span>) <span class="sc">+</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(treatment))</span></code></pre></div>
-<p><img src="07_1_lettuce_sol_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>According to these plots, the normality assumption is met
-for each group. However, we need to be careful with relying on
-these plots, as they are only based on 7 observations per group.
-Indeed, checking the assumptions of normality (and equal variances)
-on such small datasets can be tricky. For instance, when
-sampling 7 datapoints from data that has an underlying distribution
-that is not normally distributed, the small sample may be normally
-distributed by chance. Equivalently, when sampling 7 datapoints
-from a normal distribution, the small sample may appear not normally
-distributed. We can show this as follows.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lettuce, <span class="fu">aes</span>(<span class="at">sample =</span> freshweight)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="fu">aes</span>(<span class="at">col =</span> treatment), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(treatment))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_1_lettuce_sol_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>According to these plots, the normality assumption is met for each group. However, we need to be careful with relying on these plots, as they are only based on 7 observations per group. Indeed, checking the assumptions of normality (and equal variances) on such small datasets can be tricky. For instance, when sampling 7 datapoints from data that has an underlying distribution that is not normally distributed, the small sample may be normally distributed by chance. Equivalently, when sampling 7 datapoints from a normal distribution, the small sample may appear not normally distributed. We can show this as follows.</p>
 <p>Simulate from uniform distribution:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">5</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">## sample 7 observations from a uniform distribution, repeat 6 times</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">runif</span>(<span class="dv">7</span> <span class="sc">*</span> <span class="dv">6</span>), <span class="at">rep =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">7</span>))</span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">sample =</span> x)) <span class="sc">+</span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">col =</span> <span class="st">&quot;darkorchid&quot;</span>) <span class="sc">+</span></span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(rep)) <span class="sc">+</span></span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;QQ plots for uniformly distributed data&quot;</span>)</span></code></pre></div>
-<p><img src="07_1_lettuce_sol_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>Even though the data originates from a uniform distribution, several
-samples meet the normality requirements by chance.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">5</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">## sample 7 observations from a uniform distribution, repeat 6 times</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">runif</span>(<span class="dv">7</span> <span class="sc">*</span> <span class="dv">6</span>), <span class="at">rep =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">7</span>))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">sample =</span> x)) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">col =</span> <span class="st">"darkorchid"</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(rep)) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"QQ plots for uniformly distributed data"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_1_lettuce_sol_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Even though the data originates from a uniform distribution, several samples meet the normality requirements by chance.</p>
 <p>Sample from normal distribution:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">5</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="do">## sample 7 observations from a normal distribution, repeat 6 times</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">7</span> <span class="sc">*</span> <span class="dv">6</span>), <span class="at">rep =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">7</span>))</span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">sample =</span> x)) <span class="sc">+</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">col =</span> <span class="st">&quot;dodgerblue&quot;</span>) <span class="sc">+</span></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(rep)) <span class="sc">+</span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;QQ plots for normally distributed data&quot;</span>)</span></code></pre></div>
-<p><img src="07_1_lettuce_sol_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>Even though the data originates from a normal distribution, some deviations
-can be observed due to random chance.</p>
-<p>Alternatively, we may generate a qq-plot of the residuals
-of a linear model. These residuals should be normally distributed
-if the data for each treatment condition is normally distributed.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(freshweight <span class="sc">~</span> treatment, lettuce)</span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">2</span>, <span class="at">col =</span> fit<span class="sc">$</span>model<span class="sc">$</span>treatment)</span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomright&quot;</span>, <span class="fu">levels</span>(fit<span class="sc">$</span>model<span class="sc">$</span>treatment), <span class="at">text.col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span></code></pre></div>
-<p><img src="07_1_lettuce_sol_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<p>The Q-Q plot of the residuals shows a slight skew to the left. Care should be
-taken when interpreting the results for this dataset. Due to the sample size, a
-better alternative might be a non-parametric approach.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">5</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">## sample 7 observations from a normal distribution, repeat 6 times</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">7</span> <span class="sc">*</span> <span class="dv">6</span>), <span class="at">rep =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">7</span>))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">sample =</span> x)) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">col =</span> <span class="st">"dodgerblue"</span>) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(rep)) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"QQ plots for normally distributed data"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_1_lettuce_sol_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<div id="assumption-of-equal-variances" class="section level3" number="5.2.3">
-<h3><span class="header-section-number">5.2.3</span> Assumption of equal variances</h3>
+</div>
+</div>
+<p>Even though the data originates from a normal distribution, some deviations can be observed due to random chance.</p>
+<p>Alternatively, we may generate a qq-plot of the residuals of a linear model. These residuals should be normally distributed if the data for each treatment condition is normally distributed.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(freshweight <span class="sc">~</span> treatment, lettuce)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">2</span>, <span class="at">col =</span> fit<span class="sc">$</span>model<span class="sc">$</span>treatment)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>, <span class="fu">levels</span>(fit<span class="sc">$</span>model<span class="sc">$</span>treatment), <span class="at">text.col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_1_lettuce_sol_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The Q-Q plot of the residuals shows a slight skew to the left. Care should be taken when interpreting the results for this dataset. Due to the sample size, a better alternative might be a non-parametric approach.</p>
+</section>
+<section id="assumption-of-equal-variances" class="level3" data-number="5.2.3">
+<h3 data-number="5.2.3" class="anchored" data-anchor-id="assumption-of-equal-variances"><span class="header-section-number">5.2.3</span> Assumption of equal variances</h3>
 <p>We can check the assumption of equal variance with a boxplot:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>boxplot</span></code></pre></div>
-<p><img src="07_1_lettuce_sol_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<p>As a measure of variability, we may take the height
-of each box. This is the interval between
-the 25% and 75% quantile. Here we can see that this
-interval, as well as the length of the whiskers, is
-approximately equal for most groups. However, the
-variability of cobc does seem to be quite a bit larger
-than the variability in the refoak group.</p>
-<p>With this little observations per group, it is very
-difficult to reliably assess the assumptions of normality and equal variances.
-In this tutorial, we will assume that all assumptions are met.
-<strong>In a later tutorial, “Kruskal_lettuce_plants.Rmd”,</strong>
-<strong>we will see would happen if we decide to reject these assumptions.</strong></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>boxplot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_1_lettuce_sol_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<div id="modeling" class="section level2" number="5.3">
-<h2><span class="header-section-number">5.3</span> Modeling</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(freshweight <span class="sc">~</span> treatment, <span class="at">data =</span> lettuce)</span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>fit_anova <span class="ot">&lt;-</span> <span class="fu">anova</span>(fit)</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>fit_anova</span></code></pre></div>
+</div>
+<p>As a measure of variability, we may take the height of each box. This is the interval between the 25% and 75% quantile. Here we can see that this interval, as well as the length of the whiskers, is approximately equal for most groups. However, the variability of cobc does seem to be quite a bit larger than the variability in the refoak group.</p>
+<p>With this little observations per group, it is very difficult to reliably assess the assumptions of normality and equal variances. In this tutorial, we will assume that all assumptions are met. <strong>In a later tutorial, “Kruskal_lettuce_plants.Rmd”,</strong> <strong>we will see would happen if we decide to reject these assumptions.</strong></p>
+</section>
+</section>
+<section id="modeling" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="modeling"><span class="header-section-number">5.3</span> Modeling</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(freshweight <span class="sc">~</span> treatment, <span class="at">data =</span> lettuce)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>fit_anova <span class="ot">&lt;-</span> <span class="fu">anova</span>(fit)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>fit_anova</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["Sum Sq"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Mean Sq"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["F value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"3","2":"2732.1429","3":"910.71429","4":"34.01512","5":"8.307623e-09","_rn_":"treatment"},{"1":"24","2":"642.5714","3":"26.77381","4":"NA","5":"NA","_rn_":"Residuals"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>The p-value of the ANOVA analysis is extremely significant
-(p-value = 8.308e-09),
-so we reject the null hypothesis that the mean
-freshweigth is equal for the different treatment groups.
-We can say that the mean freshweigth is significantly different
-between at least two treatment groups on the 5% significance level.</p>
-<p>Based on this analysis, we do not yet know between which particular
-groups there is a significant difference. To assess this, we will
-perfrom the Tuckey post-hoc analysis.</p>
-</div>
-<div id="post-hoc-analysis" class="section level2" number="5.4">
-<h2><span class="header-section-number">5.4</span> Post-hoc analysis</h2>
-<p>We will perform a post-hoc analysis to look at the difference
-in fresweigth between each pairwise comparison of treatment groups.
-Importantly, with this strategy, the p-values will be automatically
-adjusted for multiple testing.</p>
-<p>The null hypothesis for each pairwise test is that
-<span class="math inline">\(H0\)</span> there is no difference in the average freshweight values between
-both groups.</p>
-<p>The alternative hypothesis for each pairwise test states that
-<span class="math inline">\(HA\)</span> there is indeed a difference in the average freshweight values
-between both groups.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>mcp <span class="ot">&lt;-</span> <span class="fu">glht</span>(fit, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">treatment =</span> <span class="st">&quot;Tukey&quot;</span>))</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>mcp_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(mcp)</span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>mcp_summary</span></code></pre></div>
-<pre><code>## 
-##   Simultaneous Tests for General Linear Hypotheses
-## 
-## Multiple Comparisons of Means: Tukey Contrasts
-## 
-## 
-## Fit: lm(formula = freshweight ~ treatment, data = lettuce)
-## 
-## Linear Hypotheses:
-##                        Estimate Std. Error t value Pr(&gt;|t|)    
-## cobc - control == 0      16.143      2.766   5.837   &lt;0.001 ***
-## compost - control == 0   20.857      2.766   7.541   &lt;0.001 ***
-## refoak - control == 0    -1.857      2.766  -0.671    0.907    
-## compost - cobc == 0       4.714      2.766   1.704    0.343    
-## refoak - cobc == 0      -18.000      2.766  -6.508   &lt;0.001 ***
-## refoak - compost == 0   -22.714      2.766  -8.213   &lt;0.001 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## (Adjusted p values reported -- single-step method)</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># We will also calculate the confidence interval on the mean differences.</span></span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>mcp_confint <span class="ot">&lt;-</span> <span class="fu">confint</span>(mcp)</span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>mcp_confint</span></code></pre></div>
-<pre><code>## 
-##   Simultaneous Confidence Intervals
-## 
-## Multiple Comparisons of Means: Tukey Contrasts
-## 
-## 
-## Fit: lm(formula = freshweight ~ treatment, data = lettuce)
-## 
-## Quantile = 2.7597
-## 95% family-wise confidence level
-##  
-## 
-## Linear Hypotheses:
-##                        Estimate lwr      upr     
-## cobc - control == 0     16.1429   8.5101  23.7757
-## compost - control == 0  20.8571  13.2243  28.4899
-## refoak - control == 0   -1.8571  -9.4899   5.7757
-## compost - cobc == 0      4.7143  -2.9185  12.3471
-## refoak - cobc == 0     -18.0000 -25.6328 -10.3672
-## refoak - compost == 0  -22.7143 -30.3471 -15.0815</code></pre>
-</div>
-<div id="conclusion" class="section level2" number="5.5">
-<h2><span class="header-section-number">5.5</span> Conclusion</h2>
-<p>We have found an extremely significant dependence
-(p-value = 8.308^{-9}),
-between the mean freshweigth and the treatment condition
-on the global 5% significance level.</p>
-<p>The mean freshweight of plants grown with compost is extremely
-significantly higher as compared to in control plants (Tuckey test,
-adjusted p-value &lt; 0.0001, 20.9g higher, 95% CI: [13.2; 28.5])
-and as compared to refoak plants (Tuckey test, adjusted
-p-value &lt; 0.0001, 22.7g higher, 95% CI: [15.1; 30.3]).</p>
-<p>The mean freshweight of plants grown with cobc is extremely
-significantly higher as compared to in control plants (Tuckey test,
-adjusted p-value &lt; 0.0001, 16.1g higher, 95% CI: [8.5; 23.8])
-and as compared to refoak plants (Tuckey test, adjusted
-p-value &lt; 0.0001, 18.0g higher, 95% CI: [10.4; 25.6]).</p>
-<p>We do not find enough evidence to claim a difference in mean
-freshweight between refoak and control plants or between cobc
-and compost plants.</p>
-<p>We may conclude that supplementing soil with compost or with
-both compost and biochar will have a positive effect on the
-freshweigth of lettuce plants.</p>
 </div>
 </div>
+<p>The p-value of the ANOVA analysis is extremely significant (p-value = 8.308e-09), so we reject the null hypothesis that the mean freshweigth is equal for the different treatment groups. We can say that the mean freshweigth is significantly different between at least two treatment groups on the 5% significance level.</p>
+<p>Based on this analysis, we do not yet know between which particular groups there is a significant difference. To assess this, we will perfrom the Tuckey post-hoc analysis.</p>
+</section>
+<section id="post-hoc-analysis" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="post-hoc-analysis"><span class="header-section-number">5.4</span> Post-hoc analysis</h2>
+<p>We will perform a post-hoc analysis to look at the difference in fresweigth between each pairwise comparison of treatment groups. Importantly, with this strategy, the p-values will be automatically adjusted for multiple testing.</p>
+<p>The null hypothesis for each pairwise test is that <span class="math inline">\(H0\)</span> there is no difference in the average freshweight values between both groups.</p>
+<p>The alternative hypothesis for each pairwise test states that <span class="math inline">\(HA\)</span> there is indeed a difference in the average freshweight values between both groups.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mcp <span class="ot">&lt;-</span> <span class="fu">glht</span>(fit, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">treatment =</span> <span class="st">"Tukey"</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>mcp_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(mcp)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>mcp_summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Tests for General Linear Hypotheses
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRXhlcmNpc2UgNy4xOiBBTk9WQSBvbiB0aGUgbGV0dHVjZSBkYXRhc2V0IC0gc29sdXRpb24iCmF1dGhvcjogIkxpZXZlbiBDbGVtZW50IGFuZCBKZXJvZW4gR2lsaXMiCmRhdGU6ICJzdGF0T21pY3MsIEdoZW50IFVuaXZlcnNpdHkgKGh0dHBzOi8vc3RhdG9taWNzLmdpdGh1Yi5pbykiCi0tLQoKIyBCYWNrZ3JvdW5kCgpJbiBhZ3JpY3VsdHVyZSwgaXQgaXMgaW1wb3J0YW50IHRvIGhhdmUgYSBoaWdoIHlpZWxkIG9mIGNyb3BzLiBGb3IgbGV0dHVjZQpwbGFudHMsIHBsYW50cyB3aXRoIG1hbnkgbGVhdmVzIGFyZSBrbm93biB0byBiZSBwcmVmZXJyZWQgYnkgdGhlIGNvbnN1bWVycy4KCk9uZSB3YXkgdG8gaW5jcmVhc2UgdGhlIG51bWJlciBvZiBsZWF2ZXMgKG9yIGJldHRlciwgdG90YWwKbGVhZiB3ZWlnaHQpIGlzIGJ5IHVzaW5nIGEgZmVydGlsaXplci4gUmVjZW50bHksIHRoZXJlIGhhcyBiZWVuCmEgdGVuZGVuY3kgdG8gcmVseSBtb3JlIG9uIG5hdHVyYWwgZmVydGlsaXplcnMsIHN1Y2ggYXMgY29tcG9zdC4KTmVhciBHaGVudCwgdGhlIGluc3RpdHV0ZSBvZiByZXNlYXJjaCBmb3IgYWdyaWN1bHR1cmUgYW5kIGZpc2hlcnkgaXMgdGVzdGluZwpuZXcsIG5hdHVyYWwgZmVydGlsaXphdGlvbiBtZXRob2RzLiBPbmUgb2YgdGhlc2UgbmV3IGZlcnRpbGl6ZXJzIGlzIGNhbGxlZApiaW9jaGFyLiBCaW9jaGFyIGlzIGEgcmVzaWR1YWwgcHJvZHVjdCBmcm9tIHB5cm9seXNpcywgYSBwcm9jZXNzIGluIHdoaWNoCmJpb21hc3MgaXMgYnVybmVkIHVuZGVyIHNwZWNpZmljIGNvbmRpdGlvbnMgKHN1Y2ggYXMgaGlnaCBwcmVzc3VyZSkgaW4gb3JkZXIKdG8gcHJvZHVjZSBlbmVyZ3kuIEJpb2NoYXIgaXMgc2ltaWxhciB0byBjaGFyY29hbCwgYnV0IGhhcyBzb21lIHZlcnkgdXNlZnVsCnByb3BlcnRpZXMsIHN1Y2ggYXMgcmV0YWluaW5nIHdhdGVyIGluIHRoZSBzb2lsLiBJdCBhbHNvIGhhcyBhIHBvc2l0aXZlCmluZmx1ZW5jZSBvbiB0aGUgc29pbCBtaWNyb2Jpb21lLgoKIyBUaGUgbGV0dHVjZSBkYXRhc2V0CgpUaGUgcmVzZWFyY2hlcnMgaHlwb3RoZXNpemUgdGhhdCBiaW9jaGFyLCBjb21wb3N0IGFuZAphIGNvbWJpbmF0aW9uIG9mIGJvdGggYmlvY2hhciBhbmQgY29tcG9zdCBjYW4gaGF2ZSBhIGRpZmZlcmVudCBpbmZsdWVuY2UKb24gdGhlIGdyb3d0aCBvZiBsZXR0dWNlIHBsYW50cy4gVG8gdGhpcyBlbmQsIHRoZXkgZ3JldyB1cApsZXR0dWNlIHBsYW50cyBpbiBhIGdyZWVuaG91c2UuIFRoZSBwb3RzIHdlcmUgZmlsbGVkIHdpdGgKb25lIG9mIGZvdXIgc29pbCB0eXBlczsKCjEuIFNvaWwgb25seSAoY29udHJvbCkKMi4gU29pbCBzdXBwbGVtZW50ZWQgd2l0aCBiaW9jaGFyIChyZWZvYWspCjMuIFNvaWwgc3VwcGxlbWVudGVkIHdpdGggY29tcG9zdCAoY29tcG9zdCkKNC4gU29pbCBzdXBwbGVtZW50ZWQgd2l0aCBib3RoIGJpb2NoYXIgYW5kIGNvbXBvc3QgKGNvYmMpCgpUaGUgZGF0YXNldCBgZnJlc2h3ZWlnaHRfbGV0dHVjZS50eHRgIGNvbnRhaW5zIHRoZSBmcmVzaHdlaWdodAooaW4gZ3JhbXMpIGZvciAyOCBsZXR0dWNlIHBsYW50cyAoNyBwZXIgY29uZGl0aW9uKS4gVGhlIHJlc2VhcmNoZXJzCndhbnQgdG8gdXNlIGFuIEFOT1ZBIHRlc3QgdG8gYXNzZXNzIGlmIHRoZSB0cmVhdG1lbnRzIGhhdmUgYSBkaWZmZXJlbnQgZWZmZWN0Cm9uIHRoZSBncm93dGggb2YgbGV0dHVjZSBwbGFudHMuIElmIHNvLCB0aGV5IHdpbGwgdXNlIGEgcG9zdC1ob2MgdGVzdAooVHVja2V5IHRlc3QpIHRvIGRpc2NvdmVyIHdoaWNoIHNwZWNpZmljIHRyZWF0bWVudHMgaGF2ZSBhbiBlZmZlY3QuCgpMb2FkIHRoZSByZXF1aXJlZCBsaWJyYXJpZXMKCmBgYHtyLCBtZXNzYWdlID0gRkFMU0UsIHdhcm5pbmc9RkFMU0V9CmxpYnJhcnkodGlkeXZlcnNlKQp0aGVtZV9zZXQodGhlbWVfYncoKSkgIyBDaGFuZ2UgZ2dwbG90MiBkZWZhdWx0IHRoZW1lCgpsaWJyYXJ5KG11bHRjb21wKQpgYGAKCiMgRGF0YSBpbXBvcnQKCmBgYHtyLG1lc3NhZ2U9RkFMU0V9CmxldHR1Y2UgPC0gcmVhZF9jc3YoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9zdGF0T21pY3MvUFNMU0RhdGEvbWFpbi9mcmVzaHdlaWdodF9sZXR0dWNlLnR4dCIpCiMgVGFrZSBhIGdsaW1wc2UgYXQgdGhlIGRhdGEKZ2xpbXBzZShsZXR0dWNlKQpgYGAKCkZpcnN0LCB3ZSB3aWxsIHNldCB0aGUgYHRyZWF0bWVudGAgdmFyaWFibGUgdG8gYSBmYWN0b3IKCmBgYHtyfQpsZXR0dWNlIDwtIGxldHR1Y2UgJT4lCiAgbXV0YXRlKAogICAgIyMgQ29udmVydCB0cmVhdG1lbnQgdG8gZmFjdG9yCiAgICB0cmVhdG1lbnQgPSBhcy5mYWN0b3IodHJlYXRtZW50KSwKICAgICMjIFJlbGV2ZWxzIHN1Y2ggdGhhdCAiY29udHJvbCIgaXMgdGhlIHJlZmVyZW5jZQogICAgdHJlYXRtZW50ID0gcmVsZXZlbCh0cmVhdG1lbnQsIHJlZiA9ICJjb250cm9sIikKICApCmBgYAoKIyBEYXRhIGV4cGxvcmF0aW9uCgpgYGB7cn0KIyMgQ291bnQgdGhlIG51bWJlciBvZiBvYnNlcnZhdGlvbnMgcGVyIHRyZWF0bWVudApsZXR0dWNlICU+JQogIGNvdW50KHRyZWF0bWVudCkKYGBgCgpOb3cgbGV0J3MgbWFrZSBhIGJveHBsb3QgZGlzcGxheWluZyB0aGUgZnJlc2h3ZWlnaHQgb2YgZWFjaCB0cmVhdG1lbnQgY29uZGl0aW9uOgoKYGBge3J9CmJveHBsb3QgPC0gbGV0dHVjZSAlPiUKICBnZ3Bsb3QoYWVzKHggPSB0cmVhdG1lbnQsIHkgPSBmcmVzaHdlaWdodCwgZmlsbCA9IHRyZWF0bWVudCkpICsKICBzY2FsZV9maWxsX2JyZXdlcihwYWxldHRlID0gIlJkR3kiKSArCiAgZ2VvbV9ib3hwbG90KG91dGxpZXIuc2hhcGUgPSBOQSkgKwogIGdlb21faml0dGVyKHdpZHRoID0gMC4yKSArCiAgZ2d0aXRsZSgiQm94cGxvdCBvZiB0aGUgZnJlc2h3ZWlndGggZm9yIGVhY2ggdHJlYXRtZW50IGNvbmRpdGlvbiIpICsKICB5bGFiKCJmcmVzaHdlaWdodCAoZ3JhbSkiKSArCiAgc3RhdF9zdW1tYXJ5KAogICAgZnVuID0gbWVhbiwgZ2VvbSA9ICJwb2ludCIsCiAgICBzaGFwZSA9IDUsIHNpemUgPSAzLCBjb2xvciA9ICJibGFjayIKICApCmJveHBsb3QKYGBgCgpOb3RlIHRoYXQgdGhlcmUgYXJlIG5vIGNsZWFyIG91dGxpZXJzIGluIHRoZSBkYXRhLgpXZSBjYW4gc2VlIHRoYXQgdGhlIG1lYW4gZnJlc2h3ZWlnaHQgaXMgdmVyeSBjb21wYXJhYmxlCmJldHdlZW4gdGhlIGNvbnRyb2wgYW5kIHJlZm9hayB0cmVhdG1lbnRzIGFuZCBiZXR3ZWVuIHRoZQpjb21wb3N0IGFuZCBjb2JjIHRyZWF0bWVudHMuIFdlIGNhbiBhbHNvIHNlZSB0aGF0IHRoZSBtZWFuCmZyZXNod2VpZ2h0IGlzIG11Y2ggaGlnaGVyIGluIHRoZSBjb2JjIGFuZCBjb250cm9sIHRyZWF0bWVudHMKdGhhbiBpbiB0aGUgY29udHJvbCBhbmQgcmVmb2FrIHRyZWF0bWVudHMuIEJ1dCBpcyB0aGlzCm9ic2VydmVkIGRpZmZlcmVuY2Ugc2lnbmlmaWNhbnQ/CgojIEFOT1ZBCgpUbyBzdHVkeSBpZiB0aGUgb2JzZXJ2ZWQgZGlmZmVyZW5jZSBiZXR3ZWVuIHRoZQphdmVyYWdlIGZyZXNod2VpZ2h0IHZhbHVlcyBvZiB0aGUgZGlmZmVyZW50IHRyZWF0bWVudCBncm91cHMKYXJlIHNpZ25pZmljYW50LCB3ZSBtYXkgcGVyZm9ybSBhbiBBTk9WQS4KCiMjIEZvcm11bGF0ZSBudWxsIGFuZCBhbHRlcm5hdGl2ZSBoeXBvdGhlc2VzCgpUaGUgbnVsbCBoeXBvdGhlc2lzIG9mIEFOT1ZBIHN0YXRlcyB0aGF0OgokSDAkOiBUaGUgbWVhbiBmcmVzaHdlaWd0aCBpcyBlcXVhbCBiZXR3ZWVuIHRoZSBkaWZmZXJlbnQgdHJlYXRtZW50IGdyb3Vwcy4KClRoZSBhbHRlcm5hdGl2ZSBoeXBvdGhlc2lzIG9mIEFOT1ZBIHN0YXRlcyB0aGF0OgokSEEkOiBUaGUgbWVhbiBmcmVzaHdlaWd0aCBmb3IgYXQgbGVhc3Qgb25lIHRyZWF0bWVudCBncm91cCBpcyBkaWZmZXJlbnQKZnJvbSB0aGUgbWVhbiBmcmVzaHdlaWdodCBpbiBhdCBsZWFzdCBvbmUgb3RoZXIgdHJlYXRtZW50IGdyb3VwLgoKIyMgQ2hlY2tpbmcgdGhlIGFzc3VtcHRpb25zIGZvciBBTk9WQQoKQmVmb3JlIHdlIG1heSBwcm9jZWVkIHdpdGggdGhlIGFuYWx5c2lzLCB3ZSBtdXN0IG1ha2Ugc3VyZSB0aGF0IGFsbAphc3N1bXB0aW9ucyBmb3IgQU5PVkEgYXJlIG1ldC4gQU5PVkEgaGFzIHRocmVlIGFzc3VtcHRpb25zOgoKMS4gVGhlIG9ic2VydmF0aW9ucyBhcmUgaW5kZXBlbmRlbnQgb2YgZWFjaCBvdGhlciAoaW4gYWxsIGdyb3VwcykKMi4gVGhlIGRhdGEgKGZyZXNod2VpZ3RoKSBtdXN0IGJlIG5vcm1hbGx5IGRpc3RyaWJ1dGVkIChpbiBhbGwgZ3JvdXBzKQozLiBUaGUgdmFyaWFiaWxpdHkgd2l0aGluIGFsbCBncm91cHMgaXMgc2ltaWxhcgoKIyMjIEFzc3VtcHRpb24gb2YgaW5kZXBlbmRlbmNlCgpUaGUgZmlyc3QgYXNzdW1wdGlvbiBpcyBtZXQ7IHdlIHN0YXJ0ZWQgb2Ygd2l0aCAyOCBsZXR0dWNlIHBsYW50cyBhbmQKd2UgcmFuZG9tbHkgc3VibWl0dGVkIHRoZW0gdG8gb25lIG9mIGZvdXIgdHJlYXRtZW50IGNvbmRpdGlvbnMuIFRoZXJlCmlzIG5vIHJlYXNvbiB0byBiZWxpZXZlIHRoYXQgdGhlIHBsYW50cyBkaXNwbGF5IHN5c3RlbWF0aWMgZGlmZmVyZW5jZXMKYmV0d2VlbiB0cmVhdG1lbnQgZ3JvdXBzLCBvdGhlciB0aGFuIHRoZSBhY3R1YWwgdHJlYXRtZW50LgoKIyMjIEFzc3VtcHRpb24gb2Ygbm9ybWFsaXR5CgpGb3IgdGhlIHNlY29uZCBhc3N1bXB0aW9uLCB3ZSBtdXN0IGNoZWNrIG5vcm1hbGl0eSBpbiBlYWNoIGdyb3VwLgoKYGBge3J9CmdncGxvdChsZXR0dWNlLCBhZXMoc2FtcGxlID0gZnJlc2h3ZWlnaHQpKSArCiAgZ2VvbV9xcSgpICsKICBnZW9tX3FxX2xpbmUoYWVzKGNvbCA9IHRyZWF0bWVudCksIHNob3cubGVnZW5kID0gRkFMU0UpICsKICBzY2FsZV9jb2xvcl9icmV3ZXIocGFsZXR0ZSA9ICJEYXJrMiIpICsKICBmYWNldF93cmFwKHZhcnModHJlYXRtZW50KSkKYGBgCgpBY2NvcmRpbmcgdG8gdGhlc2UgcGxvdHMsIHRoZSBub3JtYWxpdHkgYXNzdW1wdGlvbiBpcyBtZXQKZm9yIGVhY2ggZ3JvdXAuIEhvd2V2ZXIsIHdlIG5lZWQgdG8gYmUgY2FyZWZ1bCB3aXRoIHJlbHlpbmcgb24KdGhlc2UgcGxvdHMsIGFzIHRoZXkgYXJlIG9ubHkgYmFzZWQgb24gNyBvYnNlcnZhdGlvbnMgcGVyIGdyb3VwLgpJbmRlZWQsIGNoZWNraW5nIHRoZSBhc3N1bXB0aW9ucyBvZiBub3JtYWxpdHkgKGFuZCBlcXVhbCB2YXJpYW5jZXMpCm9uIHN1Y2ggc21hbGwgZGF0YXNldHMgY2FuIGJlIHRyaWNreS4gRm9yIGluc3RhbmNlLCB3aGVuCnNhbXBsaW5nIDcgZGF0YXBvaW50cyBmcm9tIGRhdGEgdGhhdCBoYXMgYW4gdW5kZXJseWluZyBkaXN0cmlidXRpb24KdGhhdCBpcyBub3Qgbm9ybWFsbHkgZGlzdHJpYnV0ZWQsIHRoZSBzbWFsbCBzYW1wbGUgbWF5IGJlIG5vcm1hbGx5CmRpc3RyaWJ1dGVkIGJ5IGNoYW5jZS4gRXF1aXZhbGVudGx5LCB3aGVuIHNhbXBsaW5nIDcgZGF0YXBvaW50cwpmcm9tIGEgbm9ybWFsIGRpc3RyaWJ1dGlvbiwgdGhlIHNtYWxsIHNhbXBsZSBtYXkgYXBwZWFyIG5vdCBub3JtYWxseQpkaXN0cmlidXRlZC4gV2UgY2FuIHNob3cgdGhpcyBhcyBmb2xsb3dzLgoKU2ltdWxhdGUgZnJvbSB1bmlmb3JtIGRpc3RyaWJ1dGlvbjoKCmBgYHtyfQpzZXQuc2VlZCg1KQoKIyMgc2FtcGxlIDcgb2JzZXJ2YXRpb25zIGZyb20gYSB1bmlmb3JtIGRpc3RyaWJ1dGlvbiwgcmVwZWF0IDYgdGltZXMKZGYgPC0gZGF0YS5mcmFtZSh4ID0gcnVuaWYoNyAqIDYpLCByZXAgPSByZXAoMTo2LCBlYWNoID0gNykpCmdncGxvdChkZiwgYWVzKHNhbXBsZSA9IHgpKSArCiAgZ2VvbV9xcSgpICsKICBnZW9tX3FxX2xpbmUoY29sID0gImRhcmtvcmNoaWQiKSArCiAgZmFjZXRfd3JhcCh2YXJzKHJlcCkpICsKICBnZ3RpdGxlKCJRUSBwbG90cyBmb3IgdW5pZm9ybWx5IGRpc3RyaWJ1dGVkIGRhdGEiKQpgYGAKCkV2ZW4gdGhvdWdoIHRoZSBkYXRhIG9yaWdpbmF0ZXMgZnJvbSBhIHVuaWZvcm0gZGlzdHJpYnV0aW9uLCBzZXZlcmFsCnNhbXBsZXMgbWVldCB0aGUgbm9ybWFsaXR5IHJlcXVpcmVtZW50cyBieSBjaGFuY2UuCgpTYW1wbGUgZnJvbSBub3JtYWwgZGlzdHJpYnV0aW9uOgoKYGBge3J9CnNldC5zZWVkKDUpCiMjIHNhbXBsZSA3IG9ic2VydmF0aW9ucyBmcm9tIGEgbm9ybWFsIGRpc3RyaWJ1dGlvbiwgcmVwZWF0IDYgdGltZXMKZGYgPC0gZGF0YS5mcmFtZSh4ID0gcm5vcm0oNyAqIDYpLCByZXAgPSByZXAoMTo2LCBlYWNoID0gNykpCmdncGxvdChkZiwgYWVzKHNhbXBsZSA9IHgpKSArCiAgZ2VvbV9xcSgpICsKICBnZW9tX3FxX2xpbmUoY29sID0gImRvZGdlcmJsdWUiKSArCiAgZmFjZXRfd3JhcCh2YXJzKHJlcCkpICsKICBnZ3RpdGxlKCJRUSBwbG90cyBmb3Igbm9ybWFsbHkgZGlzdHJpYnV0ZWQgZGF0YSIpCmBgYAoKRXZlbiB0aG91Z2ggdGhlIGRhdGEgb3JpZ2luYXRlcyBmcm9tIGEgbm9ybWFsIGRpc3RyaWJ1dGlvbiwgc29tZSBkZXZpYXRpb25zCmNhbiBiZSBvYnNlcnZlZCBkdWUgdG8gcmFuZG9tIGNoYW5jZS4KCkFsdGVybmF0aXZlbHksIHdlIG1heSBnZW5lcmF0ZSBhIHFxLXBsb3Qgb2YgdGhlIHJlc2lkdWFscwpvZiBhIGxpbmVhciBtb2RlbC4gVGhlc2UgcmVzaWR1YWxzIHNob3VsZCBiZSBub3JtYWxseSBkaXN0cmlidXRlZAppZiB0aGUgZGF0YSBmb3IgZWFjaCB0cmVhdG1lbnQgY29uZGl0aW9uIGlzIG5vcm1hbGx5IGRpc3RyaWJ1dGVkLgoKYGBge3J9CmZpdCA8LSBsbShmcmVzaHdlaWdodCB+IHRyZWF0bWVudCwgbGV0dHVjZSkKcGxvdChmaXQsIHdoaWNoID0gMiwgY29sID0gZml0JG1vZGVsJHRyZWF0bWVudCkKbGVnZW5kKCJib3R0b21yaWdodCIsIGxldmVscyhmaXQkbW9kZWwkdHJlYXRtZW50KSwgdGV4dC5jb2wgPSAxOjQpCmBgYAoKVGhlIFEtUSBwbG90IG9mIHRoZSByZXNpZHVhbHMgc2hvd3MgYSBzbGlnaHQgc2tldyB0byB0aGUgbGVmdC4gQ2FyZSBzaG91bGQgYmUKdGFrZW4gd2hlbiBpbnRlcnByZXRpbmcgdGhlIHJlc3VsdHMgZm9yIHRoaXMgZGF0YXNldC4gRHVlIHRvIHRoZSBzYW1wbGUgc2l6ZSwgYQpiZXR0ZXIgYWx0ZXJuYXRpdmUgbWlnaHQgYmUgYSBub24tcGFyYW1ldHJpYyBhcHByb2FjaC4KCgojIyMgQXNzdW1wdGlvbiBvZiBlcXVhbCB2YXJpYW5jZXMKCldlIGNhbiBjaGVjayB0aGUgYXNzdW1wdGlvbiBvZiBlcXVhbCB2YXJpYW5jZSB3aXRoIGEgYm94cGxvdDoKCmBgYHtyfQpib3hwbG90CmBgYAoKQXMgYSBtZWFzdXJlIG9mIHZhcmlhYmlsaXR5LCB3ZSBtYXkgdGFrZSB0aGUgaGVpZ2h0Cm9mIGVhY2ggYm94LiBUaGlzIGlzIHRoZSBpbnRlcnZhbCBiZXR3ZWVuCnRoZSAyNSUgYW5kIDc1JSBxdWFudGlsZS4gSGVyZSB3ZSBjYW4gc2VlIHRoYXQgdGhpcwppbnRlcnZhbCwgYXMgd2VsbCBhcyB0aGUgbGVuZ3RoIG9mIHRoZSB3aGlza2VycywgaXMKYXBwcm94aW1hdGVseSBlcXVhbCBmb3IgbW9zdCBncm91cHMuIEhvd2V2ZXIsIHRoZQp2YXJpYWJpbGl0eSBvZiBjb2JjIGRvZXMgc2VlbSB0byBiZSBxdWl0ZSBhIGJpdCBsYXJnZXIKdGhhbiB0aGUgdmFyaWFiaWxpdHkgaW4gdGhlIHJlZm9hayBncm91cC4KCldpdGggdGhpcyBsaXR0bGUgb2JzZXJ2YXRpb25zIHBlciBncm91cCwgaXQgaXMgdmVyeQpkaWZmaWN1bHQgdG8gcmVsaWFibHkgYXNzZXNzIHRoZSBhc3N1bXB0aW9ucyBvZiBub3JtYWxpdHkgYW5kIGVxdWFsIHZhcmlhbmNlcy4KSW4gdGhpcyB0dXRvcmlhbCwgd2Ugd2lsbCBhc3N1bWUgdGhhdCBhbGwgYXNzdW1wdGlvbnMgYXJlIG1ldC4KKipJbiBhIGxhdGVyIHR1dG9yaWFsLCAiS3J1c2thbF9sZXR0dWNlX3BsYW50cy5SbWQiLCoqCioqd2Ugd2lsbCBzZWUgd291bGQgaGFwcGVuIGlmIHdlIGRlY2lkZSB0byByZWplY3QgdGhlc2UgYXNzdW1wdGlvbnMuKioKCiMjIE1vZGVsaW5nCgpgYGB7cn0KZml0IDwtIGxtKGZyZXNod2VpZ2h0IH4gdHJlYXRtZW50LCBkYXRhID0gbGV0dHVjZSkKZml0X2Fub3ZhIDwtIGFub3ZhKGZpdCkKZml0X2Fub3ZhCmBgYAoKVGhlIHAtdmFsdWUgb2YgdGhlIEFOT1ZBIGFuYWx5c2lzIGlzIGV4dHJlbWVseSBzaWduaWZpY2FudAoocC12YWx1ZSA9IGByIGZvcm1hdChmaXRfYW5vdmEkIlByKD5GKSJbMV0sZGlnaXRzPTQpYCksCnNvIHdlIHJlamVjdCB0aGUgbnVsbCBoeXBvdGhlc2lzIHRoYXQgdGhlIG1lYW4KZnJlc2h3ZWlndGggaXMgZXF1YWwgZm9yIHRoZSBkaWZmZXJlbnQgdHJlYXRtZW50IGdyb3Vwcy4KV2UgY2FuIHNheSB0aGF0IHRoZSBtZWFuIGZyZXNod2VpZ3RoIGlzIHNpZ25pZmljYW50bHkgZGlmZmVyZW50CmJldHdlZW4gYXQgbGVhc3QgdHdvIHRyZWF0bWVudCBncm91cHMgb24gdGhlIDUlIHNpZ25pZmljYW5jZSBsZXZlbC4KCkJhc2VkIG9uIHRoaXMgYW5hbHlzaXMsIHdlIGRvIG5vdCB5ZXQga25vdyBiZXR3ZWVuIHdoaWNoIHBhcnRpY3VsYXIKZ3JvdXBzIHRoZXJlIGlzIGEgc2lnbmlmaWNhbnQgZGlmZmVyZW5jZS4gVG8gYXNzZXNzIHRoaXMsIHdlIHdpbGwKcGVyZnJvbSB0aGUgVHVja2V5IHBvc3QtaG9jIGFuYWx5c2lzLgoKIyMgUG9zdC1ob2MgYW5hbHlzaXMKCldlIHdpbGwgcGVyZm9ybSBhIHBvc3QtaG9jIGFuYWx5c2lzIHRvIGxvb2sgYXQgdGhlIGRpZmZlcmVuY2UKaW4gZnJlc3dlaWd0aCBiZXR3ZWVuIGVhY2ggcGFpcndpc2UgY29tcGFyaXNvbiBvZiB0cmVhdG1lbnQgZ3JvdXBzLgpJbXBvcnRhbnRseSwgd2l0aCB0aGlzIHN0cmF0ZWd5LCB0aGUgcC12YWx1ZXMgd2lsbCBiZSBhdXRvbWF0aWNhbGx5CmFkanVzdGVkIGZvciBtdWx0aXBsZSB0ZXN0aW5nLgoKVGhlIG51bGwgaHlwb3RoZXNpcyBmb3IgZWFjaCBwYWlyd2lzZSB0ZXN0IGlzIHRoYXQKJEgwJCB0aGVyZSBpcyBubyBkaWZmZXJlbmNlIGluIHRoZSBhdmVyYWdlIGZyZXNod2VpZ2h0IHZhbHVlcyBiZXR3ZWVuCmJvdGggZ3JvdXBzLgoKVGhlIGFsdGVybmF0aXZlIGh5cG90aGVzaXMgZm9yIGVhY2ggcGFpcndpc2UgdGVzdCBzdGF0ZXMgdGhhdAokSEEkIHRoZXJlIGlzIGluZGVlZCBhIGRpZmZlcmVuY2UgaW4gdGhlIGF2ZXJhZ2UgZnJlc2h3ZWlnaHQgdmFsdWVzCmJldHdlZW4gYm90aCBncm91cHMuCgpgYGB7cn0KbWNwIDwtIGdsaHQoZml0LCBsaW5mY3QgPSBtY3AodHJlYXRtZW50ID0gIlR1a2V5IikpCm1jcF9zdW1tYXJ5IDwtIHN1bW1hcnkobWNwKQptY3Bfc3VtbWFyeQoKIyBXZSB3aWxsIGFsc28gY2FsY3VsYXRlIHRoZSBjb25maWRlbmNlIGludGVydmFsIG9uIHRoZSBtZWFuIGRpZmZlcmVuY2VzLgptY3BfY29uZmludCA8LSBjb25maW50KG1jcCkKbWNwX2NvbmZpbnQKYGBgCgojIyBDb25jbHVzaW9uCgpXZSBoYXZlIGZvdW5kIGFuIGV4dHJlbWVseSBzaWduaWZpY2FudCBkZXBlbmRlbmNlCihwLXZhbHVlID0gYHIgcm91bmQoZml0X2Fub3ZhJCJQcig+RikiWzFdLGRpZ2l0cz0xMilgKSwKYmV0d2VlbiB0aGUgbWVhbiBmcmVzaHdlaWd0aCBhbmQgdGhlIHRyZWF0bWVudCBjb25kaXRpb24Kb24gdGhlIGdsb2JhbCA1JSBzaWduaWZpY2FuY2UgbGV2ZWwuCgpUaGUgbWVhbiBmcmVzaHdlaWdodCBvZiBwbGFudHMgZ3Jvd24gd2l0aCBjb21wb3N0IGlzIGV4dHJlbWVseQpzaWduaWZpY2FudGx5IGhpZ2hlciBhcyBjb21wYXJlZCB0byBpbiBjb250cm9sIHBsYW50cyAoVHVja2V5IHRlc3QsCmFkanVzdGVkIHAtdmFsdWUgPCAwLjAwMDEsIDIwLjlnIGhpZ2hlciwgOTUlIENJOiBbMTMuMjsgMjguNV0pCmFuZCBhcyBjb21wYXJlZCB0byByZWZvYWsgcGxhbnRzIChUdWNrZXkgdGVzdCwgYWRqdXN0ZWQKcC12YWx1ZSA8IDAuMDAwMSwgMjIuN2cgaGlnaGVyLCA5NSUgQ0k6IFsxNS4xOyAzMC4zXSkuCgpUaGUgbWVhbiBmcmVzaHdlaWdodCBvZiBwbGFudHMgZ3Jvd24gd2l0aCBjb2JjIGlzIGV4dHJlbWVseQpzaWduaWZpY2FudGx5IGhpZ2hlciBhcyBjb21wYXJlZCB0byBpbiBjb250cm9sIHBsYW50cyAoVHVja2V5IHRlc3QsCmFkanVzdGVkIHAtdmFsdWUgPCAwLjAwMDEsIDE2LjFnIGhpZ2hlciwgOTUlIENJOiBbOC41OyAyMy44XSkKYW5kIGFzIGNvbXBhcmVkIHRvIHJlZm9hayBwbGFudHMgKFR1Y2tleSB0ZXN0LCBhZGp1c3RlZApwLXZhbHVlIDwgMC4wMDAxLCAxOC4wZyBoaWdoZXIsIDk1JSBDSTogWzEwLjQ7IDI1LjZdKS4KCldlIGRvIG5vdCBmaW5kIGVub3VnaCBldmlkZW5jZSB0byBjbGFpbSBhIGRpZmZlcmVuY2UgaW4gbWVhbgpmcmVzaHdlaWdodCBiZXR3ZWVuIHJlZm9hayBhbmQgY29udHJvbCBwbGFudHMgb3IgYmV0d2VlbiBjb2JjCmFuZCBjb21wb3N0IHBsYW50cy4KCldlIG1heSBjb25jbHVkZSB0aGF0IHN1cHBsZW1lbnRpbmcgc29pbCB3aXRoIGNvbXBvc3Qgb3Igd2l0aApib3RoIGNvbXBvc3QgYW5kIGJpb2NoYXIgd2lsbCBoYXZlIGEgcG9zaXRpdmUgZWZmZWN0IG9uIHRoZQpmcmVzaHdlaWd0aCBvZiBsZXR0dWNlIHBsYW50cy4K</div>
-<div class="footer">
-    <hr>
-    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
-    CC BY-NC-SA 4.0</a> licence.
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lm(formula = freshweight ~ treatment, data = lettuce)
+
+Linear Hypotheses:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+cobc - control == 0      16.143      2.766   5.837   &lt;0.001 ***
+compost - control == 0   20.857      2.766   7.541   &lt;0.001 ***
+refoak - control == 0    -1.857      2.766  -0.671    0.907    
+compost - cobc == 0       4.714      2.766   1.704    0.343    
+refoak - cobc == 0      -18.000      2.766  -6.508   &lt;0.001 ***
+refoak - compost == 0   -22.714      2.766  -8.213   &lt;0.001 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+(Adjusted p values reported -- single-step method)</code></pre>
 </div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We will also calculate the confidence interval on the mean differences.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>mcp_confint <span class="ot">&lt;-</span> <span class="fu">confint</span>(mcp)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>mcp_confint</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Confidence Intervals
+
+Multiple Comparisons of Means: Tukey Contrasts
 
 
+Fit: lm(formula = freshweight ~ treatment, data = lettuce)
+
+Quantile = 2.7597
+95% family-wise confidence level
+ 
+
+Linear Hypotheses:
+                       Estimate lwr      upr     
+cobc - control == 0     16.1429   8.5101  23.7757
+compost - control == 0  20.8571  13.2243  28.4899
+refoak - control == 0   -1.8571  -9.4899   5.7757
+compost - cobc == 0      4.7143  -2.9185  12.3471
+refoak - cobc == 0     -18.0000 -25.6328 -10.3672
+refoak - compost == 0  -22.7143 -30.3471 -15.0815</code></pre>
 </div>
 </div>
-
-</div>
-
-<script>
-
-// add bootstrap table styles to pandoc tables
-function bootstrapStylePandocTables() {
-  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
-}
-$(document).ready(function () {
-  bootstrapStylePandocTables();
-});
+</section>
+<section id="conclusion" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">5.5</span> Conclusion</h2>
+<p>We have found an extremely significant dependence (p-value = 8.308^{-9}), between the mean freshweigth and the treatment condition on the global 5% significance level.</p>
+<p>The mean freshweight of plants grown with compost is extremely significantly higher as compared to in control plants (Tuckey test, adjusted p-value &lt; 0.0001, 20.9g higher, 95% CI: [13.2; 28.5]) and as compared to refoak plants (Tuckey test, adjusted p-value &lt; 0.0001, 22.7g higher, 95% CI: [15.1; 30.3]).</p>
+<p>The mean freshweight of plants grown with cobc is extremely significantly higher as compared to in control plants (Tuckey test, adjusted p-value &lt; 0.0001, 16.1g higher, 95% CI: [8.5; 23.8]) and as compared to refoak plants (Tuckey test, adjusted p-value &lt; 0.0001, 18.0g higher, 95% CI: [10.4; 25.6]).</p>
+<p>We do not find enough evidence to claim a difference in mean freshweight between refoak and control plants or between cobc and compost plants.</p>
+<p>We may conclude that supplementing soil with compost or with both compost and biochar will have a positive effect on the freshweigth of lettuce plants.</p>
 
 
-</script>
+<!-- -->
 
-<!-- tabsets -->
+</section>
+</section>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open');
-  });
-});
-</script>
-
-<!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeSourceEmbed("07_1_lettuce_sol.Rmd");
-  window.initializeCodeFolding("show" === "show");
-});
-</script>
-
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    options.showAndHide = true;
-    options.smoothScroll = true;
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Exercise 7.1: ANOVA on the lettuce dataset - solution"</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Lieven Clement and Jeroen Gilis"</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "statOmics, Ghent University (https://statomics.github.io)"</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># Background</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>In agriculture, it is important to have a high yield of crops. For lettuce</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>plants, plants with many leaves are known to be preferred by the consumers.</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>One way to increase the number of leaves (or better, total</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>leaf weight) is by using a fertilizer. Recently, there has been</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>a tendency to rely more on natural fertilizers, such as compost.</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>Near Ghent, the institute of research for agriculture and fishery is testing</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>new, natural fertilization methods. One of these new fertilizers is called</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>biochar. Biochar is a residual product from pyrolysis, a process in which</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>biomass is burned under specific conditions (such as high pressure) in order</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>to produce energy. Biochar is similar to charcoal, but has some very useful</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>properties, such as retaining water in the soil. It also has a positive</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>influence on the soil microbiome.</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="fu"># The lettuce dataset</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>The researchers hypothesize that biochar, compost and</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>a combination of both biochar and compost can have a different influence</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>on the growth of lettuce plants. To this end, they grew up</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>lettuce plants in a greenhouse. The pots were filled with</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>one of four soil types;</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Soil only (control)</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Soil supplemented with biochar (refoak)</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Soil supplemented with compost (compost)</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Soil supplemented with both biochar and compost (cobc)</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>The dataset <span class="in">`freshweight_lettuce.txt`</span> contains the freshweight</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>(in grams) for 28 lettuce plants (7 per condition). The researchers</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>want to use an ANOVA test to assess if the treatments have a different effect</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>on the growth of lettuce plants. If so, they will use a post-hoc test</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>(Tuckey test) to discover which specific treatments have an effect.</span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>Load the required libraries</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message = FALSE, warning=FALSE}</span></span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>()) <span class="co"># Change ggplot2 default theme</span></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data import</span></span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{r,message=FALSE}</span></span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>lettuce <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/statOmics/PSLSData/main/freshweight_lettuce.txt"</span>)</span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a glimpse at the data</span></span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(lettuce)</span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a>First, we will set the <span class="in">`treatment`</span> variable to a factor</span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a>lettuce <span class="ot">&lt;-</span> lettuce <span class="sc">|&gt;</span></span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Convert treatment to factor</span></span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">as.factor</span>(treatment),</span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Relevels such that "control" is the reference</span></span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">relevel</span>(treatment, <span class="at">ref =</span> <span class="st">"control"</span>)</span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data exploration</span></span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a><span class="do">## Count the number of observations per treatment</span></span>
+<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a>lettuce <span class="sc">|&gt;</span></span>
+<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(treatment)</span>
+<span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a>Now let's make a boxplot displaying the freshweight of each treatment condition:</span>
+<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a>boxplot <span class="ot">&lt;-</span> lettuce <span class="sc">|&gt;</span></span>
+<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> treatment, <span class="at">y =</span> freshweight, <span class="at">fill =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"RdGy"</span>) <span class="sc">+</span></span>
+<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Boxplot of the freshweigth for each treatment condition"</span>) <span class="sc">+</span></span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"freshweight (gram)"</span>) <span class="sc">+</span></span>
+<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
+<span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span></span>
+<span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a>boxplot</span>
+<span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a>Note that there are no clear outliers in the data.</span>
+<span id="cb17-103"><a href="#cb17-103" aria-hidden="true" tabindex="-1"></a>We can see that the mean freshweight is very comparable</span>
+<span id="cb17-104"><a href="#cb17-104" aria-hidden="true" tabindex="-1"></a>between the control and refoak treatments and between the</span>
+<span id="cb17-105"><a href="#cb17-105" aria-hidden="true" tabindex="-1"></a>compost and cobc treatments. We can also see that the mean</span>
+<span id="cb17-106"><a href="#cb17-106" aria-hidden="true" tabindex="-1"></a>freshweight is much higher in the cobc and control treatments</span>
+<span id="cb17-107"><a href="#cb17-107" aria-hidden="true" tabindex="-1"></a>than in the control and refoak treatments. But is this</span>
+<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a>observed difference significant?</span>
+<span id="cb17-109"><a href="#cb17-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-110"><a href="#cb17-110" aria-hidden="true" tabindex="-1"></a><span class="fu"># ANOVA</span></span>
+<span id="cb17-111"><a href="#cb17-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-112"><a href="#cb17-112" aria-hidden="true" tabindex="-1"></a>To study if the observed difference between the</span>
+<span id="cb17-113"><a href="#cb17-113" aria-hidden="true" tabindex="-1"></a>average freshweight values of the different treatment groups</span>
+<span id="cb17-114"><a href="#cb17-114" aria-hidden="true" tabindex="-1"></a>are significant, we may perform an ANOVA.</span>
+<span id="cb17-115"><a href="#cb17-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-116"><a href="#cb17-116" aria-hidden="true" tabindex="-1"></a><span class="fu">## Formulate null and alternative hypotheses</span></span>
+<span id="cb17-117"><a href="#cb17-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-118"><a href="#cb17-118" aria-hidden="true" tabindex="-1"></a>The null hypothesis of ANOVA states that:</span>
+<span id="cb17-119"><a href="#cb17-119" aria-hidden="true" tabindex="-1"></a>$H0$: The mean freshweigth is equal between the different treatment groups.</span>
+<span id="cb17-120"><a href="#cb17-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-121"><a href="#cb17-121" aria-hidden="true" tabindex="-1"></a>The alternative hypothesis of ANOVA states that:</span>
+<span id="cb17-122"><a href="#cb17-122" aria-hidden="true" tabindex="-1"></a>$HA$: The mean freshweigth for at least one treatment group is different</span>
+<span id="cb17-123"><a href="#cb17-123" aria-hidden="true" tabindex="-1"></a>from the mean freshweight in at least one other treatment group.</span>
+<span id="cb17-124"><a href="#cb17-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-125"><a href="#cb17-125" aria-hidden="true" tabindex="-1"></a><span class="fu">## Checking the assumptions for ANOVA</span></span>
+<span id="cb17-126"><a href="#cb17-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-127"><a href="#cb17-127" aria-hidden="true" tabindex="-1"></a>Before we may proceed with the analysis, we must make sure that all</span>
+<span id="cb17-128"><a href="#cb17-128" aria-hidden="true" tabindex="-1"></a>assumptions for ANOVA are met. ANOVA has three assumptions:</span>
+<span id="cb17-129"><a href="#cb17-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-130"><a href="#cb17-130" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The observations are independent of each other (in all groups)</span>
+<span id="cb17-131"><a href="#cb17-131" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>The data (freshweigth) must be normally distributed (in all groups)</span>
+<span id="cb17-132"><a href="#cb17-132" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>The variability within all groups is similar</span>
+<span id="cb17-133"><a href="#cb17-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-134"><a href="#cb17-134" aria-hidden="true" tabindex="-1"></a><span class="fu">### Assumption of independence</span></span>
+<span id="cb17-135"><a href="#cb17-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-136"><a href="#cb17-136" aria-hidden="true" tabindex="-1"></a>The first assumption is met; we started of with 28 lettuce plants and</span>
+<span id="cb17-137"><a href="#cb17-137" aria-hidden="true" tabindex="-1"></a>we randomly submitted them to one of four treatment conditions. There</span>
+<span id="cb17-138"><a href="#cb17-138" aria-hidden="true" tabindex="-1"></a>is no reason to believe that the plants display systematic differences</span>
+<span id="cb17-139"><a href="#cb17-139" aria-hidden="true" tabindex="-1"></a>between treatment groups, other than the actual treatment.</span>
+<span id="cb17-140"><a href="#cb17-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-141"><a href="#cb17-141" aria-hidden="true" tabindex="-1"></a><span class="fu">### Assumption of normality</span></span>
+<span id="cb17-142"><a href="#cb17-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-143"><a href="#cb17-143" aria-hidden="true" tabindex="-1"></a>For the second assumption, we must check normality in each group.</span>
+<span id="cb17-144"><a href="#cb17-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-147"><a href="#cb17-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-148"><a href="#cb17-148" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lettuce, <span class="fu">aes</span>(<span class="at">sample =</span> freshweight)) <span class="sc">+</span></span>
+<span id="cb17-149"><a href="#cb17-149" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb17-150"><a href="#cb17-150" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="fu">aes</span>(<span class="at">col =</span> treatment), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb17-151"><a href="#cb17-151" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb17-152"><a href="#cb17-152" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(treatment))</span>
+<span id="cb17-153"><a href="#cb17-153" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-154"><a href="#cb17-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-155"><a href="#cb17-155" aria-hidden="true" tabindex="-1"></a>According to these plots, the normality assumption is met</span>
+<span id="cb17-156"><a href="#cb17-156" aria-hidden="true" tabindex="-1"></a>for each group. However, we need to be careful with relying on</span>
+<span id="cb17-157"><a href="#cb17-157" aria-hidden="true" tabindex="-1"></a>these plots, as they are only based on 7 observations per group.</span>
+<span id="cb17-158"><a href="#cb17-158" aria-hidden="true" tabindex="-1"></a>Indeed, checking the assumptions of normality (and equal variances)</span>
+<span id="cb17-159"><a href="#cb17-159" aria-hidden="true" tabindex="-1"></a>on such small datasets can be tricky. For instance, when</span>
+<span id="cb17-160"><a href="#cb17-160" aria-hidden="true" tabindex="-1"></a>sampling 7 datapoints from data that has an underlying distribution</span>
+<span id="cb17-161"><a href="#cb17-161" aria-hidden="true" tabindex="-1"></a>that is not normally distributed, the small sample may be normally</span>
+<span id="cb17-162"><a href="#cb17-162" aria-hidden="true" tabindex="-1"></a>distributed by chance. Equivalently, when sampling 7 datapoints</span>
+<span id="cb17-163"><a href="#cb17-163" aria-hidden="true" tabindex="-1"></a>from a normal distribution, the small sample may appear not normally</span>
+<span id="cb17-164"><a href="#cb17-164" aria-hidden="true" tabindex="-1"></a>distributed. We can show this as follows.</span>
+<span id="cb17-165"><a href="#cb17-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-166"><a href="#cb17-166" aria-hidden="true" tabindex="-1"></a>Simulate from uniform distribution:</span>
+<span id="cb17-167"><a href="#cb17-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-170"><a href="#cb17-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-171"><a href="#cb17-171" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">5</span>)</span>
+<span id="cb17-172"><a href="#cb17-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-173"><a href="#cb17-173" aria-hidden="true" tabindex="-1"></a><span class="do">## sample 7 observations from a uniform distribution, repeat 6 times</span></span>
+<span id="cb17-174"><a href="#cb17-174" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">runif</span>(<span class="dv">7</span> <span class="sc">*</span> <span class="dv">6</span>), <span class="at">rep =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">7</span>))</span>
+<span id="cb17-175"><a href="#cb17-175" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">sample =</span> x)) <span class="sc">+</span></span>
+<span id="cb17-176"><a href="#cb17-176" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb17-177"><a href="#cb17-177" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">col =</span> <span class="st">"darkorchid"</span>) <span class="sc">+</span></span>
+<span id="cb17-178"><a href="#cb17-178" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(rep)) <span class="sc">+</span></span>
+<span id="cb17-179"><a href="#cb17-179" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"QQ plots for uniformly distributed data"</span>)</span>
+<span id="cb17-180"><a href="#cb17-180" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-181"><a href="#cb17-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-182"><a href="#cb17-182" aria-hidden="true" tabindex="-1"></a>Even though the data originates from a uniform distribution, several</span>
+<span id="cb17-183"><a href="#cb17-183" aria-hidden="true" tabindex="-1"></a>samples meet the normality requirements by chance.</span>
+<span id="cb17-184"><a href="#cb17-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-185"><a href="#cb17-185" aria-hidden="true" tabindex="-1"></a>Sample from normal distribution:</span>
+<span id="cb17-186"><a href="#cb17-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-189"><a href="#cb17-189" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-190"><a href="#cb17-190" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">5</span>)</span>
+<span id="cb17-191"><a href="#cb17-191" aria-hidden="true" tabindex="-1"></a><span class="do">## sample 7 observations from a normal distribution, repeat 6 times</span></span>
+<span id="cb17-192"><a href="#cb17-192" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">7</span> <span class="sc">*</span> <span class="dv">6</span>), <span class="at">rep =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">7</span>))</span>
+<span id="cb17-193"><a href="#cb17-193" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">sample =</span> x)) <span class="sc">+</span></span>
+<span id="cb17-194"><a href="#cb17-194" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb17-195"><a href="#cb17-195" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">col =</span> <span class="st">"dodgerblue"</span>) <span class="sc">+</span></span>
+<span id="cb17-196"><a href="#cb17-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(rep)) <span class="sc">+</span></span>
+<span id="cb17-197"><a href="#cb17-197" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"QQ plots for normally distributed data"</span>)</span>
+<span id="cb17-198"><a href="#cb17-198" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-199"><a href="#cb17-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-200"><a href="#cb17-200" aria-hidden="true" tabindex="-1"></a>Even though the data originates from a normal distribution, some deviations</span>
+<span id="cb17-201"><a href="#cb17-201" aria-hidden="true" tabindex="-1"></a>can be observed due to random chance.</span>
+<span id="cb17-202"><a href="#cb17-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-203"><a href="#cb17-203" aria-hidden="true" tabindex="-1"></a>Alternatively, we may generate a qq-plot of the residuals</span>
+<span id="cb17-204"><a href="#cb17-204" aria-hidden="true" tabindex="-1"></a>of a linear model. These residuals should be normally distributed</span>
+<span id="cb17-205"><a href="#cb17-205" aria-hidden="true" tabindex="-1"></a>if the data for each treatment condition is normally distributed.</span>
+<span id="cb17-206"><a href="#cb17-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-209"><a href="#cb17-209" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-210"><a href="#cb17-210" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(freshweight <span class="sc">~</span> treatment, lettuce)</span>
+<span id="cb17-211"><a href="#cb17-211" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">2</span>, <span class="at">col =</span> fit<span class="sc">$</span>model<span class="sc">$</span>treatment)</span>
+<span id="cb17-212"><a href="#cb17-212" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>, <span class="fu">levels</span>(fit<span class="sc">$</span>model<span class="sc">$</span>treatment), <span class="at">text.col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
+<span id="cb17-213"><a href="#cb17-213" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-214"><a href="#cb17-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-215"><a href="#cb17-215" aria-hidden="true" tabindex="-1"></a>The Q-Q plot of the residuals shows a slight skew to the left. Care should be</span>
+<span id="cb17-216"><a href="#cb17-216" aria-hidden="true" tabindex="-1"></a>taken when interpreting the results for this dataset. Due to the sample size, a</span>
+<span id="cb17-217"><a href="#cb17-217" aria-hidden="true" tabindex="-1"></a>better alternative might be a non-parametric approach.</span>
+<span id="cb17-218"><a href="#cb17-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-219"><a href="#cb17-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-220"><a href="#cb17-220" aria-hidden="true" tabindex="-1"></a><span class="fu">### Assumption of equal variances</span></span>
+<span id="cb17-221"><a href="#cb17-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-222"><a href="#cb17-222" aria-hidden="true" tabindex="-1"></a>We can check the assumption of equal variance with a boxplot:</span>
+<span id="cb17-223"><a href="#cb17-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-226"><a href="#cb17-226" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-227"><a href="#cb17-227" aria-hidden="true" tabindex="-1"></a>boxplot</span>
+<span id="cb17-228"><a href="#cb17-228" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-229"><a href="#cb17-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-230"><a href="#cb17-230" aria-hidden="true" tabindex="-1"></a>As a measure of variability, we may take the height</span>
+<span id="cb17-231"><a href="#cb17-231" aria-hidden="true" tabindex="-1"></a>of each box. This is the interval between</span>
+<span id="cb17-232"><a href="#cb17-232" aria-hidden="true" tabindex="-1"></a>the 25% and 75% quantile. Here we can see that this</span>
+<span id="cb17-233"><a href="#cb17-233" aria-hidden="true" tabindex="-1"></a>interval, as well as the length of the whiskers, is</span>
+<span id="cb17-234"><a href="#cb17-234" aria-hidden="true" tabindex="-1"></a>approximately equal for most groups. However, the</span>
+<span id="cb17-235"><a href="#cb17-235" aria-hidden="true" tabindex="-1"></a>variability of cobc does seem to be quite a bit larger</span>
+<span id="cb17-236"><a href="#cb17-236" aria-hidden="true" tabindex="-1"></a>than the variability in the refoak group.</span>
+<span id="cb17-237"><a href="#cb17-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-238"><a href="#cb17-238" aria-hidden="true" tabindex="-1"></a>With this little observations per group, it is very</span>
+<span id="cb17-239"><a href="#cb17-239" aria-hidden="true" tabindex="-1"></a>difficult to reliably assess the assumptions of normality and equal variances.</span>
+<span id="cb17-240"><a href="#cb17-240" aria-hidden="true" tabindex="-1"></a>In this tutorial, we will assume that all assumptions are met.</span>
+<span id="cb17-241"><a href="#cb17-241" aria-hidden="true" tabindex="-1"></a>**In a later tutorial, "Kruskal_lettuce_plants.Rmd",**</span>
+<span id="cb17-242"><a href="#cb17-242" aria-hidden="true" tabindex="-1"></a>**we will see would happen if we decide to reject these assumptions.**</span>
+<span id="cb17-243"><a href="#cb17-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-244"><a href="#cb17-244" aria-hidden="true" tabindex="-1"></a><span class="fu">## Modeling</span></span>
+<span id="cb17-245"><a href="#cb17-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-248"><a href="#cb17-248" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-249"><a href="#cb17-249" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(freshweight <span class="sc">~</span> treatment, <span class="at">data =</span> lettuce)</span>
+<span id="cb17-250"><a href="#cb17-250" aria-hidden="true" tabindex="-1"></a>fit_anova <span class="ot">&lt;-</span> <span class="fu">anova</span>(fit)</span>
+<span id="cb17-251"><a href="#cb17-251" aria-hidden="true" tabindex="-1"></a>fit_anova</span>
+<span id="cb17-252"><a href="#cb17-252" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-253"><a href="#cb17-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-254"><a href="#cb17-254" aria-hidden="true" tabindex="-1"></a>The p-value of the ANOVA analysis is extremely significant</span>
+<span id="cb17-255"><a href="#cb17-255" aria-hidden="true" tabindex="-1"></a>(p-value = <span class="in">`r format(fit_anova$"Pr(&gt;F)"[1],digits=4)`</span>),</span>
+<span id="cb17-256"><a href="#cb17-256" aria-hidden="true" tabindex="-1"></a>so we reject the null hypothesis that the mean</span>
+<span id="cb17-257"><a href="#cb17-257" aria-hidden="true" tabindex="-1"></a>freshweigth is equal for the different treatment groups.</span>
+<span id="cb17-258"><a href="#cb17-258" aria-hidden="true" tabindex="-1"></a>We can say that the mean freshweigth is significantly different</span>
+<span id="cb17-259"><a href="#cb17-259" aria-hidden="true" tabindex="-1"></a>between at least two treatment groups on the 5% significance level.</span>
+<span id="cb17-260"><a href="#cb17-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-261"><a href="#cb17-261" aria-hidden="true" tabindex="-1"></a>Based on this analysis, we do not yet know between which particular</span>
+<span id="cb17-262"><a href="#cb17-262" aria-hidden="true" tabindex="-1"></a>groups there is a significant difference. To assess this, we will</span>
+<span id="cb17-263"><a href="#cb17-263" aria-hidden="true" tabindex="-1"></a>perfrom the Tuckey post-hoc analysis.</span>
+<span id="cb17-264"><a href="#cb17-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-265"><a href="#cb17-265" aria-hidden="true" tabindex="-1"></a><span class="fu">## Post-hoc analysis</span></span>
+<span id="cb17-266"><a href="#cb17-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-267"><a href="#cb17-267" aria-hidden="true" tabindex="-1"></a>We will perform a post-hoc analysis to look at the difference</span>
+<span id="cb17-268"><a href="#cb17-268" aria-hidden="true" tabindex="-1"></a>in fresweigth between each pairwise comparison of treatment groups.</span>
+<span id="cb17-269"><a href="#cb17-269" aria-hidden="true" tabindex="-1"></a>Importantly, with this strategy, the p-values will be automatically</span>
+<span id="cb17-270"><a href="#cb17-270" aria-hidden="true" tabindex="-1"></a>adjusted for multiple testing.</span>
+<span id="cb17-271"><a href="#cb17-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-272"><a href="#cb17-272" aria-hidden="true" tabindex="-1"></a>The null hypothesis for each pairwise test is that</span>
+<span id="cb17-273"><a href="#cb17-273" aria-hidden="true" tabindex="-1"></a>$H0$ there is no difference in the average freshweight values between</span>
+<span id="cb17-274"><a href="#cb17-274" aria-hidden="true" tabindex="-1"></a>both groups.</span>
+<span id="cb17-275"><a href="#cb17-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-276"><a href="#cb17-276" aria-hidden="true" tabindex="-1"></a>The alternative hypothesis for each pairwise test states that</span>
+<span id="cb17-277"><a href="#cb17-277" aria-hidden="true" tabindex="-1"></a>$HA$ there is indeed a difference in the average freshweight values</span>
+<span id="cb17-278"><a href="#cb17-278" aria-hidden="true" tabindex="-1"></a>between both groups.</span>
+<span id="cb17-279"><a href="#cb17-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-282"><a href="#cb17-282" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-283"><a href="#cb17-283" aria-hidden="true" tabindex="-1"></a>mcp <span class="ot">&lt;-</span> <span class="fu">glht</span>(fit, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">treatment =</span> <span class="st">"Tukey"</span>))</span>
+<span id="cb17-284"><a href="#cb17-284" aria-hidden="true" tabindex="-1"></a>mcp_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(mcp)</span>
+<span id="cb17-285"><a href="#cb17-285" aria-hidden="true" tabindex="-1"></a>mcp_summary</span>
+<span id="cb17-286"><a href="#cb17-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-287"><a href="#cb17-287" aria-hidden="true" tabindex="-1"></a><span class="co"># We will also calculate the confidence interval on the mean differences.</span></span>
+<span id="cb17-288"><a href="#cb17-288" aria-hidden="true" tabindex="-1"></a>mcp_confint <span class="ot">&lt;-</span> <span class="fu">confint</span>(mcp)</span>
+<span id="cb17-289"><a href="#cb17-289" aria-hidden="true" tabindex="-1"></a>mcp_confint</span>
+<span id="cb17-290"><a href="#cb17-290" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-291"><a href="#cb17-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-292"><a href="#cb17-292" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conclusion</span></span>
+<span id="cb17-293"><a href="#cb17-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-294"><a href="#cb17-294" aria-hidden="true" tabindex="-1"></a>We have found an extremely significant dependence</span>
+<span id="cb17-295"><a href="#cb17-295" aria-hidden="true" tabindex="-1"></a>(p-value = <span class="in">`r round(fit_anova$"Pr(&gt;F)"[1],digits=12)`</span>),</span>
+<span id="cb17-296"><a href="#cb17-296" aria-hidden="true" tabindex="-1"></a>between the mean freshweigth and the treatment condition</span>
+<span id="cb17-297"><a href="#cb17-297" aria-hidden="true" tabindex="-1"></a>on the global 5% significance level.</span>
+<span id="cb17-298"><a href="#cb17-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-299"><a href="#cb17-299" aria-hidden="true" tabindex="-1"></a>The mean freshweight of plants grown with compost is extremely</span>
+<span id="cb17-300"><a href="#cb17-300" aria-hidden="true" tabindex="-1"></a>significantly higher as compared to in control plants (Tuckey test,</span>
+<span id="cb17-301"><a href="#cb17-301" aria-hidden="true" tabindex="-1"></a>adjusted p-value &lt; 0.0001, 20.9g higher, 95% CI: <span class="co">[</span><span class="ot">13.2; 28.5</span><span class="co">]</span>)</span>
+<span id="cb17-302"><a href="#cb17-302" aria-hidden="true" tabindex="-1"></a>and as compared to refoak plants (Tuckey test, adjusted</span>
+<span id="cb17-303"><a href="#cb17-303" aria-hidden="true" tabindex="-1"></a>p-value &lt; 0.0001, 22.7g higher, 95% CI: <span class="co">[</span><span class="ot">15.1; 30.3</span><span class="co">]</span>).</span>
+<span id="cb17-304"><a href="#cb17-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-305"><a href="#cb17-305" aria-hidden="true" tabindex="-1"></a>The mean freshweight of plants grown with cobc is extremely</span>
+<span id="cb17-306"><a href="#cb17-306" aria-hidden="true" tabindex="-1"></a>significantly higher as compared to in control plants (Tuckey test,</span>
+<span id="cb17-307"><a href="#cb17-307" aria-hidden="true" tabindex="-1"></a>adjusted p-value &lt; 0.0001, 16.1g higher, 95% CI: <span class="co">[</span><span class="ot">8.5; 23.8</span><span class="co">]</span>)</span>
+<span id="cb17-308"><a href="#cb17-308" aria-hidden="true" tabindex="-1"></a>and as compared to refoak plants (Tuckey test, adjusted</span>
+<span id="cb17-309"><a href="#cb17-309" aria-hidden="true" tabindex="-1"></a>p-value &lt; 0.0001, 18.0g higher, 95% CI: <span class="co">[</span><span class="ot">10.4; 25.6</span><span class="co">]</span>).</span>
+<span id="cb17-310"><a href="#cb17-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-311"><a href="#cb17-311" aria-hidden="true" tabindex="-1"></a>We do not find enough evidence to claim a difference in mean</span>
+<span id="cb17-312"><a href="#cb17-312" aria-hidden="true" tabindex="-1"></a>freshweight between refoak and control plants or between cobc</span>
+<span id="cb17-313"><a href="#cb17-313" aria-hidden="true" tabindex="-1"></a>and compost plants.</span>
+<span id="cb17-314"><a href="#cb17-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-315"><a href="#cb17-315" aria-hidden="true" tabindex="-1"></a>We may conclude that supplementing soil with compost or with</span>
+<span id="cb17-316"><a href="#cb17-316" aria-hidden="true" tabindex="-1"></a>both compost and biochar will have a positive effect on the</span>
+<span id="cb17-317"><a href="#cb17-317" aria-hidden="true" tabindex="-1"></a>freshweigth of lettuce plants.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
 
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
-</body>
-</html>
+
+</body></html>

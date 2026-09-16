@@ -1,0 +1,21 @@
+{
+  "hash": "679cf6d4ac5b79e2cb2dee494783add2",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Exercise 4.4: Exploring the FEV dataset\"\nauthor: \"Lieven Clement, Jeroen Gilis and Milan Malfait\"\nsubtitle: \"statOmics, Ghent University (https://statomics.github.io)\"\n---\n\n# Aims of this exercise\n\nIn this exercise, you will learn how data exploration and plots can help you to discover confounding in a real datasets.\n\nYou will also improve your data wrangling skills by importing, tidying, wrangling and visualizing data yourself.\n\n\n# The FEV dataset\n\nThe `forced expiratory volume` (FEV)\nis a measure of how much air a person can exhale (in liters)\nduring  a forced breath. In this dataset, the FEV of 606 children,\nbetween the ages of 6 and 17, were measured. The dataset\nalso provides additional information on these children:\ntheir `age`, their `height`, their `gender` and, most\nimportantly, whether the child is a smoker or a non-smoker.\n\nThe goal of this experiment was to find out whether or not\nsmoking has an effect on the FEV of children.\n\nNote: to analyse this dataset properly, we will need some\nrelatively advanced modeling techniques. At the end of this\nweek, you will have seen all three required steps to analyse\nsuch a dataset! For now, we will limit ourselves to exploring\nthe data.\n\n# Load libraries\n\nIf you do not have these libraries installed, make sure to install them first\nby using the `install.packages()` function with missing the package name inside\nthe parentheses (and using quotation marks, like `install.packages(\"car\")`)\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(readr)\nlibrary(dplyr)\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(car)\n```\n:::\n\n\n# Import the data\n\nData path:\n\n`https://raw.githubusercontent.com/statOmics/PSLSData/main/fev.txt`\n\nNote: `fev.txt` is a tab-separated file: make sure to select the correct `readr`\nfunction!\n\n\n::: {.cell}\n\n```{.r .cell-code}\n...\n```\n:::\n\n\nHave a first look at the data\n\n\n::: {.cell}\n\n```{.r .cell-code}\n...\n```\n:::\n\n\n\nThere are a few things in the formatting of the\ndata that can be improved:\n\n1. Both `gender` and `smoking` can be transformed to factors.\n\n2. The `height` variable is written in inches. Assuming that\nthis audience is mainly Portuguese/Belgian, inches are hard to\ninterpret. Let's add a new column, `height_cm`, with the values\nconverted to centimeters.\n\n\n::: {.cell}\n\n```{.r .cell-code}\n...\n```\n:::\n\n\nNow, let's make a first explorative plot, showing\nonly the FEV for both smoking categories.\n\nWhich type of plot do you suggest? Generate a good-looking,\ninformative representation of the data.\n\n\n::: {.cell}\n\n```{.r .cell-code}\n...\n```\n:::\n\n\nDid you expect these results?\n\nMaybe there is something else going on in the data.\nBy taking more of the information in the dataset into account, can\nyou provide a more detailed/accurate visualizition of the\nvariables that effect the FEV?\n\n\n::: {.cell}\n\n```{.r .cell-code}\n...\n\n\n## Try to get a visualization that describes the data as good as possible!!\n\n\n\n...\n```\n:::\n\n",
+    "supporting": [
+      "04_4_FEV_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

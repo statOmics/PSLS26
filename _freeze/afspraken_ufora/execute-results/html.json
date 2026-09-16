@@ -1,0 +1,21 @@
+{
+  "hash": "0016e1d3ef004e93de812d0893d6b5d8",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Organisation curse Practical Statistics for the Life Sciences\"\nauthor: \"Lieven Clement\"\nsubtitle: \"statOmics, Ghent University (https://statomics.github.io)\"\nformat:\n  html:\n    theme: cosmo\n    toc: true\n    highlight-style: tango\n    number-sections: false\n---\n\n\n\n\n# Course Practical Statistics for the Life Sciences\n\n- Course material via [https://statomics.github.io/PSLS25/](https://statomics.github.io/PSLS25/)\n\n\n## Lectures\n\n\n- Goal: Statistical Literacy\n- 1 Lecture block on Wednesday @ 8u30\n- Lecture room 0.2. S8. Campus Sterre. \n\n\n\n\n## On campus PC tutorials\n\n  - Three lecture blocks on Tuesday Morning / Afternoon\n  - Goal: get insight in statistics by conducting data analysis \n  - Introduction to statistical software R\n  - Week 2-3: Introduction to R\n      - [https://dodona.be/nl/courses/5450/](https://dodona.be/nl/courses/5450/)\n  - Week 4-12: PSLS exercises \n      - [https://statomics.github.io/PSLS25/](https://statomics.github.io/PSLS25/)\n\n## Contact \n\n  - Theory: Lieven Clement (email: lieven.clement@ugent.be)\n  - Exercises: Nele De Meester (email: nele.demeester@ugent.be)\n\n## Non-periodical evaluation\n\n  - Non-periodical evaluation: 5/20\n  - Project work and writing conclusion sections \n  - Evaluate R skills and interpretation of output\n  - Project work and submitting conclusion sections is mandatory. If you do not participate in projectwork you can get at most 7/20 for the course\n\n## Periodical evaluation\n\n  - Open book exam: 15/20\n      - Assesses insight and logical reasoning \n      - Analysis of statistical output and results of scientific publications\n      - Emphasis on interpretation rather than on calculation \n      - Exercises\n \n\n## Feedback\n\n  - Upon subscription\n  - Date to be announced\n",
+    "supporting": [
+      "afspraken_ufora_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

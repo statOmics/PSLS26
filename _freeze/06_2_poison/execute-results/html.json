@@ -1,0 +1,21 @@
+{
+  "hash": "d1f3854661014f5196833627e84a5ad7",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Exercise 6.1: Linear regression on the fish tank dataset\"\nauthor: \"Lieven Clement, Jeroen Gilis and Milan Malfait\"\nsubtitle: \"statOmics, Ghent University (https://statomics.github.io)\"\n---\n\n# Fish tank dataset\n\nIn this experiment, 96 fish (dojofish, goldfish and zebrafish)\nwere placed separately in a tank with two litres of water and\na certain dose (in mg) of a certain poison EI-43,064. The resistance\nof the fish a against the poison was measured as the amount of\nminutes the fish survived upon adding the poison (Surv_time, in\nminutes). Additionally, the weight of each fish was measured.\n\n# Goal\n\nThe research goal is to study the association between the dose of\nthe poison that was administered to the fish and their\nsurvival time by using a linear regression model.\n\n\nRead the required libraries\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tidyverse)\n```\n:::\n\n\n# Import the data\n\n\n::: {.cell}\n\n```{.r .cell-code}\npoison <- read_csv(\"https://raw.githubusercontent.com/statOmics/PSLSData/main/poison.csv\")\n```\n:::\n\n\n# Data tidying\n\nWe can see a couple of things in the data that can be improved:\n\n1. Capitalise the fist column name\n\n2. Set the Species column as a factor\n\n3. Change the species factor levels from 0, 1 and 2 to\nDojofish, Goldfish and Zebrafish. *Hint*: use the `fct_recode` function.\n\n\n::: {.cell}\n\n:::\n\n\n# Data Exploration and Descriptive Statistics\n\nHow many fish do we have per species?\n\n\n::: {.cell}\n\n:::\n\n\nWhich variables might influence survival? Make a suitable visualisation of the\nassociation between the dose and the survival time.\n\n\n::: {.cell}\n\n:::\n\n\n# Important note on the dataset\n\nIn this dataset, there are multiple variables can have an effect on the survival\ntime of the fish. The most obvious one is the dose of poison that was\nadministered (as displayed above). However, we could also imagine that heavier\nfish are less prone to the poison than light fish. Additionally, one fish\nspecies may be more resistant to the poison.\n\nTo correctly analyse this data, all these factors should be taken into account.\nHowever, modeling the response based on multiple predictors will only be\ndiscussed later in this course. **For now, we will simply ignore the potential**\n**effect of weigth and species on the survival time of the fish.** Hence, we\nonly consider the effect of the poison `dosage`. This allows us to analyze\nthe data using simple linear regression, **but please bear in mind that**\n**not taking into account thesee other factors will invalidate our analysis.**\nLater in the course, we will come back to this dataset and perform a correct\nanalysis that takes into acount all relevant predictors.\n\n# Linear regression\n\nIn order to get familiar with simple linear regression\n\n1. Check the assumptions\n\n2. Interpret the model parameters of the linear model\n\n3. Interpret the results, both for the intercept as well as for the slope\n\n4. Write a conclusion that answers the research hypothesis.\n",
+    "supporting": [
+      "06_2_poison_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

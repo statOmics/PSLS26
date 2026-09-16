@@ -1,0 +1,158 @@
+---
+title: "Exercises on chapter 5: Statistical inference"
+author: "Lieven Clement, Jeroen Gilis and Milan Malfait"
+subtitle: "statOmics, Ghent University (https://statomics.github.io)"
+format:
+  html:
+    code-tools: false
+
+---
+
+In this hands-on tutorial session you will perform four exercises on statistical inference based on
+4 different studies:
+
+* [Diabetes example]
+* [Pertussis example]
+* [Cuckoo example]
+* [Shrimps example]
+
+# Diabetes example
+
+The diabetes dataset consists of a small experiment with 8 patients
+that were subjected to a glucose tolerance test.
+
+Patients had to fast for eight hours before the test.
+When the patients entered the hospital their baseline glucose level was measured (mmol/l).
+
+Patients then  had to drink 250 ml of a syrupy glucose solution containing 100 grams of sugar.
+Two hours later, their blood glucose level was measured again.
+
+The data consist of three variables:
+
+- before: glucose concentration upon 8 hours of fasting (mmol/l)
+- after: glucose concentration 2 hours after drinking glucose solution (mmol/l).
+- patient: identifier for the patient
+
+In this exercise, you will revisit the basics of statistical  hypothesis testing. You will acquire the skills
+
+1. to assess the assumptions of a one-sample and a paired t-test in a data exploration.
+2. to conduct a one-sample t-test in R and to interpret the results.
+3. to conduct a paired t-test in R and to interpret the results.
+
+
+Files:
+
+- Exercise: [Exercise1](./05_1_diabetes.html)
+- Data path:
+
+  `https://raw.githubusercontent.com/statOmics/PSLSData/main/diabetes.txt`
+
+<!--
+- Solution: [Solution1](./05_1_diabetes_sol.html)
+<!---->
+
+---
+
+# Pertussis example
+
+Researchers wanted to study the immune response on pertussis.
+They have set up an experiments with 40 rats.
+16 rats were infected with pertussis and 24 rats received a control treatment.
+Researchers measured the white blood cell concentration (WBC) in each rat (count per mm$^3$).
+
+The data consist of two variables:
+
+- WBC: white blood cell count (counts/mm$^3$).
+- trt: treatment
+
+    - control: rat recieved control treatment
+    - pertussis: rat was infected with pertussis
+
+Upon this exercise you can
+
+
+1. conduct a statistical hypothesis test for a two group comparison in R and to interpret the results.
+2. critically evaluate the assumptions for a two sample t-test
+3. use simulations to assist you when evaluating the assumptions of a two group comparison
+4. select the correct test based on the data exploration.
+
+
+Files
+
+- Exercise: [Exercise2](./05_2_pertussis.html)
+- Data path:
+
+  `https://raw.githubusercontent.com/statOmics/PSLSData/main/wbcon.csv`
+
+<!--
+- Solution: [Solution2](./05_2_pertussis_sol.html)
+<!---->
+
+---
+
+Two-sample t-test: [armpit example](05_armpit_example.html)
+
+---
+
+# Cuckoo example
+
+The common cuckoo does not build its own nest: it prefers to lay its eggs in
+another birds' nest. It is known, since 1892, that the type of cuckoo bird eggs
+are different between different locations. In a study from 1940, it was shown
+that cuckoos return to the same nesting area each year, and that they always
+pick the same bird species to be a "foster parent" for their eggs.
+
+Over the years, this has lead to the development of geographically determined
+subspecies of cuckoos. These subspecies have evolved in such a way that their
+eggs look as similar as possible as those of their foster parents.
+
+The cuckoo dataset contains information on 120 Cuckoo eggs, obtained from
+randomly selected "foster" nests. The researchers want to test if the type of
+foster parent has an effect on the average length of the cuckoo eggs.
+
+In this tutorial you will further sharpen your skills in
+
+1. data wrangling
+2. formulating the null and alternative hypothesis of t-tests
+3. critically evaluating the assumptions of t-tests,
+4. selecting the appropriate test for answering the research question, and
+5. formulating your conclusion in terms of the research question.
+
+Files:
+
+- Exercise: [Exercise3](./05_3_cuckoo.html)
+- Data path:
+
+  `https://raw.githubusercontent.com/statOmics/PSLSData/main/Cuckoo.txt`
+
+<!--
+- Solution: [Solution3](./05_3_cuckoo_sol.html)
+<!---->
+
+---
+
+# Shrimps example
+
+Dataset on the accumulation of PCBs (Polychlorinated biphenyls)
+in the adipose tissue of shrimps. PCBs are often present in coolants, and are
+know to accumulate easily in the adipose tissue of shrimps. In this experiment,
+two groups of 18 samples (each 100 grams) of shrimps each were cultivated
+in different conditions, one control condition and one condition
+where the medium was poluted with PCBs.
+
+The research question is to assess if there an effect of the growth condition on the PCB concentration in the adipose tissue of shrimps?
+
+This exercise aims to further sharpen your skills in
+
+- translating the research question in a a null and alternative hypothesis of t-tests
+- critically evaluating the assumptions of t-tests, and
+- selecting the appropriate test for answering the research question.
+
+- Exercise: [Exercise4](./05_4_shrimps.html)
+- Data path:
+
+  `https://raw.githubusercontent.com/statOmics/PSLSData/main/shrimps.txt`
+
+<!--
+- Solution: [Solution4](./05_4_shrimps_sol.html)
+<!---->

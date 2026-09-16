@@ -1,67 +1,33 @@
 <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<html>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
 
-<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta name="author" content="Lieven Clement">
 
-
-<meta name="author" content="Lieven Clement" />
-
-
-<title>9. Nonparametric Statistics - Wilcoxon-Mann-Withney test</title>
-
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
-<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<style>h1 {font-size: 34px;}
-       h1.title {font-size: 38px;}
-       h2 {font-size: 30px;}
-       h3 {font-size: 24px;}
-       h4 {font-size: 18px;}
-       h5 {font-size: 16px;}
-       h6 {font-size: 12px;}
-       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
-       pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
-<script src="site_libs/navigation-1.1/sourceembed.js"></script>
-<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
-
-
-
-<style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
-</style>
-<style type="text/css" data-origin="pandoc">
+<title>9. Nonparametric Statistics - Wilcoxon-Mann-Withney test – PSLS26 - Practical Statistics for the Life Sciences</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -72,7 +38,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -86,478 +52,297 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
-  {  background-color: #f8f8f8; }
+  {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ef2929; } /* Alert */
-code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #204a87; } /* Attribute */
-code span.bn { color: #0000cf; } /* BaseN */
-code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4e9a06; } /* Char */
-code span.cn { color: #8f5902; } /* Constant */
-code span.co { color: #8f5902; font-style: italic; } /* Comment */
-code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code span.dt { color: #204a87; } /* DataType */
-code span.dv { color: #0000cf; } /* DecVal */
-code span.er { color: #a40000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #0000cf; } /* Float */
-code span.fu { color: #204a87; font-weight: bold; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code span.ot { color: #8f5902; } /* Other */
-code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
-code span.ss { color: #4e9a06; } /* SpecialString */
-code span.st { color: #4e9a06; } /* String */
-code span.va { color: #000000; } /* Variable */
-code span.vs { color: #4e9a06; } /* VerbatimString */
-code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-
-.sourceCode .row {
-  width: 100%;
-}
-.sourceCode {
-  overflow-x: auto;
-}
-.code-folding-btn {
-  margin-right: -30px;
-}
 </style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    var j = 0;
-    while (j < rules.length) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
-        j++;
-        continue;
-      }
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') {
-        j++;
-        continue;
-      }
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f79c7fb6db380d32be398468f2fb58cf.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-2c9dadc89b91d1343c807e0fac51702d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
-})();
-</script>
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
-
-<style type="text/css">
-#rmd-source-code {
-  display: none;
-}
-</style>
-
-
-<link rel="stylesheet" href="style.css" type="text/css" />
-
-
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-img {
-  max-width:100%;
-}
-.tabbed-pane {
-  padding-top: 12px;
-}
-.html-widget {
-  margin-bottom: 20px;
-}
-button.code-folding-btn:focus {
-  outline: none;
-}
-summary {
-  display: list-item;
-}
-details > summary > p:only-child {
-  display: inline;
-}
-pre code {
-  padding: 0;
-}
-</style>
-
-
-<style type="text/css">
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  border-radius: 0 6px 6px 6px;
-}
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #cccccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-.dropdown-submenu:hover>a:after {
-  border-left-color: #adb5bd;
-}
-.dropdown-submenu.pull-left {
-  float: none;
-}
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  border-radius: 6px 0 6px 6px;
-}
-</style>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-// manage active state of menu based on current page
-$(document).ready(function () {
-  // active menu anchor
-  href = window.location.pathname
-  href = href.substr(href.lastIndexOf('/') + 1)
-  if (href === "")
-    href = "index.html";
-  var menuAnchor = $('a[href="' + href + '"]');
-
-  // mark the anchor link active (and if it's in a dropdown, also mark that active)
-  var dropdown = menuAnchor.closest('li.dropdown');
-  if (window.bootstrap) { // Bootstrap 4+
-    menuAnchor.addClass('active');
-    dropdown.find('> .dropdown-toggle').addClass('active');
-  } else { // Bootstrap 3
-    menuAnchor.parent().addClass('active');
-    dropdown.addClass('active');
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
   }
-
-  // Navbar adjustments
-  var navHeight = $(".navbar").first().height() + 15;
-  var style = document.createElement('style');
-  var pt = "padding-top: " + navHeight + "px; ";
-  var mt = "margin-top: -" + navHeight + "px; ";
-  var css = "";
-  // offset scroll position for anchor links (for fixed navbar)
-  for (var i = 1; i <= 6; i++) {
-    css += ".section h" + i + "{ " + pt + mt + "}\n";
-  }
-  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
-  document.head.appendChild(style);
-});
+}
+window.Quarto = {
+  typesetMath
+};
 </script>
 
-<!-- tabsets -->
-
-<style type="text/css">
-.tabset-dropdown > .nav-tabs {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "\e259";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "\e258";
-  font-family: 'Glyphicons Halflings';
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs > li.active {
-  display: block;
-}
-
-.tabset-dropdown > .nav-tabs > li > a,
-.tabset-dropdown > .nav-tabs > li > a:focus,
-.tabset-dropdown > .nav-tabs > li > a:hover {
-  border: none;
-  display: inline-block;
-  border-radius: 4px;
-  background-color: transparent;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
-  display: block;
-  float: none;
-}
-
-.tabset-dropdown > .nav-tabs > li {
-  display: none;
-}
-</style>
-
-<!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
-
-
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
-
+<link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="floating nav-fixed quarto-light">
 
-
-<div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
-
-
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html"></a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">PSLS26 - Practical Statistics for the Life Sciences</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-easel" role="img">
+</i> 
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
         <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-  </a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-chalkboard-teacher"></span>
-     
-    Topics
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="01-intro.html">1. Introduction</a>
-    </li>
-    <li>
-      <a href="02-concepts.html">2. Concepts</a>
-    </li>
-    <li>
-      <a href="03-experimentalDesign.html">3. Experimental Design I</a>
-    </li>
-    <li>
-      <a href="04-dataExploration.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference.html">5.1 Statistical Inference 1</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference-twosampleT.html">5.2 Statistical Inference 2</a>
-    </li>
-    <li>
-      <a href="06-linearRegression.html">6. Linear Regression</a>
-    </li>
-    <li>
-      <a href="07-Anova.html">7. Analysis of Variance</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression.html">8. Multiple Regression</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression-SpecificDesigns.html">8.2 Multiple Regression: Factorial Designs</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign2.html">8.3. Experimental Design II</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign3.html">8.4. Experimental Design III</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-WilcoxonMannWithney.html">9.1. Nonparametric Statistics 1</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-KruskalWallis.html">9.2. Nonparametric Statistics 2</a>
-    </li>
-    <li>
-      <a href="10-categoricalDataAnalysis.html">10. Categorical Data Analysis</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-laptop"></span>
-     
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="04_exercises.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05_exercises.html">5. Statistical inference</a>
-    </li>
-    <li>
-      <a href="06_exercises.html">6. Simple linear regression</a>
-    </li>
-    <li>
-      <a href="07_exercises.html">7. ANOVA</a>
-    </li>
-    <li>
-      <a href="08_exercises.html">8. Multiple linear regression</a>
-    </li>
-    <li>
-      <a href="09_exercises.html">9. Non-parametric statistics</a>
-    </li>
-  </ul>
-</li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
+    <a class="dropdown-item" href="./01-intro.html">
+ <span class="dropdown-text">1. Introduction</span></a>
+  </li>  
         <li>
-  <a href="http://statomics.github.io/">statOmics</a>
-</li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container -->
-</div><!--/.navbar -->
-
-<div id="header">
-
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-<li role="separator" class="divider"></li>
-<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+    <a class="dropdown-item" href="./02-concepts.html">
+ <span class="dropdown-text">2. Concepts</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-experimentalDesign.html">
+ <span class="dropdown-text">3. Experimental Design I</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-dataExploration.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference.html">
+ <span class="dropdown-text">5.1 Statistical Inference 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference-twosampleT.html">
+ <span class="dropdown-text">5.2 Statistical Inference 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06-linearRegression.html">
+ <span class="dropdown-text">6. Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07-Anova.html">
+ <span class="dropdown-text">7. Analysis of Variance</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression.html">
+ <span class="dropdown-text">8. Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression-SpecificDesigns.html">
+ <span class="dropdown-text">8.2 Multiple Regression: Factorial Designs</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign2.html">
+ <span class="dropdown-text">8.3. Experimental Design II</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign3.html">
+ <span class="dropdown-text">8.4. Experimental Design III</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-WilcoxonMannWithney.html">
+ <span class="dropdown-text">9.1. Nonparametric Statistics 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-KruskalWallis.html">
+ <span class="dropdown-text">9.2. Nonparametric Statistics 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./10-categoricalDataAnalysis.html">
+ <span class="dropdown-text">10. Categorical Data Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-exercises" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-laptop" role="img">
+</i> 
+ <span class="menu-text">Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-exercises">    
+        <li>
+    <a class="dropdown-item" href="./04_exercises.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05_exercises.html">
+ <span class="dropdown-text">5. Statistical inference</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06_exercises.html">
+ <span class="dropdown-text">6. Simple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07_exercises.html">
+ <span class="dropdown-text">7. ANOVA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08_exercises.html">
+ <span class="dropdown-text">8. Multiple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09_exercises.html">
+ <span class="dropdown-text">9. Non-parametric statistics</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="http://statomics.github.io/"> 
+<span class="menu-text">statOmics</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#cholesterol-example" id="toc-cholesterol-example" class="nav-link" data-scroll-target="#cholesterol-example"><span class="header-section-number">1.1</span> Cholesterol example</a></li>
+  </ul></li>
+  <li><a href="#rank-tests" id="toc-rank-tests" class="nav-link" data-scroll-target="#rank-tests"><span class="header-section-number">2</span> Rank Tests</a></li>
+  <li><a href="#ranks" id="toc-ranks" class="nav-link" data-scroll-target="#ranks"><span class="header-section-number">3</span> Ranks</a>
+  <ul class="collapse">
+  <li><a href="#ties" id="toc-ties" class="nav-link" data-scroll-target="#ties"><span class="header-section-number">3.1</span> Ties</a></li>
+  <li><a href="#ranks-of-pooled-sample" id="toc-ranks-of-pooled-sample" class="nav-link" data-scroll-target="#ranks-of-pooled-sample"><span class="header-section-number">3.2</span> Ranks of pooled sample</a></li>
+  </ul></li>
+  <li><a href="#wilcoxon-mann-whitney-test" id="toc-wilcoxon-mann-whitney-test" class="nav-link" data-scroll-target="#wilcoxon-mann-whitney-test"><span class="header-section-number">4</span> Wilcoxon-Mann-Whitney Test</a>
+  <ul class="collapse">
+  <li><a href="#hypotheses" id="toc-hypotheses" class="nav-link" data-scroll-target="#hypotheses"><span class="header-section-number">4.1</span> Hypotheses</a></li>
+  <li><a href="#test-statistic" id="toc-test-statistic" class="nav-link" data-scroll-target="#test-statistic"><span class="header-section-number">4.2</span> Test statistic</a></li>
+  <li><a href="#standardized-statistic" id="toc-standardized-statistic" class="nav-link" data-scroll-target="#standardized-statistic"><span class="header-section-number">4.3</span> Standardized statistic</a></li>
+  <li><a href="#cholesterol-example-1" id="toc-cholesterol-example-1" class="nav-link" data-scroll-target="#cholesterol-example-1"><span class="header-section-number">4.4</span> Cholesterol example</a></li>
+  <li><a href="#mann-and-whitney-test" id="toc-mann-and-whitney-test" class="nav-link" data-scroll-target="#mann-and-whitney-test"><span class="header-section-number">4.5</span> Mann and Whitney test</a></li>
+  <li><a href="#probabilistic-index" id="toc-probabilistic-index" class="nav-link" data-scroll-target="#probabilistic-index"><span class="header-section-number">4.6</span> Probabilistic index</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">4.7</span> Conclusion</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="09-NonparametericStatistics-WilcoxonMannWithney.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">9. Nonparametric Statistics - Wilcoxon-Mann-Withney test</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<p class="subtitle lead">statOmics, Ghent University (https://statomics.github.io)</p>
 </div>
 
 
 
-<h1 class="title toc-ignore">9. Nonparametric Statistics - Wilcoxon-Mann-Withney test</h1>
-<h4 class="author">Lieven Clement</h4>
-<h4 class="date">statOmics, Ghent University (<a href="https://statomics.github.io" class="uri">https://statomics.github.io</a>)</h4>
+<div class="quarto-title-meta">
 
-</div>
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lieven Clement </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
 
 
-<p><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a></p>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/W7Jou4ZY8Vg?si=YVGWEeM7PaEtQmcZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+</header>
+
+
+<p><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/W7Jou4ZY8Vg?si=YVGWEeM7PaEtQmcZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
 </iframe>
-<div id="introduction" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Introduction</h1>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
 <p>Inference was only correct if distributional assumptions were satisfied</p>
 <ul>
 <li><p>e.g Normal distribution</p></li>
@@ -575,9 +360,9 @@ div.tocify {
 <li>more flexible: easier to analyse data with complex designs</li>
 </ul></li>
 </ul>
-<hr />
-<div id="cholesterol-example" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> Cholesterol example</h2>
+<hr>
+<section id="cholesterol-example" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="cholesterol-example"><span class="header-section-number">1.1</span> Cholesterol example</h2>
 <ul>
 <li>Cholesterol concentration in blood measured for
 <ul>
@@ -586,26 +371,48 @@ div.tocify {
 </ul></li>
 <li>Is cholesterol concentration of hart patients and healthy subjects on average different?</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>chol <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">&quot;https://raw.githubusercontent.com/GTPB/PSLS20/master/data/chol.txt&quot;</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>chol<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(chol<span class="sc">$</span>group)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>nGroups <span class="ot">&lt;-</span> <span class="fu">table</span>(chol<span class="sc">$</span>group)</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">sum</span>(nGroups)</span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>chol</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>chol <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"https://raw.githubusercontent.com/GTPB/PSLS20/master/data/chol.txt"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>chol<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(chol<span class="sc">$</span>group)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>nGroups <span class="ot">&lt;-</span> <span class="fu">table</span>(chol<span class="sc">$</span>group)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">sum</span>(nGroups)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>chol</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["group"],"name":[1],"type":["fct"],"align":["left"]},{"label":["cholest"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"244"},{"1":"1","2":"206"},{"1":"1","2":"242"},{"1":"1","2":"278"},{"1":"1","2":"236"},{"1":"2","2":"188"},{"1":"2","2":"212"},{"1":"2","2":"186"},{"1":"2","2":"198"},{"1":"2","2":"160"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<hr />
-<p><img src="09-NonparametericStatistics-WilcoxonMannWithney_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /><img src="09-NonparametericStatistics-WilcoxonMannWithney_files/figure-html/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<hr>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="09-NonparametericStatistics-WilcoxonMannWithney_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="09-NonparametericStatistics-WilcoxonMannWithney_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <ul>
 <li>Possibly outliers</li>
 <li>Difficult to assess distributional assumptions when only 5 observations are available.</li>
 </ul>
-</div>
-</div>
-<div id="rank-tests" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Rank Tests</h1>
+</section>
+</section>
+<section id="rank-tests" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Rank Tests</h1>
 <ul>
 <li>Important group of non-parametric test
 <ul>
@@ -616,68 +423,101 @@ div.tocify {
 <li>Robust to outliers</li>
 </ul></li>
 </ul>
-<hr />
-</div>
-<div id="ranks" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Ranks</h1>
+<hr>
+</section>
+<section id="ranks" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Ranks</h1>
 <p>Rank tests start from rank-transformed data.</p>
 <ul>
 <li>Let <span class="math inline">\(Y_1, \ldots, Y_n\)</span>.</li>
-<li>In the absence of <em>ties</em>
-<span class="math display">\[R_i=R(Y_i) = \#\{Y_j: Y_j\leq Y_i; j=1,\ldots, n\}\]</span></li>
+<li>In the absence of <em>ties</em> <span class="math display">\[R_i=R(Y_i) = \#\{Y_j: Y_j\leq Y_i; j=1,\ldots, n\}\]</span></li>
 <li>Smallest observation has rank 1, second smallest rank 2, … , largest observation gets rank <span class="math inline">\(n\)</span></li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>chol<span class="sc">$</span>cholest</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>chol<span class="sc">$</span>cholest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code> [1] 244 206 242 278 236 188 212 186 198 160</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">rank</span>(chol<span class="sc">$</span>cholest)</span></code></pre></div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rank</span>(chol<span class="sc">$</span>cholest)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code> [1]  9  5  8 10  7  3  6  2  4  1</code></pre>
-<hr />
-<div id="ties" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Ties</h2>
+</div>
+</div>
+<hr>
+<section id="ties" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="ties"><span class="header-section-number">3.1</span> Ties</h2>
 <p>Sometimes <em>ties</em> occur: two observations with identical values</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>withTies <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">403</span>, <span class="dv">507</span>, <span class="dv">507</span>, <span class="dv">610</span>, <span class="dv">651</span>, <span class="dv">651</span>, <span class="dv">651</span>, <span class="dv">830</span>, <span class="dv">900</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">rank</span>(withTies)</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>withTies <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">403</span>, <span class="dv">507</span>, <span class="dv">507</span>, <span class="dv">610</span>, <span class="dv">651</span>, <span class="dv">651</span>, <span class="dv">651</span>, <span class="dv">830</span>, <span class="dv">900</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rank</span>(withTies)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.0 2.5 2.5 4.0 6.0 6.0 6.0 8.0 9.0</code></pre>
+</div>
+</div>
 <ul>
 <li><p>Ties: 507 occurs twice, 651 occurs 3 times</p></li>
 <li><p>If ties occur <em>midranks</em> are used.</p></li>
-<li><p><strong>midrank</strong> of observation <span class="math inline">\(Y_i\)</span> becomes
-<span class="math display">\[\begin{eqnarray*}
+<li><p><strong>midrank</strong> of observation <span class="math inline">\(Y_i\)</span> becomes <span class="math display">\[\begin{eqnarray*}
 R_i &amp;=&amp; \frac{ \#\{Y_j: Y_j\leq Y_i\} + ( \#\{Y_j: Y_j &lt; Y_i\} +1)}{2}.
 \end{eqnarray*}\]</span></p></li>
 </ul>
-<hr />
-</div>
-<div id="ranks-of-pooled-sample" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Ranks of pooled sample</h2>
+<hr>
+</section>
+<section id="ranks-of-pooled-sample" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="ranks-of-pooled-sample"><span class="header-section-number">3.2</span> Ranks of pooled sample</h2>
 <ul>
 <li>Let <span class="math inline">\(Y_{ij}\)</span>, <span class="math inline">\(i=1,\ldots, n_j\)</span> be observations from two treatment groups <span class="math inline">\(j=1,2\)</span>.</li>
 <li>They can also be represented by <span class="math inline">\(Z_1,\ldots, Z_n\)</span> (<span class="math inline">\(n=n_1+n_2\)</span>), the outcomes of the pooled sample</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">t</span>(chol)</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(chol)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>        [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9]  [,10]
-group   &quot;1&quot;   &quot;1&quot;   &quot;1&quot;   &quot;1&quot;   &quot;1&quot;   &quot;2&quot;   &quot;2&quot;   &quot;2&quot;   &quot;2&quot;   &quot;2&quot;  
-cholest &quot;244&quot; &quot;206&quot; &quot;242&quot; &quot;278&quot; &quot;236&quot; &quot;188&quot; &quot;212&quot; &quot;186&quot; &quot;198&quot; &quot;160&quot;</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>z <span class="ot">&lt;-</span> chol<span class="sc">$</span>cholest</span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>z</span></code></pre></div>
+group   "1"   "1"   "1"   "1"   "1"   "2"   "2"   "2"   "2"   "2"  
+cholest "244" "206" "242" "278" "236" "188" "212" "186" "198" "160"</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> chol<span class="sc">$</span>cholest</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>z</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code> [1] 244 206 242 278 236 188 212 186 198 160</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">rank</span>(z)</span></code></pre></div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rank</span>(z)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code> [1]  9  5  8 10  7  3  6  2  4  1</code></pre>
-<hr />
 </div>
 </div>
-<div id="wilcoxon-mann-whitney-test" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Wilcoxon-Mann-Whitney Test</h1>
+<hr>
+</section>
+</section>
+<section id="wilcoxon-mann-whitney-test" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Wilcoxon-Mann-Whitney Test</h1>
 <p>Simultaneously developed by Wilcoxon, and, Mann and Whitney: <strong>Wilcoxon-Mann-Whitney</strong>, <strong>Wilcoxon rank sum test</strong> or <strong>Mann-Whitney U test</strong></p>
-<div id="hypotheses" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Hypotheses</h2>
-<p>Under <span class="math inline">\(H_0\)</span> the distributions of the two groups are equal
-<span class="math display">\[H_0: f_1=f_2\]</span></p>
+<section id="hypotheses" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="hypotheses"><span class="header-section-number">4.1</span> Hypotheses</h2>
+<p>Under <span class="math inline">\(H_0\)</span> the distributions of the two groups are equal <span class="math display">\[H_0: f_1=f_2\]</span></p>
 <p>Under the alternative <span class="math inline">\(H_1\)</span> the distributions differ in location <span class="math display">\[H_1: \mu_1\neq \mu_2\]</span></p>
 <p><span class="math inline">\(H_1\)</span> assumes <strong>location-shift</strong>, we will relax this assumption later on.</p>
-</div>
-<div id="test-statistic" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> Test statistic</h2>
+</section>
+<section id="test-statistic" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="test-statistic"><span class="header-section-number">4.2</span> Test statistic</h2>
 <p>Classic T-test: difference in sample means <span class="math inline">\(\bar{Y}_1-\bar{Y}_2\)</span>.</p>
 <p>Here: Difference in sample means based on rank transformed data</p>
 <p>Ranks based on the pooled sample (upon joining the observations from the two groups): <span class="math inline">\(R_{ij}=R(Y_{ij})\)</span> is de rank of observation <span class="math inline">\(Y_{ij}\)</span> in the pooled sample.</p>
@@ -687,122 +527,174 @@ cholest &quot;244&quot; &quot;206&quot; &quot;242&quot; &quot;278&quot; &quot;23
 <ul>
 <li><p>Under <span class="math inline">\(H_0\)</span> we expect the average rank of the first group to be close to that of the second group so <span class="math inline">\(T\)</span> is close to zero.</p></li>
 <li><p>Under <span class="math inline">\(H_1\)</span> we expect the mean ranks to differ so that <span class="math inline">\(T\)</span> deviates from zero.</p></li>
-<li><p>It is sufficient to only calculate
-<span class="math display">\[S_1=\sum_{i=1}^{n_1} R(Y_{i1})\]</span>.</p></li>
+<li><p>It is sufficient to only calculate <span class="math display">\[S_1=\sum_{i=1}^{n_1} R(Y_{i1})\]</span>.</p></li>
 <li><p><span class="math inline">\(S_1\)</span> is the sum of the ranks of the first group: <em>rank sum test</em>.</p></li>
-<li><p>This holds because
-<span class="math display">\[
-S_1+S_2 = \text{sum of all ranks} = 1+2+\cdots + n=\frac{1}{2}n(n+1).
-\]</span></p></li>
+<li><p>This holds because</p></li>
+</ul>
+<p><span class="math display">\[
+  S_1+S_2 = \text{sum of all ranks} = 1+2+\cdots + n=\frac{1}{2}n(n+1).
+\]</span></p>
+<ul>
 <li><p><span class="math inline">\(S_1\)</span> (or <span class="math inline">\(S_2\)</span>) is a good test statistic</p></li>
 <li><p>Use permutations to determine the exact permutation distribution. (Permute the ranks between the groups)</p></li>
-<li><p>For a given <span class="math inline">\(n\)</span> and no <em>ties</em> the rank transformed data is always
-<span class="math display">\[1, 2, \ldots, n\]</span></p></li>
+<li><p>For a given <span class="math inline">\(n\)</span> and no <em>ties</em> the rank transformed data is always <span class="math display">\[1, 2, \ldots, n\]</span></p></li>
 <li><p>For given <span class="math inline">\(n_1\)</span> en <span class="math inline">\(n_2\)</span> the permutation distribution is always the same!</p></li>
 <li><p>With current computing power this is not so important any more.</p></li>
 </ul>
-<hr />
-</div>
-<div id="standardized-statistic" class="section level2" number="4.3">
-<h2><span class="header-section-number">4.3</span> Standardized statistic</h2>
-<p>Often the standardized test statistic is used
-<span class="math display">\[
+<hr>
+</section>
+<section id="standardized-statistic" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="standardized-statistic"><span class="header-section-number">4.3</span> Standardized statistic</h2>
+<p>Often the standardized test statistic is used</p>
+<p><span class="math display">\[
   T = \frac{S_1-\text{E}_{0}\left[S_1\right]}{\sqrt{\text{Var}_{0}\left[S_1\right]}},
 \]</span></p>
 <ul>
 <li><p>with <span class="math inline">\(\text{E}_{0}\left[S_1\right]\)</span> and <span class="math inline">\(\text{Var}_{0}\left[S_1\right]\)</span> the expect mean and variance of S1 under <span class="math inline">\(H_0\)</span>.</p></li>
-<li><p>Under <span class="math inline">\(H_0\)</span>
-<span class="math display">\[
+<li><p>Under <span class="math inline">\(H_0\)</span> <span class="math display">\[
 \text{E}_{0}\left[S_1\right]= \frac{1}{2}n_1(n+1) \;\;\;\;\text{ en }\;\;\;\; \text{Var}_{0}\left[S_1\right]=\frac{1}{12}n_1n_2(n+1).
 \]</span></p></li>
-<li><p>Under <span class="math inline">\(H_0\)</span> and when <span class="math inline">\(\min(n_1,n_2)\rightarrow \infty\)</span>
-<span class="math display">\[
+<li><p>Under <span class="math inline">\(H_0\)</span> and when <span class="math inline">\(\min(n_1,n_2)\rightarrow \infty\)</span> <span class="math display">\[
   T = \frac{S_1-\text{E}_{0}\left[S_1\right]}{\sqrt{\text{Var}_{0}\left[S_1\right]}} \rightarrow N(0,1).
 \]</span></p></li>
 </ul>
 <p>Asymptotically the standardised statistic follows a standard normal distribution!</p>
-<hr />
-</div>
-<div id="cholesterol-example-1" class="section level2" number="4.4">
-<h2><span class="header-section-number">4.4</span> Cholesterol example</h2>
+<hr>
+</section>
+<section id="cholesterol-example-1" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="cholesterol-example-1"><span class="header-section-number">4.4</span> Cholesterol example</h2>
 <p>We illustrate the result for the cholesterol example using the R function <code>wilcox.test</code>.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">wilcox.test</span>(cholest <span class="sc">~</span> group, <span class="at">data =</span> chol)</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(cholest <span class="sc">~</span> group, <span class="at">data =</span> chol)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon rank sum exact test
 
 data:  cholest by group
 W = 24, p-value = 0.01587
 alternative hypothesis: true location shift is not equal to 0</code></pre>
+</div>
+</div>
 <ul>
 <li><p>We reject <span class="math inline">\(H_0\)</span> (<span class="math inline">\(p=\)</span> 0.016 <span class="math inline">\(&lt;0.05\)</span>)</p></li>
 <li><p>The output shows <span class="math inline">\(W=\)</span> 24?</p></li>
 <li><p>Lets calculate</p></li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>S1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">rank</span>(chol<span class="sc">$</span>cholest)[chol<span class="sc">$</span>group <span class="sc">==</span> <span class="dv">1</span>])</span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>S1</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>S1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">rank</span>(chol<span class="sc">$</span>cholest)[chol<span class="sc">$</span>group <span class="sc">==</span> <span class="dv">1</span>])</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>S1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>[1] 39</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>S2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">rank</span>(chol<span class="sc">$</span>cholest)[chol<span class="sc">$</span>group <span class="sc">==</span> <span class="dv">2</span>])</span>
-<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>S2</span></code></pre></div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>S2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">rank</span>(chol<span class="sc">$</span>cholest)[chol<span class="sc">$</span>group <span class="sc">==</span> <span class="dv">2</span>])</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>S2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>[1] 16</code></pre>
+</div>
+</div>
 <ul>
 <li>Where does <span class="math inline">\(W=\)</span> 24 comes from?</li>
 </ul>
-<hr />
-</div>
-<div id="mann-and-whitney-test" class="section level2" number="4.5">
-<h2><span class="header-section-number">4.5</span> Mann and Whitney test</h2>
-<p>Mann and Whitney test in absence of ties:
-<span class="math display">\[
+<hr>
+</section>
+<section id="mann-and-whitney-test" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="mann-and-whitney-test"><span class="header-section-number">4.5</span> Mann and Whitney test</h2>
+<p>Mann and Whitney test in absence of ties:</p>
+<p><span class="math display">\[
 U_1 = \sum_{i=1}^{n_1}\sum_{k=1}^{n_2} \text{I}\left\{Y_{i1}\geq Y_{k2}\right\}.
 \]</span></p>
 <ul>
 <li><p>with <span class="math inline">\(\text{I}\left\{.\right\}\)</span> an indicator that equals 1 if the expression is true and is zero otherwise.</p></li>
 <li><p>U counts how many times an observation of the first group is larger or equal to an observation from the second group.</p></li>
 </ul>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(chol, group <span class="sc">==</span> <span class="dv">1</span>)<span class="sc">$</span>cholest</span>
-<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="fu">subset</span>(chol, group <span class="sc">==</span> <span class="dv">2</span>)<span class="sc">$</span>cholest</span>
-<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>u1Hlp <span class="ot">&lt;-</span> <span class="fu">sapply</span>(y1, <span class="cf">function</span>(y1i, y2) {</span>
-<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>  y1i <span class="sc">&gt;=</span> y2</span>
-<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>}, <span class="at">y2 =</span> y2)</span>
-<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a><span class="fu">colnames</span>(u1Hlp) <span class="ot">&lt;-</span> y1</span>
-<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a><span class="fu">rownames</span>(u1Hlp) <span class="ot">&lt;-</span> y2</span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>u1Hlp</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(chol, group <span class="sc">==</span> <span class="dv">1</span>)<span class="sc">$</span>cholest</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="fu">subset</span>(chol, group <span class="sc">==</span> <span class="dv">2</span>)<span class="sc">$</span>cholest</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>u1Hlp <span class="ot">&lt;-</span> <span class="fu">sapply</span>(y1, <span class="cf">function</span>(y1i, y2) {</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  y1i <span class="sc">&gt;=</span> y2</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>}, <span class="at">y2 =</span> y2)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(u1Hlp) <span class="ot">&lt;-</span> y1</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(u1Hlp) <span class="ot">&lt;-</span> y2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>u1Hlp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>     244   206  242  278  236
 188 TRUE  TRUE TRUE TRUE TRUE
 212 TRUE FALSE TRUE TRUE TRUE
 186 TRUE  TRUE TRUE TRUE TRUE
 198 TRUE  TRUE TRUE TRUE TRUE
 160 TRUE  TRUE TRUE TRUE TRUE</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>U1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(u1Hlp)</span>
-<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>U1</span></code></pre></div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>U1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(u1Hlp)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>U1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>[1] 24</code></pre>
+</div>
+</div>
 <p>It can be shown that <span class="math inline">\(U_1 = S_1 - \frac{1}{2}n_1(n_1+1).\)</span></p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>S1 <span class="sc">-</span> nGroups[<span class="dv">1</span>] <span class="sc">*</span> (nGroups[<span class="dv">1</span>] <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="dv">2</span></span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>S1 <span class="sc">-</span> nGroups[<span class="dv">1</span>] <span class="sc">*</span> (nGroups[<span class="dv">1</span>] <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code> 1 
 24 </code></pre>
-<ol style="list-style-type: decimal">
+</div>
+</div>
+<ol type="1">
 <li><span class="math inline">\(U_1\)</span> en <span class="math inline">\(S_1\)</span> contain the same information</li>
 <li><span class="math inline">\(U_1\)</span> is also a rank statistic, and</li>
 <li>Exact test based on <span class="math inline">\(U_1\)</span> and <span class="math inline">\(S_1\)</span> are equivalent.</li>
 </ol>
-<hr />
-</div>
-<div id="probabilistic-index" class="section level2" number="4.6">
-<h2><span class="header-section-number">4.6</span> Probabilistic index</h2>
+<hr>
+</section>
+<section id="probabilistic-index" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="probabilistic-index"><span class="header-section-number">4.6</span> Probabilistic index</h2>
 <ul>
 <li><span class="math inline">\(U_1\)</span> has a better interpretation feature</li>
-<li>Let <span class="math inline">\(Y_j\)</span> a random observation from group <span class="math inline">\(j\)</span> (<span class="math inline">\(j=1,2\)</span>). Then
-<span class="math display">\[\begin{eqnarray*}
+<li>Let <span class="math inline">\(Y_j\)</span> a random observation from group <span class="math inline">\(j\)</span> (<span class="math inline">\(j=1,2\)</span>). Then <span class="math display">\[\begin{eqnarray*}
 \frac{1}{n_1n_2}\text{E}\left[U_1\right]
    &amp;=&amp; \text{P}\left[Y_1 \geq Y_2\right].
 \end{eqnarray*}\]</span></li>
 </ul>
 <p>So we can estimate the probability by calculating the mean of all indicator variable values <span class="math inline">\(\text{I}\left\{Y_{i1}\geq Y_{k2}\right\}\)</span>. Note, that we did <span class="math inline">\(n_1 \times n_2\)</span> comparisons</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">mean</span>(u1Hlp)</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(u1Hlp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.96</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>U1 <span class="sc">/</span> (nGroups[<span class="dv">1</span>] <span class="sc">*</span> nGroups[<span class="dv">2</span>])</span></code></pre></div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>U1 <span class="sc">/</span> (nGroups[<span class="dv">1</span>] <span class="sc">*</span> nGroups[<span class="dv">2</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>   1 
 0.96 </code></pre>
+</div>
+</div>
 <ul>
 <li><p>Probability <span class="math inline">\(\text{P}\left[Y_1 \geq Y_2\right]\)</span> is referred to as the <em>probabilistic index</em>.</p></li>
 <li><p>It is the probability that a random observation of the first group is larger or equal than a random observation of the second group</p></li>
@@ -810,25 +702,41 @@ U_1 = \sum_{i=1}^{n_1}\sum_{k=1}^{n_2} \text{I}\left\{Y_{i1}\geq Y_{k2}\right\}.
 <li><p>R function <code>wilcox.test</code> does not return the Wilcoxon rank sum statistic. It returns the Mann-Whitney statistic <span class="math inline">\(U_1\)</span>.</p></li>
 <li><p>Lets revisit the result</p></li>
 </ul>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>wTest <span class="ot">&lt;-</span> <span class="fu">wilcox.test</span>(cholest <span class="sc">~</span> group, <span class="at">data =</span> chol)</span>
-<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>wTest</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>wTest <span class="ot">&lt;-</span> <span class="fu">wilcox.test</span>(cholest <span class="sc">~</span> group, <span class="at">data =</span> chol)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>wTest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon rank sum exact test
 
 data:  cholest by group
 W = 24, p-value = 0.01587
 alternative hypothesis: true location shift is not equal to 0</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>U1</span></code></pre></div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>U1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>[1] 24</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>probInd <span class="ot">&lt;-</span> wTest<span class="sc">$</span>statistic <span class="sc">/</span> <span class="fu">prod</span>(nGroups)</span>
-<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>probInd</span></code></pre></div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>probInd <span class="ot">&lt;-</span> wTest<span class="sc">$</span>statistic <span class="sc">/</span> <span class="fu">prod</span>(nGroups)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>probInd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>   W 
 0.96 </code></pre>
+</div>
+</div>
 <p>Because <span class="math inline">\(p=\)</span> 0.0159 <span class="math inline">\(&lt;0.05\)</span> we conclude at the <span class="math inline">\(5\%\)</span> significance level that the mean cholesterol level of hart patients is larger then that of healthy subjects.</p>
 <ul>
 <li>Note that we have assumed that the location-shift model is valid in this conclusion.</li>
-<li>We also know that higher cholesterol level are more likely for hart patients then for healthy subjects and this probability is
-<span class="math inline">\(U1/(n_1\times n_2)=\)</span> 96%.</li>
+<li>We also know that higher cholesterol level are more likely for hart patients then for healthy subjects and this probability is <span class="math inline">\(U1/(n_1\times n_2)=\)</span> 96%.</li>
 <li>We should assess the location shift assumption. But this is not possible with only 5 observations.</li>
 </ul>
 <p>Without the location-shift assumption the conclusion in terms of the probabilistic index remains valid!</p>
@@ -836,100 +744,800 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <li>So when we do not assume location shift we test for</li>
 </ul>
 <p><span class="math display">\[H_0: F_1=F_2 \text{ vs } H_1: P[Y_1 \geq Y_2] \neq 0.5.\]</span></p>
-</div>
-<div id="conclusion" class="section level2" number="4.7">
-<h2><span class="header-section-number">4.7</span> Conclusion</h2>
+</section>
+<section id="conclusion" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">4.7</span> Conclusion</h2>
 <p>There is a significant difference in the distribution of the cholesterol concentration of hart patients two days upon a stroke and that of healthy subject (<span class="math inline">\(p=\)</span> 0.0159). It is more likely to observe higher cholesterol levels for hart patients then for healthy subjects. The point estimator for this probability is 96%.</p>
-</div>
-</div>
-
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiOS4gTm9ucGFyYW1ldHJpYyBTdGF0aXN0aWNzIC0gV2lsY294b24tTWFubi1XaXRobmV5IHRlc3QiCmF1dGhvcjogIkxpZXZlbiBDbGVtZW50IgpkYXRlOiAic3RhdE9taWNzLCBHaGVudCBVbml2ZXJzaXR5IChodHRwczovL3N0YXRvbWljcy5naXRodWIuaW8pIgotLS0KCjxhIHJlbD0ibGljZW5zZSIgaHJlZj0iaHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMCI+PGltZyBhbHQ9IkNyZWF0aXZlIENvbW1vbnMgTGljZW5zZSIgc3R5bGU9ImJvcmRlci13aWR0aDowIiBzcmM9Imh0dHBzOi8vaS5jcmVhdGl2ZWNvbW1vbnMub3JnL2wvYnktbmMtc2EvNC4wLzg4eDMxLnBuZyIgLz48L2E+CgpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRSwgY2FjaGU9RkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldCgKICBpbmNsdWRlID0gVFJVRSwgY29tbWVudCA9IE5BLCBlY2hvID0gVFJVRSwKICBtZXNzYWdlID0gRkFMU0UsIHdhcm5pbmcgPSBGQUxTRSwgY2FjaGUgPSBUUlVFCikKbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoUm1pc2MpCnNldC5zZWVkKDE0MCkKYGBgCgo8aWZyYW1lIHdpZHRoPSI1NjAiIGhlaWdodD0iMzE1IiBzcmM9Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL2VtYmVkL1c3Sm91NFpZOFZnP3NpPVlWR1dFZU03UGFFdFFtY1oiIHRpdGxlPSJZb3VUdWJlIHZpZGVvIHBsYXllciIgZnJhbWVib3JkZXI9IjAiIGFsbG93PSJhY2NlbGVyb21ldGVyOyBhdXRvcGxheTsgY2xpcGJvYXJkLXdyaXRlOyBlbmNyeXB0ZWQtbWVkaWE7IGd5cm9zY29wZTsgcGljdHVyZS1pbi1waWN0dXJlOyB3ZWItc2hhcmUiIHJlZmVycmVycG9saWN5PSJzdHJpY3Qtb3JpZ2luLXdoZW4tY3Jvc3Mtb3JpZ2luIiBhbGxvd2Z1bGxzY3JlZW4+PC9pZnJhbWU+CgojIEludHJvZHVjdGlvbgoKSW5mZXJlbmNlIHdhcyBvbmx5IGNvcnJlY3QgaWYgZGlzdHJpYnV0aW9uYWwgYXNzdW1wdGlvbnMgd2VyZSBzYXRpc2ZpZWQKCi0gZS5nIE5vcm1hbCBkaXN0cmlidXRpb24KLSBlcXVhbCB2YXJpYW5jZQoKLSAgVGhlICRwJC12YWx1ZTogJFx0ZXh0e1B9XzBcbGVmdFsgXHZlcnQgVFx2ZXJ0IFxnZXEgXHZlcnQgdCBcdmVydCBccmlnaHRdJC4KCgktIENhbGN1bGF0ZWQgdXNpbmcgdGhlIG51bGwgZGlzdHJpYnV0aW9uIG9mICRUJCB0aGF0IHdlIGRlcml2ZWQgdW5kZXIgdGhlIGFzc3VtcHRpb25zCgktIEluIGNvcnJlY3QgaWYgYXNzdW1wdGlvbnMgYXJlIHZpb2xhdGVkCgotICAkOTVcJSQgQ0kgYWxzbyBidWlsZHMgdXBvbiB0aGVzZSBhc3N1bXB0aW9ucy4gSWYgdGhleSBhcmUgaW52YWxpZCB0aGVuIHRoZSBpbnRlcnZhbHMgd2lsbCBub3QgY29udGFpbiB0aGUgcG9wdWxhdGlvbiBwYXJhbWV0ZXIgd2l0aCA5NSUgcHJvYmFiaWxpdHkuCgotIEFzeW1wdG90aWMgdGhlb3J5IGlzIG1vcmUgZGlmZmljdWx0IHRvIHBsYWNlOiB0aGUgJHQkLXRlc3QgaXMgYXN5bXB0b3RpY2FsbHkgbm9uLXBhcmFtZXRyaWMgYmVjYXVzZSBmb3IgdmVyeSBsYXJnZSBzYW1wbGVzIHRoZSBkaXN0cmlidXRpb25hbCBhc3N1bXB0aW9ucyBvZiBub3JtYWxpdHkgYXJlIG5vIGxvbmdlciBpbXBvcnRhbnQuCgotIElmIGFzc3VtcHRpb25zIGhvbGQgdGhlIHBhcmFtZXRyaWMgYXBwcm9hY2gKCgktIG1vcmUgZWZmaWNpZW50OiBsYXJnZXIgcG93ZXIgd2l0aCBzYW1lIHNhbXBsZSBzaXplICsgc21hbGxlciBDSS4KCS0gbW9yZSBmbGV4aWJsZTogZWFzaWVyIHRvIGFuYWx5c2UgZGF0YSB3aXRoIGNvbXBsZXggZGVzaWducwoKLS0tCgojIyBDaG9sZXN0ZXJvbCBleGFtcGxlCgotIENob2xlc3Rlcm9sIGNvbmNlbnRyYXRpb24gaW4gYmxvb2QgbWVhc3VyZWQgZm9yCiAgLSA1IHBhdGllbnRzIChncm91cD0xKSB0d28gZGF5cyB1cG9uIGEgc3Ryb2tlCiAgLSA1IGhlYWx0aHkgc3ViamVjdCAoZ3JvZXA9MikuCgotIElzIGNob2xlc3Rlcm9sIGNvbmNlbnRyYXRpb24gb2YgaGFydCBwYXRpZW50cyBhbmQgaGVhbHRoeSBzdWJqZWN0cyBvbiBhdmVyYWdlIGRpZmZlcmVudD8KCmBgYHtyfQpjaG9sIDwtIHJlYWRfdHN2KCJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vR1RQQi9QU0xTMjAvbWFzdGVyL2RhdGEvY2hvbC50eHQiKQpjaG9sJGdyb3VwIDwtIGFzLmZhY3RvcihjaG9sJGdyb3VwKQpuR3JvdXBzIDwtIHRhYmxlKGNob2wkZ3JvdXApCm4gPC0gc3VtKG5Hcm91cHMpCmNob2wKYGBgCgotLS0KCgpgYGB7ciwgZWNobz1GQUxTRSwgZmlnLmFsaWduPSdjZW50ZXInfQpjaG9sICU+JSBnZ3Bsb3QoYWVzKHggPSBncm91cCwgeSA9IGNob2xlc3QpKSArCiAgZ2VvbV9ib3hwbG90KG91dGxpZXIuc2hhcGUgPSBOQSkgKwogIGdlb21fcG9pbnQocG9zaXRpb24gPSAiaml0dGVyIikKCmNob2wgJT4lIGdncGxvdChhZXMoc2FtcGxlID0gY2hvbGVzdCkpICsKICBnZW9tX3FxKCkgKwogIGdlb21fcXFfbGluZSgpICsKICBmYWNldF93cmFwKH5ncm91cCkKYGBgCgotIFBvc3NpYmx5IG91dGxpZXJzCi0gRGlmZmljdWx0IHRvIGFzc2VzcyBkaXN0cmlidXRpb25hbCBhc3N1bXB0aW9ucyB3aGVuIG9ubHkgNSBvYnNlcnZhdGlvbnMgYXJlIGF2YWlsYWJsZS4KCgojIFJhbmsgVGVzdHMKCi0gSW1wb3J0YW50IGdyb3VwIG9mIG5vbi1wYXJhbWV0cmljIHRlc3QKICAtIE5vbi1wYXJhbWV0cmljLAogIC0gRXhhY3QgJHAkLXZhbHVlcyB1c2luZyBhIHBlcm11dGF0aW9uIG51bGwgZGlzdHJpYnV0aW9uLgogIC0gTm8gbmVlZCBmb3Igc2VwYXJhdGUgcGVybXV0YXRpb24gZGlzdHJpYnV0aW9uIGZvciBlYWNoIG5ldyBkYXRhc2V0LgogIC0gUGVybXV0YXRpb24gbnVsbCBkaXN0cmlidXRpb24gb2YgcmFuayB0ZXN0cyBvbmx5IGRlcGVuZHMgb24gc2FtcGxlIHNpemUKICAtIFJvYnVzdCB0byBvdXRsaWVycwoKLS0tCgojIFJhbmtzCgpSYW5rIHRlc3RzIHN0YXJ0IGZyb20gcmFuay10cmFuc2Zvcm1lZCBkYXRhLgoKLSBMZXQgJFlfMSwgXGxkb3RzLCBZX24kLgotIEluIHRoZSBhYnNlbmNlIG9mICp0aWVzKgogICQkUl9pPVIoWV9pKSA9IFwjXHtZX2o6IFlfalxsZXEgWV9pOyBqPTEsXGxkb3RzLCBuXH0kJAotIFNtYWxsZXN0IG9ic2VydmF0aW9uIGhhcyByYW5rIDEsIHNlY29uZCBzbWFsbGVzdCByYW5rIDIsIC4uLiAsIGxhcmdlc3Qgb2JzZXJ2YXRpb24gZ2V0cyByYW5rICRuJAoKYGBge3J9CmNob2wkY2hvbGVzdApyYW5rKGNob2wkY2hvbGVzdCkKYGBgCgotLS0KCiMjIFRpZXMKClNvbWV0aW1lcyAqdGllcyogb2NjdXI6IHR3byBvYnNlcnZhdGlvbnMgd2l0aCBpZGVudGljYWwgdmFsdWVzCgpgYGB7cn0Kd2l0aFRpZXMgPC0gYyg0MDMsIDUwNywgNTA3LCA2MTAsIDY1MSwgNjUxLCA2NTEsIDgzMCwgOTAwKQpyYW5rKHdpdGhUaWVzKQpgYGAKCi0gVGllczogNTA3IG9jY3VycyB0d2ljZSwgNjUxIG9jY3VycyAzIHRpbWVzCi0gSWYgdGllcyBvY2N1ciAqbWlkcmFua3MqIGFyZSB1c2VkLgoKLSAqKm1pZHJhbmsqKiBvZiBvYnNlcnZhdGlvbiAkWV9pJCBiZWNvbWVzCiAgXGJlZ2lue2VxbmFycmF5Kn0KICAgUl9pICY9JiBcZnJhY3sgXCNce1lfajogWV9qXGxlcSBZX2lcfSArICggXCNce1lfajogWV9qIDwgWV9pXH0gKzEpfXsyfS4KICAgXGVuZHtlcW5hcnJheSp9CgotLS0KCiMjIFJhbmtzIG9mIHBvb2xlZCBzYW1wbGUKCi0gTGV0ICRZX3tpan0kLCAkaT0xLFxsZG90cywgbl9qJCBiZSBvYnNlcnZhdGlvbnMgZnJvbSB0d28gdHJlYXRtZW50IGdyb3VwcyAkaj0xLDIkLgotIFRoZXkgY2FuIGFsc28gYmUgcmVwcmVzZW50ZWQgYnkgJFpfMSxcbGRvdHMsIFpfbiQgKCRuPW5fMStuXzIkKSwgdGhlIG91dGNvbWVzIG9mIHRoZSBwb29sZWQgc2FtcGxlCgpgYGB7cn0KdChjaG9sKQp6IDwtIGNob2wkY2hvbGVzdAp6CnJhbmsoeikKYGBgCi0tLQoKIyBXaWxjb3hvbi1NYW5uLVdoaXRuZXkgVGVzdAoKIFNpbXVsdGFuZW91c2x5IGRldmVsb3BlZCBieSBXaWxjb3hvbiwgYW5kLCAgTWFubiBhbmQgV2hpdG5leTogICoqV2lsY294b24tTWFubi1XaGl0bmV5KiosICoqV2lsY294b24gcmFuayBzdW0gdGVzdCoqICBvciAqKk1hbm4tV2hpdG5leSBVIHRlc3QqKgoKIyMgSHlwb3RoZXNlcwoKVW5kZXIgJEhfMCQgdGhlIGRpc3RyaWJ1dGlvbnMgb2YgdGhlIHR3byBncm91cHMgYXJlIGVxdWFsCiQkSF8wOiBmXzE9Zl8yJCQKCgpVbmRlciB0aGUgYWx0ZXJuYXRpdmUgJEhfMSQgdGhlIGRpc3RyaWJ1dGlvbnMgZGlmZmVyIGluIGxvY2F0aW9uICQkSF8xOiBcbXVfMVxuZXEgXG11XzIkJAoKJEhfMSQgYXNzdW1lcyAqKmxvY2F0aW9uLXNoaWZ0KiosIHdlIHdpbGwgcmVsYXggdGhpcyBhc3N1bXB0aW9uIGxhdGVyIG9uLgoKIyMgVGVzdCBzdGF0aXN0aWMKCkNsYXNzaWMgVC10ZXN0OiBkaWZmZXJlbmNlIGluIHNhbXBsZSBtZWFucyAkXGJhcntZfV8xLVxiYXJ7WX1fMiQuCgpIZXJlOiBEaWZmZXJlbmNlIGluIHNhbXBsZSBtZWFucyBiYXNlZCBvbiByYW5rIHRyYW5zZm9ybWVkIGRhdGEKClJhbmtzIGJhc2VkIG9uIHRoZSBwb29sZWQgc2FtcGxlICh1cG9uIGpvaW5pbmcgdGhlIG9ic2VydmF0aW9ucyBmcm9tIHRoZSB0d28gZ3JvdXBzKTogJFJfe2lqfT1SKFlfe2lqfSkkIGlzIGRlIHJhbmsgb2Ygb2JzZXJ2YXRpb24gJFlfe2lqfSQgaW4gdGhlIHBvb2xlZCBzYW1wbGUuCgpcWwogIFQgPSBcZnJhY3sxfXtuXzF9XHN1bV97aT0xfV57bl8xfSBSKFlfe2kxfSkgLSBcZnJhY3sxfXtuXzJ9XHN1bV97aT0xfV57bl8yfSBSKFlfe2kyfSkgLgpcXQoKLSBVbmRlciAkSF8wJCB3ZSBleHBlY3QgdGhlIGF2ZXJhZ2UgcmFuayBvZiB0aGUgZmlyc3QgZ3JvdXAgdG8gYmUgY2xvc2UgdG8gdGhhdCBvZiB0aGUgc2Vjb25kIGdyb3VwIHNvICRUJCBpcyBjbG9zZSB0byB6ZXJvLgoKLSBVbmRlciAkSF8xJCB3ZSBleHBlY3QgdGhlIG1lYW4gcmFua3MgdG8gZGlmZmVyIHNvIHRoYXQgJFQkIGRldmlhdGVzIGZyb20gemVyby4KCi0gSXQgaXMgc3VmZmljaWVudCB0byBvbmx5IGNhbGN1bGF0ZQogICQkU18xPVxzdW1fe2k9MX1ee25fMX0gUihZX3tpMX0pJCQuCgotICRTXzEkIGlzIHRoZSBzdW0gb2YgdGhlIHJhbmtzIG9mIHRoZSBmaXJzdCBncm91cDogKnJhbmsgc3VtIHRlc3QqLgoKLSBUaGlzIGhvbGRzIGJlY2F1c2UKXFsKICBTXzErU18yID0gXHRleHR7c3VtIG9mIGFsbCByYW5rc30gPSAxKzIrXGNkb3RzICsgbj1cZnJhY3sxfXsyfW4obisxKS4KXF0KCgotICRTXzEkIChvciAkU18yJCkgaXMgYSBnb29kIHRlc3Qgc3RhdGlzdGljCgotIFVzZSBwZXJtdXRhdGlvbnMgdG8gZGV0ZXJtaW5lIHRoZSBleGFjdCBwZXJtdXRhdGlvbiBkaXN0cmlidXRpb24uIChQZXJtdXRlIHRoZSByYW5rcyBiZXR3ZWVuIHRoZSBncm91cHMpCgotIEZvciBhIGdpdmVuICRuJCBhbmQgbm8gKnRpZXMqIHRoZSByYW5rIHRyYW5zZm9ybWVkIGRhdGEgaXMgYWx3YXlzCiAgJCQxLCAyLCBcbGRvdHMsIG4kJAotIEZvciBnaXZlbiAkbl8xJCBlbiAkbl8yJCB0aGUgcGVybXV0YXRpb24gZGlzdHJpYnV0aW9uIGlzIGFsd2F5cyB0aGUgc2FtZSEKLSBXaXRoIGN1cnJlbnQgY29tcHV0aW5nIHBvd2VyIHRoaXMgaXMgbm90IHNvIGltcG9ydGFudCBhbnkgbW9yZS4KCi0tLQoKIyMgU3RhbmRhcmRpemVkIHN0YXRpc3RpYwoKT2Z0ZW4gdGhlIHN0YW5kYXJkaXplZCB0ZXN0IHN0YXRpc3RpYyBpcyB1c2VkClxbCiAgVCA9IFxmcmFje1NfMS1cdGV4dHtFfV97MH1cbGVmdFtTXzFccmlnaHRdfXtcc3FydHtcdGV4dHtWYXJ9X3swfVxsZWZ0W1NfMVxyaWdodF19fSwKXF0KCi0gd2l0aCAkXHRleHR7RX1fezB9XGxlZnRbU18xXHJpZ2h0XSQgYW5kICRcdGV4dHtWYXJ9X3swfVxsZWZ0W1NfMVxyaWdodF0kIHRoZSBleHBlY3QgbWVhbiBhbmQgdmFyaWFuY2Ugb2YgUzEgdW5kZXIgJEhfMCQuCgotIFVuZGVyICRIXzAkCiBcWwogICBcdGV4dHtFfV97MH1cbGVmdFtTXzFccmlnaHRdPSBcZnJhY3sxfXsyfW5fMShuKzEpIFw7XDtcO1w7XHRleHR7IGVuIH1cO1w7XDtcOyBcdGV4dHtWYXJ9X3swfVxsZWZ0W1NfMVxyaWdodF09XGZyYWN7MX17MTJ9bl8xbl8yKG4rMSkuCiBcXQoKLSBVbmRlciAkSF8wJCBhbmQgd2hlbiAkXG1pbihuXzEsbl8yKVxyaWdodGFycm93IFxpbmZ0eSQKIFxbCiAgICBUID0gXGZyYWN7U18xLVx0ZXh0e0V9X3swfVxsZWZ0W1NfMVxyaWdodF19e1xzcXJ0e1x0ZXh0e1Zhcn1fezB9XGxlZnRbU18xXHJpZ2h0XX19IFxyaWdodGFycm93IE4oMCwxKS4KIFxdCgpBc3ltcHRvdGljYWxseSB0aGUgc3RhbmRhcmRpc2VkIHN0YXRpc3RpYyBmb2xsb3dzIGEgc3RhbmRhcmQgbm9ybWFsIGRpc3RyaWJ1dGlvbiEKCi0tLQoKIyMgQ2hvbGVzdGVyb2wgZXhhbXBsZQoKV2UgaWxsdXN0cmF0ZSB0aGUgcmVzdWx0IGZvciB0aGUgY2hvbGVzdGVyb2wgZXhhbXBsZSB1c2luZyB0aGUgUiBmdW5jdGlvbiBgd2lsY294LnRlc3RgLgpgYGB7cn0Kd2lsY294LnRlc3QoY2hvbGVzdCB+IGdyb3VwLCBkYXRhID0gY2hvbCkKYGBgCgotIFdlIHJlamVjdCAkSF8wJCAoJHA9JCBgciBmb3JtYXQod2lsY294LnRlc3QoY2hvbGVzdH5ncm91cCxkYXRhPWNob2wpJHAudmFsdWUsZGlnaXRzPTIpYCAkPDAuMDUkKQoKLSBUaGUgb3V0cHV0IHNob3dzICRXPSQgYHIgd2lsY294LnRlc3QoY2hvbGVzdH5ncm91cCxkYXRhPWNob2wpJHN0YXRpc3RpY2A/CgotIExldHMgY2FsY3VsYXRlCmBgYHtyfQpTMSA8LSBzdW0ocmFuayhjaG9sJGNob2xlc3QpW2Nob2wkZ3JvdXAgPT0gMV0pClMxClMyIDwtIHN1bShyYW5rKGNob2wkY2hvbGVzdClbY2hvbCRncm91cCA9PSAyXSkKUzIKYGBgCgotIFdoZXJlIGRvZXMgJFc9JCBgciB3aWxjb3gudGVzdChjaG9sZXN0fmdyb3VwLGRhdGE9Y2hvbCkkc3RhdGlzdGljYCBjb21lcyBmcm9tPwoKLS0tCgojIyBNYW5uIGFuZCBXaGl0bmV5IHRlc3QKCk1hbm4gYW5kIFdoaXRuZXkgdGVzdCBpbiBhYnNlbmNlIG9mIHRpZXM6ClxbCiBVXzEgPSBcc3VtX3tpPTF9XntuXzF9XHN1bV97az0xfV57bl8yfSBcdGV4dHtJfVxsZWZ0XHtZX3tpMX1cZ2VxIFlfe2syfVxyaWdodFx9LgpcXQoKLSB3aXRoICRcdGV4dHtJfVxsZWZ0XHsuXHJpZ2h0XH0kIGFuIGluZGljYXRvciB0aGF0IGVxdWFscyAxICBpZiB0aGUgZXhwcmVzc2lvbiBpcyB0cnVlIGFuZCBpcyB6ZXJvIG90aGVyd2lzZS4KCi0gVSBjb3VudHMgaG93IG1hbnkgdGltZXMgYW4gb2JzZXJ2YXRpb24gb2YgdGhlIGZpcnN0IGdyb3VwIGlzIGxhcmdlciBvciBlcXVhbCB0byBhbiBvYnNlcnZhdGlvbiBmcm9tIHRoZSBzZWNvbmQgZ3JvdXAuCgpgYGB7cn0KeTEgPC0gc3Vic2V0KGNob2wsIGdyb3VwID09IDEpJGNob2xlc3QKeTIgPC0gc3Vic2V0KGNob2wsIGdyb3VwID09IDIpJGNob2xlc3QKdTFIbHAgPC0gc2FwcGx5KHkxLCBmdW5jdGlvbih5MWksIHkyKSB7CiAgeTFpID49IHkyCn0sIHkyID0geTIpCmNvbG5hbWVzKHUxSGxwKSA8LSB5MQpyb3duYW1lcyh1MUhscCkgPC0geTIKYGBgCgpgYGB7cn0KdTFIbHAKVTEgPC0gc3VtKHUxSGxwKQpVMQpgYGAKCkl0IGNhbiBiZSBzaG93biB0aGF0ICRVXzEgPSBTXzEgLSBcZnJhY3sxfXsyfW5fMShuXzErMSkuJAoKYGBge3J9ClMxIC0gbkdyb3Vwc1sxXSAqIChuR3JvdXBzWzFdICsgMSkgLyAyCmBgYAoKMS4gJFVfMSQgZW4gJFNfMSQgY29udGFpbiB0aGUgc2FtZSBpbmZvcm1hdGlvbgoyLiAkVV8xJCBpcyBhbHNvIGEgcmFuayBzdGF0aXN0aWMsIGFuZAozLiBFeGFjdCB0ZXN0IGJhc2VkIG9uICRVXzEkIGFuZCAkU18xJCBhcmUgZXF1aXZhbGVudC4KCi0tLQoKIyMgUHJvYmFiaWxpc3RpYyBpbmRleAoKLSAkVV8xJCBoYXMgYSBiZXR0ZXIgaW50ZXJwcmV0YXRpb24gZmVhdHVyZQotIExldCAkWV9qJCBhIHJhbmRvbSBvYnNlcnZhdGlvbiBmcm9tIGdyb3VwICRqJCAoJGo9MSwyJCkuIFRoZW4KXGJlZ2lue2VxbmFycmF5Kn0KICBcZnJhY3sxfXtuXzFuXzJ9XHRleHR7RX1cbGVmdFtVXzFccmlnaHRdCiAgICAgJj0mIFx0ZXh0e1B9XGxlZnRbWV8xIFxnZXEgWV8yXHJpZ2h0XS4KXGVuZHtlcW5hcnJheSp9CgpTbyB3ZSBjYW4gZXN0aW1hdGUgdGhlIHByb2JhYmlsaXR5IGJ5IGNhbGN1bGF0aW5nIHRoZSBtZWFuIG9mIGFsbCBpbmRpY2F0b3IgdmFyaWFibGUgdmFsdWVzICRcdGV4dHtJfVxsZWZ0XHtZX3tpMX1cZ2VxIFlfe2syfVxyaWdodFx9JC4gTm90ZSwgdGhhdCB3ZSBkaWQgJG5fMSBcdGltZXMgbl8yJCBjb21wYXJpc29ucwoKYGBge3J9Cm1lYW4odTFIbHApClUxIC8gKG5Hcm91cHNbMV0gKiBuR3JvdXBzWzJdKQpgYGAKCi0gUHJvYmFiaWxpdHkgJFx0ZXh0e1B9XGxlZnRbWV8xIFxnZXEgWV8yXHJpZ2h0XSQgaXMgcmVmZXJyZWQgdG8gYXMgdGhlICpwcm9iYWJpbGlzdGljIGluZGV4Ki4KLSBJdCBpcyB0aGUgcHJvYmFiaWxpdHkgdGhhdCBhIHJhbmRvbSBvYnNlcnZhdGlvbiBvZiB0aGUgZmlyc3QgZ3JvdXAgaXMgbGFyZ2VyIG9yIGVxdWFsIHRoYW4gYSByYW5kb20gb2JzZXJ2YXRpb24gb2YgdGhlIHNlY29uZCBncm91cAotIElmICRIXzAkIGhvbGRzICRcdGV4dHtQfVxsZWZ0W1lfMSBcZ2VxIFlfMlxyaWdodF09XGZyYWN7MX17Mn0kLgoKLSBSIGZ1bmN0aW9uIGB3aWxjb3gudGVzdGAgZG9lcyBub3QgcmV0dXJuIHRoZSBXaWxjb3hvbiByYW5rIHN1bSBzdGF0aXN0aWMuIEl0IHJldHVybnMgdGhlIE1hbm4tV2hpdG5leSBzdGF0aXN0aWMgJFVfMSQuCi0gTGV0cyByZXZpc2l0IHRoZSByZXN1bHQKYGBge3J9CndUZXN0IDwtIHdpbGNveC50ZXN0KGNob2xlc3QgfiBncm91cCwgZGF0YSA9IGNob2wpCndUZXN0ClUxCnByb2JJbmQgPC0gd1Rlc3Qkc3RhdGlzdGljIC8gcHJvZChuR3JvdXBzKQpwcm9iSW5kCmBgYAoKQmVjYXVzZSAkcD0kIGByIGZvcm1hdCh3VGVzdCRwLnZhbHVlLGRpZ2l0cz0zKWAgJDwwLjA1JCB3ZSBjb25jbHVkZSBhdCB0aGUgJDVcJSQgc2lnbmlmaWNhbmNlIGxldmVsIHRoYXQgdGhlIG1lYW4gY2hvbGVzdGVyb2wgbGV2ZWwgb2YgaGFydCBwYXRpZW50cyBpcyBsYXJnZXIgdGhlbiB0aGF0IG9mIGhlYWx0aHkgc3ViamVjdHMuCgogIC0gTm90ZSB0aGF0IHdlIGhhdmUgYXNzdW1lZCB0aGF0IHRoZSBsb2NhdGlvbi1zaGlmdCBtb2RlbCBpcyB2YWxpZCBpbiB0aGlzIGNvbmNsdXNpb24uCiAgLSBXZSBhbHNvIGtub3cgdGhhdCBoaWdoZXIgY2hvbGVzdGVyb2wgbGV2ZWwgYXJlIG1vcmUgbGlrZWx5IGZvciBoYXJ0IHBhdGllbnRzIHRoZW4gZm9yIGhlYWx0aHkgc3ViamVjdHMgYW5kIHRoaXMgcHJvYmFiaWxpdHkgaXMKJFUxLyhuXzFcdGltZXMgbl8yKT0kIGByIHByb2JJbmQqMTAwYCUuCiAgLSBXZSBzaG91bGQgYXNzZXNzIHRoZSBsb2NhdGlvbiBzaGlmdCBhc3N1bXB0aW9uLiBCdXQgdGhpcyBpcyBub3QgcG9zc2libGUgd2l0aCBvbmx5IDUgb2JzZXJ2YXRpb25zLgoKV2l0aG91dCB0aGUgbG9jYXRpb24tc2hpZnQgYXNzdW1wdGlvbiB0aGUgY29uY2x1c2lvbiBpbiB0ZXJtcyBvZiB0aGUgcHJvYmFiaWxpc3RpYyBpbmRleCByZW1haW5zIHZhbGlkIQoKICAtIFNvIHdoZW4gd2UgZG8gbm90IGFzc3VtZSBsb2NhdGlvbiBzaGlmdCB3ZSB0ZXN0IGZvcgoKXFtIXzA6IEZfMT1GXzIgXHRleHR7IHZzIH0gSF8xOiBQW1lfMSBcZ2VxIFlfMl0gXG5lcSAwLjUuXF0KCgojIyBDb25jbHVzaW9uCgpUaGVyZSBpcyBhIHNpZ25pZmljYW50IGRpZmZlcmVuY2UgaW4gdGhlIGRpc3RyaWJ1dGlvbiBvZiB0aGUgY2hvbGVzdGVyb2wgY29uY2VudHJhdGlvbiBvZiBoYXJ0IHBhdGllbnRzIHR3byBkYXlzIHVwb24gYSBzdHJva2UgYW5kIHRoYXQgb2YgaGVhbHRoeSBzdWJqZWN0ICgkcD0kIGByIGZvcm1hdCh3VGVzdCRwLnZhbHVlLGRpZ2l0cz0zKWApLiBJdCBpcyBtb3JlIGxpa2VseSB0byBvYnNlcnZlIGhpZ2hlciBjaG9sZXN0ZXJvbCBsZXZlbHMgZm9yIGhhcnQgcGF0aWVudHMgdGhlbiBmb3IgaGVhbHRoeSBzdWJqZWN0cy4gVGhlIHBvaW50IGVzdGltYXRvciBmb3IgdGhpcyBwcm9iYWJpbGl0eSBpcyBgciBwcm9iSW5kKjEwMGAlLgo=</div>
-<div class="footer">
-    <hr>
-    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
-    CC BY-NC-SA 4.0</a> licence.
-</div>
 
 
-</div>
-</div>
+<!-- -->
 
-</div>
+</section>
+</section>
 
-<script>
-
-// add bootstrap table styles to pandoc tables
-function bootstrapStylePandocTables() {
-  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
-}
-$(document).ready(function () {
-  bootstrapStylePandocTables();
-});
-
-
-</script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open');
-  });
-});
-</script>
-
-<!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeSourceEmbed("09-NonparametericStatistics-WilcoxonMannWithney.Rmd");
-  window.initializeCodeFolding("show" === "show");
-});
-</script>
-
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    options.showAndHide = true;
-    options.smoothScroll = true;
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "9. Nonparametric Statistics - Wilcoxon-Mann-Withney test"</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Lieven Clement"</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "statOmics, Ghent University (https://statomics.github.io)"</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co">  html: default</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf: default</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> rel</span><span class="op">=</span><span class="st">"license"</span><span class="ot"> href</span><span class="op">=</span><span class="st">"https://creativecommons.org/licenses/by-nc-sa/4.0"</span><span class="dt">&gt;&lt;</span><span class="kw">img</span><span class="ot"> alt</span><span class="op">=</span><span class="st">"Creative Commons License"</span><span class="ot"> style</span><span class="op">=</span><span class="st">"border-width:0"</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"</span><span class="ot"> </span><span class="dt">/&gt;&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE, cache=FALSE}</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">include =</span> <span class="cn">TRUE</span>, <span class="at">comment =</span> <span class="cn">NA</span>, <span class="at">echo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">message =</span> <span class="cn">FALSE</span>, <span class="at">warning =</span> <span class="cn">FALSE</span>, <span class="at">cache =</span> <span class="cn">TRUE</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">140</span>)</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">iframe</span><span class="ot"> width</span><span class="op">=</span><span class="st">"560"</span><span class="ot"> height</span><span class="op">=</span><span class="st">"315"</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://www.youtube.com/embed/W7Jou4ZY8Vg?si=YVGWEeM7PaEtQmcZ"</span><span class="ot"> title</span><span class="op">=</span><span class="st">"YouTube video player"</span><span class="ot"> frameborder</span><span class="op">=</span><span class="st">"0"</span><span class="ot"> allow</span><span class="op">=</span><span class="st">"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"</span><span class="ot"> referrerpolicy</span><span class="op">=</span><span class="st">"strict-origin-when-cross-origin"</span><span class="ot"> allowfullscreen</span><span class="dt">&gt;&lt;/</span><span class="kw">iframe</span><span class="dt">&gt;</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introduction</span></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>Inference was only correct if distributional assumptions were satisfied</span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>e.g Normal distribution</span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>equal variance</span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a><span class="ss">-  </span>The $p$-value: $\text{P}_0\left<span class="co">[</span><span class="ot"> \vert T\vert \geq \vert t \vert \right</span><span class="co">]</span>$.</span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Calculated using the null distribution of $T$ that we derived under the assumptions</span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>In correct if assumptions are violated</span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a><span class="ss">-  </span>$95\%$ CI also builds upon these assumptions. If they are invalid then the intervals will not contain the population parameter with 95% probability.</span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Asymptotic theory is more difficult to place: the $t$-test is asymptotically non-parametric because for very large samples the distributional assumptions of normality are no longer important.</span>
+<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>If assumptions hold the parametric approach</span>
+<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>more efficient: larger power with same sample size + smaller CI.</span>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>more flexible: easier to analyse data with complex designs</span>
+<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cholesterol example</span></span>
+<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-49"><a href="#cb37-49" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Cholesterol concentration in blood measured for</span>
+<span id="cb37-50"><a href="#cb37-50" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>5 patients (group=1) two days upon a stroke</span>
+<span id="cb37-51"><a href="#cb37-51" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>5 healthy subject (groep=2).</span>
+<span id="cb37-52"><a href="#cb37-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-53"><a href="#cb37-53" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Is cholesterol concentration of hart patients and healthy subjects on average different?</span>
+<span id="cb37-54"><a href="#cb37-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-57"><a href="#cb37-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb37-58"><a href="#cb37-58" aria-hidden="true" tabindex="-1"></a>chol <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"https://raw.githubusercontent.com/GTPB/PSLS20/master/data/chol.txt"</span>)</span>
+<span id="cb37-59"><a href="#cb37-59" aria-hidden="true" tabindex="-1"></a>chol<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(chol<span class="sc">$</span>group)</span>
+<span id="cb37-60"><a href="#cb37-60" aria-hidden="true" tabindex="-1"></a>nGroups <span class="ot">&lt;-</span> <span class="fu">table</span>(chol<span class="sc">$</span>group)</span>
+<span id="cb37-61"><a href="#cb37-61" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">sum</span>(nGroups)</span>
+<span id="cb37-62"><a href="#cb37-62" aria-hidden="true" tabindex="-1"></a>chol</span>
+<span id="cb37-63"><a href="#cb37-63" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-64"><a href="#cb37-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-65"><a href="#cb37-65" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb37-66"><a href="#cb37-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-67"><a href="#cb37-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-68"><a href="#cb37-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=FALSE, fig.align='center'}</span></span>
+<span id="cb37-69"><a href="#cb37-69" aria-hidden="true" tabindex="-1"></a>chol <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> cholest)) <span class="sc">+</span></span>
+<span id="cb37-70"><a href="#cb37-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb37-71"><a href="#cb37-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="st">"jitter"</span>)</span>
+<span id="cb37-72"><a href="#cb37-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-73"><a href="#cb37-73" aria-hidden="true" tabindex="-1"></a>chol <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> cholest)) <span class="sc">+</span></span>
+<span id="cb37-74"><a href="#cb37-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb37-75"><a href="#cb37-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb37-76"><a href="#cb37-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>group)</span>
+<span id="cb37-77"><a href="#cb37-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-78"><a href="#cb37-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-79"><a href="#cb37-79" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Possibly outliers</span>
+<span id="cb37-80"><a href="#cb37-80" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Difficult to assess distributional assumptions when only 5 observations are available.</span>
+<span id="cb37-81"><a href="#cb37-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-82"><a href="#cb37-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-83"><a href="#cb37-83" aria-hidden="true" tabindex="-1"></a><span class="fu"># Rank Tests</span></span>
+<span id="cb37-84"><a href="#cb37-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-85"><a href="#cb37-85" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Important group of non-parametric test</span>
+<span id="cb37-86"><a href="#cb37-86" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Non-parametric,</span>
+<span id="cb37-87"><a href="#cb37-87" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Exact $p$-values using a permutation null distribution.</span>
+<span id="cb37-88"><a href="#cb37-88" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>No need for separate permutation distribution for each new dataset.</span>
+<span id="cb37-89"><a href="#cb37-89" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Permutation null distribution of rank tests only depends on sample size</span>
+<span id="cb37-90"><a href="#cb37-90" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Robust to outliers</span>
+<span id="cb37-91"><a href="#cb37-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-92"><a href="#cb37-92" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb37-93"><a href="#cb37-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-94"><a href="#cb37-94" aria-hidden="true" tabindex="-1"></a><span class="fu"># Ranks</span></span>
+<span id="cb37-95"><a href="#cb37-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-96"><a href="#cb37-96" aria-hidden="true" tabindex="-1"></a>Rank tests start from rank-transformed data.</span>
+<span id="cb37-97"><a href="#cb37-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-98"><a href="#cb37-98" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Let $Y_1, \ldots, Y_n$.</span>
+<span id="cb37-99"><a href="#cb37-99" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>In the absence of *ties*</span>
+<span id="cb37-100"><a href="#cb37-100" aria-hidden="true" tabindex="-1"></a>  $$R_i=R(Y_i) = <span class="sc">\#\{</span>Y_j: Y_j\leq Y_i; j=1,\ldots, n<span class="sc">\}</span>$$</span>
+<span id="cb37-101"><a href="#cb37-101" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Smallest observation has rank 1, second smallest rank 2, ... , largest observation gets rank $n$</span>
+<span id="cb37-102"><a href="#cb37-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-105"><a href="#cb37-105" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb37-106"><a href="#cb37-106" aria-hidden="true" tabindex="-1"></a>chol<span class="sc">$</span>cholest</span>
+<span id="cb37-107"><a href="#cb37-107" aria-hidden="true" tabindex="-1"></a><span class="fu">rank</span>(chol<span class="sc">$</span>cholest)</span>
+<span id="cb37-108"><a href="#cb37-108" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-109"><a href="#cb37-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-110"><a href="#cb37-110" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb37-111"><a href="#cb37-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-112"><a href="#cb37-112" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ties</span></span>
+<span id="cb37-113"><a href="#cb37-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-114"><a href="#cb37-114" aria-hidden="true" tabindex="-1"></a>Sometimes *ties* occur: two observations with identical values</span>
+<span id="cb37-115"><a href="#cb37-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-118"><a href="#cb37-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb37-119"><a href="#cb37-119" aria-hidden="true" tabindex="-1"></a>withTies <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">403</span>, <span class="dv">507</span>, <span class="dv">507</span>, <span class="dv">610</span>, <span class="dv">651</span>, <span class="dv">651</span>, <span class="dv">651</span>, <span class="dv">830</span>, <span class="dv">900</span>)</span>
+<span id="cb37-120"><a href="#cb37-120" aria-hidden="true" tabindex="-1"></a><span class="fu">rank</span>(withTies)</span>
+<span id="cb37-121"><a href="#cb37-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-122"><a href="#cb37-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-123"><a href="#cb37-123" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Ties: 507 occurs twice, 651 occurs 3 times</span>
+<span id="cb37-124"><a href="#cb37-124" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>If ties occur *midranks* are used.</span>
+<span id="cb37-125"><a href="#cb37-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-126"><a href="#cb37-126" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**midrank** of observation $Y_i$ becomes</span>
+<span id="cb37-127"><a href="#cb37-127" aria-hidden="true" tabindex="-1"></a>  \begin{eqnarray*}</span>
+<span id="cb37-128"><a href="#cb37-128" aria-hidden="true" tabindex="-1"></a>   R_i &amp;=&amp; \frac{ <span class="sc">\#\{</span>Y_j: Y_j\leq Y_i<span class="sc">\}</span> + ( <span class="sc">\#\{</span>Y_j: Y_j &lt; Y_i<span class="sc">\}</span> +1)}{2}.</span>
+<span id="cb37-129"><a href="#cb37-129" aria-hidden="true" tabindex="-1"></a>   \end{eqnarray*}</span>
+<span id="cb37-130"><a href="#cb37-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-131"><a href="#cb37-131" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb37-132"><a href="#cb37-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-133"><a href="#cb37-133" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ranks of pooled sample</span></span>
+<span id="cb37-134"><a href="#cb37-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-135"><a href="#cb37-135" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Let $Y_{ij}$, $i=1,\ldots, n_j$ be observations from two treatment groups $j=1,2$.</span>
+<span id="cb37-136"><a href="#cb37-136" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>They can also be represented by $Z_1,\ldots, Z_n$ ($n=n_1+n_2$), the outcomes of the pooled sample</span>
+<span id="cb37-137"><a href="#cb37-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-140"><a href="#cb37-140" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb37-141"><a href="#cb37-141" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(chol)</span>
+<span id="cb37-142"><a href="#cb37-142" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> chol<span class="sc">$</span>cholest</span>
+<span id="cb37-143"><a href="#cb37-143" aria-hidden="true" tabindex="-1"></a>z</span>
+<span id="cb37-144"><a href="#cb37-144" aria-hidden="true" tabindex="-1"></a><span class="fu">rank</span>(z)</span>
+<span id="cb37-145"><a href="#cb37-145" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-146"><a href="#cb37-146" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb37-147"><a href="#cb37-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-148"><a href="#cb37-148" aria-hidden="true" tabindex="-1"></a><span class="fu"># Wilcoxon-Mann-Whitney Test</span></span>
+<span id="cb37-149"><a href="#cb37-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-150"><a href="#cb37-150" aria-hidden="true" tabindex="-1"></a> Simultaneously developed by Wilcoxon, and,  Mann and Whitney:  **Wilcoxon-Mann-Whitney**, **Wilcoxon rank sum test**  or **Mann-Whitney U test**</span>
+<span id="cb37-151"><a href="#cb37-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-152"><a href="#cb37-152" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hypotheses</span></span>
+<span id="cb37-153"><a href="#cb37-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-154"><a href="#cb37-154" aria-hidden="true" tabindex="-1"></a>Under $H_0$ the distributions of the two groups are equal</span>
+<span id="cb37-155"><a href="#cb37-155" aria-hidden="true" tabindex="-1"></a>$$H_0: f_1=f_2$$</span>
+<span id="cb37-156"><a href="#cb37-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-157"><a href="#cb37-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-158"><a href="#cb37-158" aria-hidden="true" tabindex="-1"></a>Under the alternative $H_1$ the distributions differ in location $$H_1: \mu_1\neq \mu_2$$</span>
+<span id="cb37-159"><a href="#cb37-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-160"><a href="#cb37-160" aria-hidden="true" tabindex="-1"></a>$H_1$ assumes **location-shift**, we will relax this assumption later on.</span>
+<span id="cb37-161"><a href="#cb37-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-162"><a href="#cb37-162" aria-hidden="true" tabindex="-1"></a><span class="fu">## Test statistic</span></span>
+<span id="cb37-163"><a href="#cb37-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-164"><a href="#cb37-164" aria-hidden="true" tabindex="-1"></a>Classic T-test: difference in sample means $\bar{Y}_1-\bar{Y}_2$.</span>
+<span id="cb37-165"><a href="#cb37-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-166"><a href="#cb37-166" aria-hidden="true" tabindex="-1"></a>Here: Difference in sample means based on rank transformed data</span>
+<span id="cb37-167"><a href="#cb37-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-168"><a href="#cb37-168" aria-hidden="true" tabindex="-1"></a>Ranks based on the pooled sample (upon joining the observations from the two groups): $R_{ij}=R(Y_{ij})$ is de rank of observation $Y_{ij}$ in the pooled sample.</span>
+<span id="cb37-169"><a href="#cb37-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-170"><a href="#cb37-170" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb37-171"><a href="#cb37-171" aria-hidden="true" tabindex="-1"></a>  T = \frac{1}{n_1}\sum_{i=1}^{n_1} R(Y_{i1}) - \frac{1}{n_2}\sum_{i=1}^{n_2} R(Y_{i2}) .</span>
+<span id="cb37-172"><a href="#cb37-172" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb37-173"><a href="#cb37-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-174"><a href="#cb37-174" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Under $H_0$ we expect the average rank of the first group to be close to that of the second group so $T$ is close to zero.</span>
+<span id="cb37-175"><a href="#cb37-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-176"><a href="#cb37-176" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Under $H_1$ we expect the mean ranks to differ so that $T$ deviates from zero.</span>
+<span id="cb37-177"><a href="#cb37-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-178"><a href="#cb37-178" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>It is sufficient to only calculate</span>
+<span id="cb37-179"><a href="#cb37-179" aria-hidden="true" tabindex="-1"></a>  $$S_1=\sum_{i=1}^{n_1} R(Y_{i1})$$.</span>
+<span id="cb37-180"><a href="#cb37-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-181"><a href="#cb37-181" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$S_1$ is the sum of the ranks of the first group: *rank sum test*.</span>
+<span id="cb37-182"><a href="#cb37-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-183"><a href="#cb37-183" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>This holds because</span>
+<span id="cb37-184"><a href="#cb37-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-185"><a href="#cb37-185" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb37-186"><a href="#cb37-186" aria-hidden="true" tabindex="-1"></a>  S_1+S_2 = \text{sum of all ranks} = 1+2+\cdots + n=\frac{1}{2}n(n+1).</span>
+<span id="cb37-187"><a href="#cb37-187" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb37-188"><a href="#cb37-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-189"><a href="#cb37-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-190"><a href="#cb37-190" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$S_1$ (or $S_2$) is a good test statistic</span>
+<span id="cb37-191"><a href="#cb37-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-192"><a href="#cb37-192" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Use permutations to determine the exact permutation distribution. (Permute the ranks between the groups)</span>
+<span id="cb37-193"><a href="#cb37-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-194"><a href="#cb37-194" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>For a given $n$ and no *ties* the rank transformed data is always</span>
+<span id="cb37-195"><a href="#cb37-195" aria-hidden="true" tabindex="-1"></a>  $$1, 2, \ldots, n$$</span>
+<span id="cb37-196"><a href="#cb37-196" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>For given $n_1$ en $n_2$ the permutation distribution is always the same!</span>
+<span id="cb37-197"><a href="#cb37-197" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>With current computing power this is not so important any more.</span>
+<span id="cb37-198"><a href="#cb37-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-199"><a href="#cb37-199" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb37-200"><a href="#cb37-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-201"><a href="#cb37-201" aria-hidden="true" tabindex="-1"></a><span class="fu">## Standardized statistic</span></span>
+<span id="cb37-202"><a href="#cb37-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-203"><a href="#cb37-203" aria-hidden="true" tabindex="-1"></a>Often the standardized test statistic is used</span>
+<span id="cb37-204"><a href="#cb37-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-205"><a href="#cb37-205" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb37-206"><a href="#cb37-206" aria-hidden="true" tabindex="-1"></a>  T = \frac{S_1-\text{E}_{0}\left[S_1\right]}{\sqrt{\text{Var}_{0}\left<span class="co">[</span><span class="ot">S_1\right</span><span class="co">]</span>}},</span>
+<span id="cb37-207"><a href="#cb37-207" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb37-208"><a href="#cb37-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-209"><a href="#cb37-209" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>with $\text{E}_{0}\left[S_1\right]$ and $\text{Var}_{0}\left<span class="co">[</span><span class="ot">S_1\right</span><span class="co">]</span>$ the expect mean and variance of S1 under $H_0$.</span>
+<span id="cb37-210"><a href="#cb37-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-211"><a href="#cb37-211" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Under $H_0$</span>
+<span id="cb37-212"><a href="#cb37-212" aria-hidden="true" tabindex="-1"></a> $$</span>
+<span id="cb37-213"><a href="#cb37-213" aria-hidden="true" tabindex="-1"></a>   \text{E}_{0}\left[S_1\right]= \frac{1}{2}n_1(n+1) \;\;\;\;\text{ en }\;\;\;\; \text{Var}_{0}\left<span class="co">[</span><span class="ot">S_1\right</span><span class="co">]</span>=\frac{1}{12}n_1n_2(n+1).</span>
+<span id="cb37-214"><a href="#cb37-214" aria-hidden="true" tabindex="-1"></a> $$</span>
+<span id="cb37-215"><a href="#cb37-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-216"><a href="#cb37-216" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Under $H_0$ and when $\min(n_1,n_2)\rightarrow \infty$</span>
+<span id="cb37-217"><a href="#cb37-217" aria-hidden="true" tabindex="-1"></a> $$</span>
+<span id="cb37-218"><a href="#cb37-218" aria-hidden="true" tabindex="-1"></a>    T = \frac{S_1-\text{E}_{0}\left[S_1\right]}{\sqrt{\text{Var}_{0}\left<span class="co">[</span><span class="ot">S_1\right</span><span class="co">]</span>}} \rightarrow N(0,1).</span>
+<span id="cb37-219"><a href="#cb37-219" aria-hidden="true" tabindex="-1"></a> $$</span>
+<span id="cb37-220"><a href="#cb37-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-221"><a href="#cb37-221" aria-hidden="true" tabindex="-1"></a>Asymptotically the standardised statistic follows a standard normal distribution!</span>
+<span id="cb37-222"><a href="#cb37-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-223"><a href="#cb37-223" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb37-224"><a href="#cb37-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-225"><a href="#cb37-225" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cholesterol example</span></span>
+<span id="cb37-226"><a href="#cb37-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-227"><a href="#cb37-227" aria-hidden="true" tabindex="-1"></a>We illustrate the result for the cholesterol example using the R function <span class="in">`wilcox.test`</span>.</span>
+<span id="cb37-230"><a href="#cb37-230" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb37-231"><a href="#cb37-231" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(cholest <span class="sc">~</span> group, <span class="at">data =</span> chol)</span>
+<span id="cb37-232"><a href="#cb37-232" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-233"><a href="#cb37-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-234"><a href="#cb37-234" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>We reject $H_0$ ($p=$ <span class="in">`r format(wilcox.test(cholest~group,data=chol)$p.value,digits=2)`</span> $&lt;0.05$)</span>
+<span id="cb37-235"><a href="#cb37-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-236"><a href="#cb37-236" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The output shows $W=$ <span class="in">`r wilcox.test(cholest~group,data=chol)$statistic`</span>?</span>
+<span id="cb37-237"><a href="#cb37-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-238"><a href="#cb37-238" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Lets calculate</span>
+<span id="cb37-241"><a href="#cb37-241" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb37-242"><a href="#cb37-242" aria-hidden="true" tabindex="-1"></a>S1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">rank</span>(chol<span class="sc">$</span>cholest)[chol<span class="sc">$</span>group <span class="sc">==</span> <span class="dv">1</span>])</span>
+<span id="cb37-243"><a href="#cb37-243" aria-hidden="true" tabindex="-1"></a>S1</span>
+<span id="cb37-244"><a href="#cb37-244" aria-hidden="true" tabindex="-1"></a>S2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">rank</span>(chol<span class="sc">$</span>cholest)[chol<span class="sc">$</span>group <span class="sc">==</span> <span class="dv">2</span>])</span>
+<span id="cb37-245"><a href="#cb37-245" aria-hidden="true" tabindex="-1"></a>S2</span>
+<span id="cb37-246"><a href="#cb37-246" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-247"><a href="#cb37-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-248"><a href="#cb37-248" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Where does $W=$ <span class="in">`r wilcox.test(cholest~group,data=chol)$statistic`</span> comes from?</span>
+<span id="cb37-249"><a href="#cb37-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-250"><a href="#cb37-250" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb37-251"><a href="#cb37-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-252"><a href="#cb37-252" aria-hidden="true" tabindex="-1"></a><span class="fu">## Mann and Whitney test</span></span>
+<span id="cb37-253"><a href="#cb37-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-254"><a href="#cb37-254" aria-hidden="true" tabindex="-1"></a>Mann and Whitney test in absence of ties:</span>
+<span id="cb37-255"><a href="#cb37-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-256"><a href="#cb37-256" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb37-257"><a href="#cb37-257" aria-hidden="true" tabindex="-1"></a> U_1 = \sum_{i=1}^{n_1}\sum_{k=1}^{n_2} \text{I}\left<span class="sc">\{</span>Y_{i1}\geq Y_{k2}\right<span class="sc">\}</span>.</span>
+<span id="cb37-258"><a href="#cb37-258" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb37-259"><a href="#cb37-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-260"><a href="#cb37-260" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>with $\text{I}\left<span class="sc">\{</span>.\right<span class="sc">\}</span>$ an indicator that equals 1  if the expression is true and is zero otherwise.</span>
+<span id="cb37-261"><a href="#cb37-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-262"><a href="#cb37-262" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>U counts how many times an observation of the first group is larger or equal to an observation from the second group.</span>
+<span id="cb37-263"><a href="#cb37-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-266"><a href="#cb37-266" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb37-267"><a href="#cb37-267" aria-hidden="true" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(chol, group <span class="sc">==</span> <span class="dv">1</span>)<span class="sc">$</span>cholest</span>
+<span id="cb37-268"><a href="#cb37-268" aria-hidden="true" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="fu">subset</span>(chol, group <span class="sc">==</span> <span class="dv">2</span>)<span class="sc">$</span>cholest</span>
+<span id="cb37-269"><a href="#cb37-269" aria-hidden="true" tabindex="-1"></a>u1Hlp <span class="ot">&lt;-</span> <span class="fu">sapply</span>(y1, <span class="cf">function</span>(y1i, y2) {</span>
+<span id="cb37-270"><a href="#cb37-270" aria-hidden="true" tabindex="-1"></a>  y1i <span class="sc">&gt;=</span> y2</span>
+<span id="cb37-271"><a href="#cb37-271" aria-hidden="true" tabindex="-1"></a>}, <span class="at">y2 =</span> y2)</span>
+<span id="cb37-272"><a href="#cb37-272" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(u1Hlp) <span class="ot">&lt;-</span> y1</span>
+<span id="cb37-273"><a href="#cb37-273" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(u1Hlp) <span class="ot">&lt;-</span> y2</span>
+<span id="cb37-274"><a href="#cb37-274" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-275"><a href="#cb37-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-278"><a href="#cb37-278" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb37-279"><a href="#cb37-279" aria-hidden="true" tabindex="-1"></a>u1Hlp</span>
+<span id="cb37-280"><a href="#cb37-280" aria-hidden="true" tabindex="-1"></a>U1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(u1Hlp)</span>
+<span id="cb37-281"><a href="#cb37-281" aria-hidden="true" tabindex="-1"></a>U1</span>
+<span id="cb37-282"><a href="#cb37-282" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-283"><a href="#cb37-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-284"><a href="#cb37-284" aria-hidden="true" tabindex="-1"></a>It can be shown that $U_1 = S_1 - \frac{1}{2}n_1(n_1+1).$</span>
+<span id="cb37-285"><a href="#cb37-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-288"><a href="#cb37-288" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb37-289"><a href="#cb37-289" aria-hidden="true" tabindex="-1"></a>S1 <span class="sc">-</span> nGroups[<span class="dv">1</span>] <span class="sc">*</span> (nGroups[<span class="dv">1</span>] <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb37-290"><a href="#cb37-290" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-291"><a href="#cb37-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-292"><a href="#cb37-292" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>$U_1$ en $S_1$ contain the same information</span>
+<span id="cb37-293"><a href="#cb37-293" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>$U_1$ is also a rank statistic, and</span>
+<span id="cb37-294"><a href="#cb37-294" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Exact test based on $U_1$ and $S_1$ are equivalent.</span>
+<span id="cb37-295"><a href="#cb37-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-296"><a href="#cb37-296" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb37-297"><a href="#cb37-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-298"><a href="#cb37-298" aria-hidden="true" tabindex="-1"></a><span class="fu">## Probabilistic index</span></span>
+<span id="cb37-299"><a href="#cb37-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-300"><a href="#cb37-300" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$U_1$ has a better interpretation feature</span>
+<span id="cb37-301"><a href="#cb37-301" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Let $Y_j$ a random observation from group $j$ ($j=1,2$). Then</span>
+<span id="cb37-302"><a href="#cb37-302" aria-hidden="true" tabindex="-1"></a>\begin{eqnarray*}</span>
+<span id="cb37-303"><a href="#cb37-303" aria-hidden="true" tabindex="-1"></a>  \frac{1}{n_1n_2}\text{E}\left<span class="co">[</span><span class="ot">U_1\right</span><span class="co">]</span></span>
+<span id="cb37-304"><a href="#cb37-304" aria-hidden="true" tabindex="-1"></a>     &amp;=&amp; \text{P}\left<span class="co">[</span><span class="ot">Y_1 \geq Y_2\right</span><span class="co">]</span>.</span>
+<span id="cb37-305"><a href="#cb37-305" aria-hidden="true" tabindex="-1"></a>\end{eqnarray*}</span>
+<span id="cb37-306"><a href="#cb37-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-307"><a href="#cb37-307" aria-hidden="true" tabindex="-1"></a>So we can estimate the probability by calculating the mean of all indicator variable values $\text{I}\left<span class="sc">\{</span>Y_{i1}\geq Y_{k2}\right<span class="sc">\}</span>$. Note, that we did $n_1 \times n_2$ comparisons</span>
+<span id="cb37-308"><a href="#cb37-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-311"><a href="#cb37-311" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb37-312"><a href="#cb37-312" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(u1Hlp)</span>
+<span id="cb37-313"><a href="#cb37-313" aria-hidden="true" tabindex="-1"></a>U1 <span class="sc">/</span> (nGroups[<span class="dv">1</span>] <span class="sc">*</span> nGroups[<span class="dv">2</span>])</span>
+<span id="cb37-314"><a href="#cb37-314" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-315"><a href="#cb37-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-316"><a href="#cb37-316" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Probability $\text{P}\left<span class="co">[</span><span class="ot">Y_1 \geq Y_2\right</span><span class="co">]</span>$ is referred to as the *probabilistic index*.</span>
+<span id="cb37-317"><a href="#cb37-317" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>It is the probability that a random observation of the first group is larger or equal than a random observation of the second group</span>
+<span id="cb37-318"><a href="#cb37-318" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>If $H_0$ holds $\text{P}\left<span class="co">[</span><span class="ot">Y_1 \geq Y_2\right</span><span class="co">]</span>=\frac{1}{2}$.</span>
+<span id="cb37-319"><a href="#cb37-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-320"><a href="#cb37-320" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>R function <span class="in">`wilcox.test`</span> does not return the Wilcoxon rank sum statistic. It returns the Mann-Whitney statistic $U_1$.</span>
+<span id="cb37-321"><a href="#cb37-321" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Lets revisit the result</span>
+<span id="cb37-324"><a href="#cb37-324" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb37-325"><a href="#cb37-325" aria-hidden="true" tabindex="-1"></a>wTest <span class="ot">&lt;-</span> <span class="fu">wilcox.test</span>(cholest <span class="sc">~</span> group, <span class="at">data =</span> chol)</span>
+<span id="cb37-326"><a href="#cb37-326" aria-hidden="true" tabindex="-1"></a>wTest</span>
+<span id="cb37-327"><a href="#cb37-327" aria-hidden="true" tabindex="-1"></a>U1</span>
+<span id="cb37-328"><a href="#cb37-328" aria-hidden="true" tabindex="-1"></a>probInd <span class="ot">&lt;-</span> wTest<span class="sc">$</span>statistic <span class="sc">/</span> <span class="fu">prod</span>(nGroups)</span>
+<span id="cb37-329"><a href="#cb37-329" aria-hidden="true" tabindex="-1"></a>probInd</span>
+<span id="cb37-330"><a href="#cb37-330" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb37-331"><a href="#cb37-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-332"><a href="#cb37-332" aria-hidden="true" tabindex="-1"></a>Because $p=$ <span class="in">`r format(wTest$p.value,digits=3)`</span> $&lt;0.05$ we conclude at the $5\%$ significance level that the mean cholesterol level of hart patients is larger then that of healthy subjects.</span>
+<span id="cb37-333"><a href="#cb37-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-334"><a href="#cb37-334" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Note that we have assumed that the location-shift model is valid in this conclusion.</span>
+<span id="cb37-335"><a href="#cb37-335" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>We also know that higher cholesterol level are more likely for hart patients then for healthy subjects and this probability is</span>
+<span id="cb37-336"><a href="#cb37-336" aria-hidden="true" tabindex="-1"></a>$U1/(n_1\times n_2)=$ <span class="in">`r probInd*100`</span>%.</span>
+<span id="cb37-337"><a href="#cb37-337" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>We should assess the location shift assumption. But this is not possible with only 5 observations.</span>
+<span id="cb37-338"><a href="#cb37-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-339"><a href="#cb37-339" aria-hidden="true" tabindex="-1"></a>Without the location-shift assumption the conclusion in terms of the probabilistic index remains valid!</span>
+<span id="cb37-340"><a href="#cb37-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-341"><a href="#cb37-341" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>So when we do not assume location shift we test for</span>
+<span id="cb37-342"><a href="#cb37-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-343"><a href="#cb37-343" aria-hidden="true" tabindex="-1"></a>$$H_0: F_1=F_2 \text{ vs } H_1: P<span class="co">[</span><span class="ot">Y_1 \geq Y_2</span><span class="co">]</span> \neq 0.5.$$</span>
+<span id="cb37-344"><a href="#cb37-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-345"><a href="#cb37-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-346"><a href="#cb37-346" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conclusion</span></span>
+<span id="cb37-347"><a href="#cb37-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-348"><a href="#cb37-348" aria-hidden="true" tabindex="-1"></a>There is a significant difference in the distribution of the cholesterol concentration of hart patients two days upon a stroke and that of healthy subject ($p=$ <span class="in">`r format(wTest$p.value,digits=3)`</span>). It is more likely to observe higher cholesterol levels for hart patients then for healthy subjects. The point estimator for this probability is <span class="in">`r probInd*100`</span>%.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
 
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
-</body>
-</html>
+
+</body></html>

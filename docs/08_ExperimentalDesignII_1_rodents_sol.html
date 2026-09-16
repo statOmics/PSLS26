@@ -1,67 +1,33 @@
 <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<html>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
 
-<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta name="author" content="Lieven Clement &amp; Alexandre Segers">
 
-
-<meta name="author" content="Lieven Clement &amp; Alexandre Segers" />
-
-
-<title>Experimental Design II: replication and power exercise 1 - solution</title>
-
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
-<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<style>h1 {font-size: 34px;}
-       h1.title {font-size: 38px;}
-       h2 {font-size: 30px;}
-       h3 {font-size: 24px;}
-       h4 {font-size: 18px;}
-       h5 {font-size: 16px;}
-       h6 {font-size: 12px;}
-       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
-       pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
-<script src="site_libs/navigation-1.1/sourceembed.js"></script>
-<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
-
-
-
-<style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
-</style>
-<style type="text/css" data-origin="pandoc">
+<title>Experimental Design II: replication and power exercise 1 - solution – PSLS26 - Practical Statistics for the Life Sciences</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -72,7 +38,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -86,491 +52,310 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
-  {  background-color: #f8f8f8; }
+  {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ef2929; } /* Alert */
-code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #204a87; } /* Attribute */
-code span.bn { color: #0000cf; } /* BaseN */
-code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4e9a06; } /* Char */
-code span.cn { color: #8f5902; } /* Constant */
-code span.co { color: #8f5902; font-style: italic; } /* Comment */
-code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code span.dt { color: #204a87; } /* DataType */
-code span.dv { color: #0000cf; } /* DecVal */
-code span.er { color: #a40000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #0000cf; } /* Float */
-code span.fu { color: #204a87; font-weight: bold; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code span.ot { color: #8f5902; } /* Other */
-code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
-code span.ss { color: #4e9a06; } /* SpecialString */
-code span.st { color: #4e9a06; } /* String */
-code span.va { color: #000000; } /* Variable */
-code span.vs { color: #4e9a06; } /* VerbatimString */
-code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-
-.sourceCode .row {
-  width: 100%;
-}
-.sourceCode {
-  overflow-x: auto;
-}
-.code-folding-btn {
-  margin-right: -30px;
-}
 </style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    var j = 0;
-    while (j < rules.length) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
-        j++;
-        continue;
-      }
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') {
-        j++;
-        continue;
-      }
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f79c7fb6db380d32be398468f2fb58cf.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-2c9dadc89b91d1343c807e0fac51702d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
-})();
-</script>
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
-
-<style type="text/css">
-#rmd-source-code {
-  display: none;
-}
-</style>
-
-
-<link rel="stylesheet" href="style.css" type="text/css" />
-
-
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-img {
-  max-width:100%;
-}
-.tabbed-pane {
-  padding-top: 12px;
-}
-.html-widget {
-  margin-bottom: 20px;
-}
-button.code-folding-btn:focus {
-  outline: none;
-}
-summary {
-  display: list-item;
-}
-details > summary > p:only-child {
-  display: inline;
-}
-pre code {
-  padding: 0;
-}
-</style>
-
-
-<style type="text/css">
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  border-radius: 0 6px 6px 6px;
-}
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #cccccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-.dropdown-submenu:hover>a:after {
-  border-left-color: #adb5bd;
-}
-.dropdown-submenu.pull-left {
-  float: none;
-}
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  border-radius: 6px 0 6px 6px;
-}
-</style>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-// manage active state of menu based on current page
-$(document).ready(function () {
-  // active menu anchor
-  href = window.location.pathname
-  href = href.substr(href.lastIndexOf('/') + 1)
-  if (href === "")
-    href = "index.html";
-  var menuAnchor = $('a[href="' + href + '"]');
-
-  // mark the anchor link active (and if it's in a dropdown, also mark that active)
-  var dropdown = menuAnchor.closest('li.dropdown');
-  if (window.bootstrap) { // Bootstrap 4+
-    menuAnchor.addClass('active');
-    dropdown.find('> .dropdown-toggle').addClass('active');
-  } else { // Bootstrap 3
-    menuAnchor.parent().addClass('active');
-    dropdown.addClass('active');
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
   }
-
-  // Navbar adjustments
-  var navHeight = $(".navbar").first().height() + 15;
-  var style = document.createElement('style');
-  var pt = "padding-top: " + navHeight + "px; ";
-  var mt = "margin-top: -" + navHeight + "px; ";
-  var css = "";
-  // offset scroll position for anchor links (for fixed navbar)
-  for (var i = 1; i <= 6; i++) {
-    css += ".section h" + i + "{ " + pt + mt + "}\n";
-  }
-  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
-  document.head.appendChild(style);
-});
+}
+window.Quarto = {
+  typesetMath
+};
 </script>
 
-<!-- tabsets -->
-
-<style type="text/css">
-.tabset-dropdown > .nav-tabs {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "\e259";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "\e258";
-  font-family: 'Glyphicons Halflings';
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs > li.active {
-  display: block;
-}
-
-.tabset-dropdown > .nav-tabs > li > a,
-.tabset-dropdown > .nav-tabs > li > a:focus,
-.tabset-dropdown > .nav-tabs > li > a:hover {
-  border: none;
-  display: inline-block;
-  border-radius: 4px;
-  background-color: transparent;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
-  display: block;
-  float: none;
-}
-
-.tabset-dropdown > .nav-tabs > li {
-  display: none;
-}
-</style>
-
-<!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
-
-
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
-
+<link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="floating nav-fixed quarto-light">
 
-
-<div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
-
-
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html"></a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">PSLS26 - Practical Statistics for the Life Sciences</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-easel" role="img">
+</i> 
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
         <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-  </a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-chalkboard-teacher"></span>
-     
-    Topics
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="01-intro.html">1. Introduction</a>
-    </li>
-    <li>
-      <a href="02-concepts.html">2. Concepts</a>
-    </li>
-    <li>
-      <a href="03-experimentalDesign.html">3. Experimental Design I</a>
-    </li>
-    <li>
-      <a href="04-dataExploration.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference.html">5.1 Statistical Inference 1</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference-twosampleT.html">5.2 Statistical Inference 2</a>
-    </li>
-    <li>
-      <a href="06-linearRegression.html">6. Linear Regression</a>
-    </li>
-    <li>
-      <a href="07-Anova.html">7. Analysis of Variance</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression.html">8. Multiple Regression</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression-SpecificDesigns.html">8.2 Multiple Regression: Factorial Designs</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign2.html">8.3. Experimental Design II</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign3.html">8.4. Experimental Design III</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-WilcoxonMannWithney.html">9.1. Nonparametric Statistics 1</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-KruskalWallis.html">9.2. Nonparametric Statistics 2</a>
-    </li>
-    <li>
-      <a href="10-categoricalDataAnalysis.html">10. Categorical Data Analysis</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-laptop"></span>
-     
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="04_exercises.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05_exercises.html">5. Statistical inference</a>
-    </li>
-    <li>
-      <a href="06_exercises.html">6. Simple linear regression</a>
-    </li>
-    <li>
-      <a href="07_exercises.html">7. ANOVA</a>
-    </li>
-    <li>
-      <a href="08_exercises.html">8. Multiple linear regression</a>
-    </li>
-    <li>
-      <a href="09_exercises.html">9. Non-parametric statistics</a>
-    </li>
-  </ul>
-</li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
+    <a class="dropdown-item" href="./01-intro.html">
+ <span class="dropdown-text">1. Introduction</span></a>
+  </li>  
         <li>
-  <a href="http://statomics.github.io/">statOmics</a>
-</li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container -->
-</div><!--/.navbar -->
-
-<div id="header">
-
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-<li role="separator" class="divider"></li>
-<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+    <a class="dropdown-item" href="./02-concepts.html">
+ <span class="dropdown-text">2. Concepts</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-experimentalDesign.html">
+ <span class="dropdown-text">3. Experimental Design I</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-dataExploration.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference.html">
+ <span class="dropdown-text">5.1 Statistical Inference 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference-twosampleT.html">
+ <span class="dropdown-text">5.2 Statistical Inference 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06-linearRegression.html">
+ <span class="dropdown-text">6. Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07-Anova.html">
+ <span class="dropdown-text">7. Analysis of Variance</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression.html">
+ <span class="dropdown-text">8. Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression-SpecificDesigns.html">
+ <span class="dropdown-text">8.2 Multiple Regression: Factorial Designs</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign2.html">
+ <span class="dropdown-text">8.3. Experimental Design II</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign3.html">
+ <span class="dropdown-text">8.4. Experimental Design III</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-WilcoxonMannWithney.html">
+ <span class="dropdown-text">9.1. Nonparametric Statistics 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-KruskalWallis.html">
+ <span class="dropdown-text">9.2. Nonparametric Statistics 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./10-categoricalDataAnalysis.html">
+ <span class="dropdown-text">10. Categorical Data Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-exercises" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-laptop" role="img">
+</i> 
+ <span class="menu-text">Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-exercises">    
+        <li>
+    <a class="dropdown-item" href="./04_exercises.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05_exercises.html">
+ <span class="dropdown-text">5. Statistical inference</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06_exercises.html">
+ <span class="dropdown-text">6. Simple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07_exercises.html">
+ <span class="dropdown-text">7. ANOVA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08_exercises.html">
+ <span class="dropdown-text">8. Multiple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09_exercises.html">
+ <span class="dropdown-text">9. Non-parametric statistics</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="http://statomics.github.io/"> 
+<span class="menu-text">statOmics</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#power" id="toc-power" class="nav-link active" data-scroll-target="#power"><span class="header-section-number">1</span> Power</a></li>
+  <li><a href="#rodents" id="toc-rodents" class="nav-link" data-scroll-target="#rodents"><span class="header-section-number">2</span> Rodents</a>
+  <ul class="collapse">
+  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration"><span class="header-section-number">2.1</span> Data exploration</a></li>
+  </ul></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis"><span class="header-section-number">3</span> Analysis</a></li>
+  <li><a href="#power-of-the-test-to-detect-the-same-effect-size-as-observed-in-our-dataset-with-our-experimental-design" id="toc-power-of-the-test-to-detect-the-same-effect-size-as-observed-in-our-dataset-with-our-experimental-design" class="nav-link" data-scroll-target="#power-of-the-test-to-detect-the-same-effect-size-as-observed-in-our-dataset-with-our-experimental-design"><span class="header-section-number">4</span> Power of the test to detect the same effect size as observed in our dataset with our experimental design?</a>
+  <ul class="collapse">
+  <li><a href="#simulation-function" id="toc-simulation-function" class="nav-link" data-scroll-target="#simulation-function"><span class="header-section-number">4.1</span> Simulation function</a></li>
+  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation"><span class="header-section-number">4.2</span> Simulation</a></li>
+  </ul></li>
+  <li><a href="#power-for-a-balanced-design" id="toc-power-for-a-balanced-design" class="nav-link" data-scroll-target="#power-for-a-balanced-design"><span class="header-section-number">5</span> Power for a balanced design</a></li>
+  <li><a href="#required-sample-size-to-obtain-a-power-of-90" id="toc-required-sample-size-to-obtain-a-power-of-90" class="nav-link" data-scroll-target="#required-sample-size-to-obtain-a-power-of-90"><span class="header-section-number">6</span> Required sample size to obtain a power of 90 %?</a></li>
+  <li><a href="#impact-of-effect-size" id="toc-impact-of-effect-size" class="nav-link" data-scroll-target="#impact-of-effect-size"><span class="header-section-number">7</span> Impact of effect size</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Experimental Design II: replication and power exercise 1 - solution</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<p class="subtitle lead">statOmics, Ghent University (https://statomics.github.io)</p>
 </div>
 
 
 
-<h1 class="title toc-ignore">Experimental Design II: replication and power exercise 1 - solution</h1>
-<h4 class="author">Lieven Clement &amp; Alexandre Segers</h4>
-<h4 class="date">statOmics, Ghent University (<a href="https://statomics.github.io" class="uri">https://statomics.github.io</a>)</h4>
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lieven Clement &amp; Alexandre Segers </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-
-
-<p><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
-<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-## ✔ dplyr     1.1.4     ✔ readr     2.1.5
-## ✔ forcats   1.0.0     ✔ stringr   1.5.1
-## ✔ ggplot2   3.5.1     ✔ tibble    3.2.1
-## ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
-## ✔ purrr     1.0.2     
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
-## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-<div id="power" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Power</h1>
+</div>
+<section id="power" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Power</h1>
 <p>The power of a test is defined as:</p>
 <p><span class="math display">\[P(p &lt;
-\alpha | H_1)\]</span>
-This is the probability to reject the nulhypothesis at the significance level <span class="math inline">\(\alpha\)</span> given that the alternative hypothesis is true.</p>
+\alpha | H_1)\]</span> This is the probability to reject the nulhypothesis at the significance level <span class="math inline">\(\alpha\)</span> given that the alternative hypothesis is true.</p>
 <p>The power depends on:</p>
 <ul>
 <li>the real effect size in the population <span class="math inline">\(\mathbf{L}^T\boldsymbol{\beta}\)</span>.</li>
@@ -579,54 +364,78 @@ This is the probability to reject the nulhypothesis at the significance level <s
 <li>Choice of significance-level <span class="math inline">\(\alpha\)</span>.</li>
 </ul>
 <p>We will evaluate the power using simulation.</p>
-</div>
-<div id="rodents" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Rodents</h1>
-<p>A biologist examined the effect of a fungal infection on the eating behavior of rodents.
-Infected apples were offered to a group of eight rodents, and sterile apples were offered to a group of 4 rodents. The amount of grams of apples consumed per kg body weight are given in the dataset below.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>rodents <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">weight =</span> <span class="fu">c</span>(<span class="dv">11</span>, <span class="dv">33</span>, <span class="dv">48</span>, <span class="dv">34</span>, <span class="dv">112</span>, <span class="dv">369</span>, <span class="dv">64</span>, <span class="dv">44</span>, <span class="dv">177</span>, <span class="dv">80</span>, <span class="dv">141</span>, <span class="dv">332</span>), <span class="at">group =</span> <span class="fu">as.factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&quot;treat&quot;</span>, <span class="dv">8</span>), <span class="fu">rep</span>(<span class="st">&quot;ctrl&quot;</span>, <span class="dv">4</span>))))</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>rodents</span></code></pre></div>
+</section>
+<section id="rodents" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Rodents</h1>
+<p>A biologist examined the effect of a fungal infection on the eating behavior of rodents. Infected apples were offered to a group of eight rodents, and sterile apples were offered to a group of 4 rodents. The amount of grams of apples consumed per kg body weight are given in the dataset below.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rodents <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">weight =</span> <span class="fu">c</span>(<span class="dv">11</span>, <span class="dv">33</span>, <span class="dv">48</span>, <span class="dv">34</span>, <span class="dv">112</span>, <span class="dv">369</span>, <span class="dv">64</span>, <span class="dv">44</span>, <span class="dv">177</span>, <span class="dv">80</span>, <span class="dv">141</span>, <span class="dv">332</span>), <span class="at">group =</span> <span class="fu">as.factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"treat"</span>, <span class="dv">8</span>), <span class="fu">rep</span>(<span class="st">"ctrl"</span>, <span class="dv">4</span>))))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>rodents</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["weight"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[2],"type":["fct"],"align":["left"]}],"data":[{"1":"11","2":"treat"},{"1":"33","2":"treat"},{"1":"48","2":"treat"},{"1":"34","2":"treat"},{"1":"112","2":"treat"},{"1":"369","2":"treat"},{"1":"64","2":"treat"},{"1":"44","2":"treat"},{"1":"177","2":"ctrl"},{"1":"80","2":"ctrl"},{"1":"141","2":"ctrl"},{"1":"332","2":"ctrl"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div id="data-exploration" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Data exploration</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>rodents <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> weight)) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="fu">geom_jitter</span>()</span></code></pre></div>
-<p><img src="08_ExperimentalDesignII_1_rodents_sol_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>rodents <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> weight)) <span class="sc">+</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>group)</span></code></pre></div>
-<p><img src="08_ExperimentalDesignII_1_rodents_sol_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+</div>
+</div>
+<section id="data-exploration" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="data-exploration"><span class="header-section-number">2.1</span> Data exploration</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>rodents <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> weight)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="08_ExperimentalDesignII_1_rodents_sol_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>rodents <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> weight)) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="08_ExperimentalDesignII_1_rodents_sol_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>In the data exploration we do not have enough data to evaluate the assumptions.</p>
 <p>Suppose that the assumptions are valid and that standard deviation in the population would be equal to the ones you observed in the experiment.</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>What is the power of the experiment if the effect size and standard deviation in the population would be equal to the ones you observed in the experiment</li>
 <li>What would the power by if number of rodents would balanced in both groups</li>
 <li>How many observations would you need to pick up the treatment effect with a power of 90%?</li>
 <li>How many observations would you need to pick up the treatment effect of 60 g/kg with a power of 90%?</li>
 </ol>
-</div>
-</div>
-<div id="analysis" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Analysis</h1>
+</section>
+</section>
+<section id="analysis" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Analysis</h1>
 <p>We will model the data using a linear model with one dummy variable.</p>
 <p><span class="math display">\[
 y_i = \beta_0 + \beta_1 x_{t,i} +
 \epsilon_i
-\]</span>
-with <span class="math inline">\(x_{p,i} = 0\)</span> if the rodent is subjected the control treatment with sterile apples and <span class="math inline">\(x_{t,i} = 1\)</span> if rodent receives the treatment with infected apples.</p>
+\]</span> with <span class="math inline">\(x_{p,i} = 0\)</span> if the rodent is subjected the control treatment with sterile apples and <span class="math inline">\(x_{t,i} = 1\)</span> if rodent receives the treatment with infected apples.</p>
 <ul>
 <li>Estimated effect size?</li>
 </ul>
-<p>The average difference in relative abundance of Staphylococcus of patients
-of the transplant and the placebo group.</p>
+<p>The average difference in relative abundance of Staphylococcus of patients of the transplant and the placebo group.</p>
 <p><span class="math display">\[
 \hat \beta_1 = \bar y_t - \bar y_c
 \]</span></p>
@@ -634,284 +443,1009 @@ of the transplant and the placebo group.</p>
 <li><span class="math inline">\(H_0\)</span>: rodents eat consume on average the same amount of apples per kg body weight when they are fed with sterile or with infected apples.</li>
 <li><span class="math inline">\(H_1\)</span>: the average amount of apples in g/kg body weight is different when rodents are fed with sterile then as when they are fed with infected apples.</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> group, rodents)</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">summary</span>(lm1)</span></code></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = weight ~ group, data = rodents)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -102.500  -55.625  -41.438    1.531  279.625 
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)   
-## (Intercept)   182.50      57.03   3.200  0.00949 **
-## grouptreat    -93.12      69.85  -1.333  0.21204   
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 114.1 on 10 degrees of freedom
-## Multiple R-squared:  0.1509, Adjusted R-squared:  0.06601 
-## F-statistic: 1.777 on 1 and 10 DF,  p-value: 0.212</code></pre>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> group, rodents)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = weight ~ group, data = rodents)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-102.500  -55.625  -41.438    1.531  279.625 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)   182.50      57.03   3.200  0.00949 **
+grouptreat    -93.12      69.85  -1.333  0.21204   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 114.1 on 10 degrees of freedom
+Multiple R-squared:  0.1509,    Adjusted R-squared:  0.06601 
+F-statistic: 1.777 on 1 and 10 DF,  p-value: 0.212</code></pre>
+</div>
+</div>
 <p>With the current study and when we assume that the assumptions of the model hold, we conclude that the amount of apples that rodents on average consume does not differ significantly between the group that was fed with sterile apples and the group that was fed with infected apples.</p>
-</div>
-<div id="power-of-the-test-to-detect-the-same-effect-size-as-observed-in-our-dataset-with-our-experimental-design" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Power of the test to detect the same effect size as observed in our dataset with our experimental design?</h1>
-<div id="simulation-function" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Simulation function</h2>
+</section>
+<section id="power-of-the-test-to-detect-the-same-effect-size-as-observed-in-our-dataset-with-our-experimental-design" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Power of the test to detect the same effect size as observed in our dataset with our experimental design?</h1>
+<section id="simulation-function" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="simulation-function"><span class="header-section-number">4.1</span> Simulation function</h2>
 <p>Function to simulate data similar to that of our experiment under our model assumptions.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>simFast <span class="ot">&lt;-</span> <span class="cf">function</span>(form, data, betas, sd, contrasts, <span class="at">alpha =</span> .<span class="dv">05</span>, <span class="at">nSim =</span> <span class="dv">10000</span>) {</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  ySim <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(data) <span class="sc">*</span> nSim, <span class="at">sd =</span> sd)</span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">dim</span>(ySim) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">nrow</span>(data), nSim)</span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(form, data)</span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  ySim <span class="ot">&lt;-</span> ySim <span class="sc">+</span> <span class="fu">c</span>(design <span class="sc">%*%</span> betas)</span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  ySim <span class="ot">&lt;-</span> <span class="fu">t</span>(ySim)</span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  <span class="do">### Fitting</span></span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  fitAll <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">lmFit</span>(ySim, design)</span>
-<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>  <span class="do">### Inference</span></span>
-<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>  varUnscaled <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">t</span>(contrasts) <span class="sc">%*%</span> fitAll<span class="sc">$</span>cov.coefficients <span class="sc">%*%</span> contrasts)</span>
-<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>  contrasts <span class="ot">&lt;-</span> fitAll<span class="sc">$</span>coefficients <span class="sc">%*%</span> contrasts</span>
-<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>  seContrasts <span class="ot">&lt;-</span> varUnscaled<span class="sc">^</span>.<span class="dv">5</span> <span class="sc">*</span> fitAll<span class="sc">$</span>sigma</span>
-<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>  tstats <span class="ot">&lt;-</span> contrasts <span class="sc">/</span> seContrasts</span>
-<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>  pvals <span class="ot">&lt;-</span> <span class="fu">pt</span>(<span class="fu">abs</span>(tstats), fitAll<span class="sc">$</span>df.residual, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>) <span class="sc">*</span> <span class="dv">2</span></span>
-<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">mean</span>(pvals <span class="sc">&lt;</span> alpha))</span>
-<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>}</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>simFast <span class="ot">&lt;-</span> <span class="cf">function</span>(form, data, betas, sd, contrasts, <span class="at">alpha =</span> .<span class="dv">05</span>, <span class="at">nSim =</span> <span class="dv">10000</span>) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  ySim <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(data) <span class="sc">*</span> nSim, <span class="at">sd =</span> sd)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dim</span>(ySim) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">nrow</span>(data), nSim)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(form, data)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  ySim <span class="ot">&lt;-</span> ySim <span class="sc">+</span> <span class="fu">c</span>(design <span class="sc">%*%</span> betas)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  ySim <span class="ot">&lt;-</span> <span class="fu">t</span>(ySim)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="do">### Fitting</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  fitAll <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">lmFit</span>(ySim, design)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="do">### Inference</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  varUnscaled <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">t</span>(contrasts) <span class="sc">%*%</span> fitAll<span class="sc">$</span>cov.coefficients <span class="sc">%*%</span> contrasts)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  contrasts <span class="ot">&lt;-</span> fitAll<span class="sc">$</span>coefficients <span class="sc">%*%</span> contrasts</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  seContrasts <span class="ot">&lt;-</span> varUnscaled<span class="sc">^</span>.<span class="dv">5</span> <span class="sc">*</span> fitAll<span class="sc">$</span>sigma</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  tstats <span class="ot">&lt;-</span> contrasts <span class="sc">/</span> seContrasts</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  pvals <span class="ot">&lt;-</span> <span class="fu">pt</span>(<span class="fu">abs</span>(tstats), fitAll<span class="sc">$</span>df.residual, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>) <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">mean</span>(pvals <span class="sc">&lt;</span> alpha))</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div id="simulation" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> Simulation</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>betas <span class="ot">&lt;-</span> lm1<span class="sc">$</span>coefficients</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>form <span class="ot">&lt;-</span> <span class="er">~</span>group</span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sigma</span>(lm1)</span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">makeContrasts</span>(<span class="st">&quot;grouptreat&quot;</span>, <span class="at">levels =</span> <span class="fu">names</span>(lm1<span class="sc">$</span>coefficients))</span></code></pre></div>
-<pre><code>## Warning in limma::makeContrasts(&quot;grouptreat&quot;, levels =
-## names(lm1$coefficients)): Renaming (Intercept) to Intercept</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>power <span class="ot">&lt;-</span> <span class="fu">simFast</span>(form, rodents, betas, sd, <span class="at">contrasts =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">nSim =</span> nSim)</span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>power</span></code></pre></div>
-<pre><code>## [1] 0.2306</code></pre>
-<p>We observe that the experiment is severly underpowered. We only have a power of 23.1% to pick up the treatment effect.</p>
+</section>
+<section id="simulation" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="simulation"><span class="header-section-number">4.2</span> Simulation</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>betas <span class="ot">&lt;-</span> lm1<span class="sc">$</span>coefficients</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>form <span class="ot">&lt;-</span> <span class="er">~</span>group</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sigma</span>(lm1)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">makeContrasts</span>(<span class="st">"grouptreat"</span>, <span class="at">levels =</span> <span class="fu">names</span>(lm1<span class="sc">$</span>coefficients))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Renaming (Intercept) to Intercept</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>power <span class="ot">&lt;-</span> <span class="fu">simFast</span>(form, rodents, betas, sd, <span class="at">contrasts =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">nSim =</span> nSim)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>power</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.225</code></pre>
 </div>
 </div>
-<div id="power-for-a-balanced-design" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Power for a balanced design</h1>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>betas <span class="ot">&lt;-</span> lm1<span class="sc">$</span>coefficients</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>form <span class="ot">&lt;-</span> <span class="er">~</span>group</span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sigma</span>(lm1)</span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">makeContrasts</span>(<span class="st">&quot;grouptreat&quot;</span>, <span class="at">levels =</span> <span class="fu">names</span>(lm1<span class="sc">$</span>coefficients))</span></code></pre></div>
-<pre><code>## Warning in limma::makeContrasts(&quot;grouptreat&quot;, levels =
-## names(lm1$coefficients)): Renaming (Intercept) to Intercept</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> <span class="fu">nrow</span>(rodents) <span class="sc">/</span> <span class="dv">2</span></span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>predictorData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;ctrl&quot;</span>, <span class="st">&quot;treat&quot;</span>), <span class="fu">c</span>(n1, n2)) <span class="sc">%&gt;%</span> <span class="fu">as.factor</span>())</span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>powerBalanced <span class="ot">&lt;-</span> <span class="fu">simFast</span>(form, predictorData, betas, sd, <span class="at">contrasts =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">nSim =</span> nSim)</span>
-<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>powerBalanced</span></code></pre></div>
-<pre><code>## [1] 0.2493</code></pre>
-<p>We observe that the power is larger for the balanced design.
-We could also have known this from formula of the standard error from the two-sample t-test.</p>
+<p>We observe that the experiment is severly underpowered. We only have a power of 22.5% to pick up the treatment effect.</p>
+</section>
+</section>
+<section id="power-for-a-balanced-design" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Power for a balanced design</h1>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>betas <span class="ot">&lt;-</span> lm1<span class="sc">$</span>coefficients</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>form <span class="ot">&lt;-</span> <span class="er">~</span>group</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sigma</span>(lm1)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">makeContrasts</span>(<span class="st">"grouptreat"</span>, <span class="at">levels =</span> <span class="fu">names</span>(lm1<span class="sc">$</span>coefficients))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Renaming (Intercept) to Intercept</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> <span class="fu">nrow</span>(rodents) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>predictorData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"ctrl"</span>, <span class="st">"treat"</span>), <span class="fu">c</span>(n1, n2)) <span class="sc">|&gt;</span> <span class="fu">as.factor</span>())</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>powerBalanced <span class="ot">&lt;-</span> <span class="fu">simFast</span>(form, predictorData, betas, sd, <span class="at">contrasts =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">nSim =</span> nSim)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>powerBalanced</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2446</code></pre>
+</div>
+</div>
+<p>We observe that the power is larger for the balanced design. We could also have known this from formula of the standard error from the two-sample t-test.</p>
 <p><span class="math display">\[
 SE = \hat \sigma \sqrt{1/n1 + 1/n2}
-\]</span>
-Indeed,</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="fu">sum</span>(rodents<span class="sc">$</span>group <span class="sc">==</span> <span class="st">&quot;treat&quot;</span>) <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">sum</span>(rodents<span class="sc">$</span>group <span class="sc">==</span> <span class="st">&quot;ctrl&quot;</span>))</span></code></pre></div>
-<pre><code>## [1] 0.6123724</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> n1 <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> n1)</span></code></pre></div>
-<pre><code>## [1] 0.5773503</code></pre>
-<p>So the SE is larger when the design is not balanced.</p>
+\]</span> Indeed,</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="fu">sum</span>(rodents<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"treat"</span>) <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">sum</span>(rodents<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"ctrl"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6123724</code></pre>
 </div>
-<div id="required-sample-size-to-obtain-a-power-of-90" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Required sample size to obtain a power of 90 %?</h1>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1400</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>betas <span class="ot">&lt;-</span> lm1<span class="sc">$</span>coefficients</span>
-<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>form <span class="ot">&lt;-</span> <span class="er">~</span>group</span>
-<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sigma</span>(lm1)</span>
-<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>power <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">n =</span> <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">5</span>), <span class="at">power =</span> <span class="cn">NA</span>)</span>
-<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">makeContrasts</span>(<span class="st">&quot;grouptreat&quot;</span>, <span class="at">levels =</span> <span class="fu">names</span>(lm1<span class="sc">$</span>coefficients))</span></code></pre></div>
-<pre><code>## Warning in limma::makeContrasts(&quot;grouptreat&quot;, levels =
-## names(lm1$coefficients)): Renaming (Intercept) to Intercept</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(power))</span>
-<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>{</span>
-<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> power<span class="sc">$</span>n[i]</span>
-<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>  predictorData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;ctrl&quot;</span>, <span class="st">&quot;treat&quot;</span>), <span class="fu">c</span>(n1, n2)) <span class="sc">%&gt;%</span> <span class="fu">as.factor</span>())</span>
-<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a>  power<span class="sc">$</span>power[i] <span class="ot">&lt;-</span> <span class="fu">simFast</span>(form, predictorData, betas, sd, <span class="at">contrasts =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">nSim =</span> nSim)</span>
-<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a>}</span>
-<span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a>power</span></code></pre></div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> n1 <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> n1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5773503</code></pre>
+</div>
+</div>
+<p>So the SE is larger when the design is not balanced.</p>
+</section>
+<section id="required-sample-size-to-obtain-a-power-of-90" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Required sample size to obtain a power of 90 %?</h1>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1400</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>betas <span class="ot">&lt;-</span> lm1<span class="sc">$</span>coefficients</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>form <span class="ot">&lt;-</span> <span class="er">~</span>group</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sigma</span>(lm1)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>power <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">n =</span> <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">5</span>), <span class="at">power =</span> <span class="cn">NA</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">makeContrasts</span>(<span class="st">"grouptreat"</span>, <span class="at">levels =</span> <span class="fu">names</span>(lm1<span class="sc">$</span>coefficients))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Renaming (Intercept) to Intercept</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(power))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> power<span class="sc">$</span>n[i]</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  predictorData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"ctrl"</span>, <span class="st">"treat"</span>), <span class="fu">c</span>(n1, n2)) <span class="sc">|&gt;</span> <span class="fu">as.factor</span>())</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  power<span class="sc">$</span>power[i] <span class="ot">&lt;-</span> <span class="fu">simFast</span>(form, predictorData, betas, sd, <span class="at">contrasts =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">nSim =</span> nSim)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>power</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["n"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["power"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"5","2":"0.2106"},{"1":"10","2":"0.4063"},{"1":"15","2":"0.5753"},{"1":"20","2":"0.7087"},{"1":"25","2":"0.8077"},{"1":"30","2":"0.8792"},{"1":"35","2":"0.9196"},{"1":"40","2":"0.9515"},{"1":"45","2":"0.9688"},{"1":"50","2":"0.9816"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>power <span class="sc">%&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> power)) <span class="sc">+</span></span>
-<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code></pre></div>
-<p><img src="08_ExperimentalDesignII_1_rodents_sol_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>power <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> power)) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="08_ExperimentalDesignII_1_rodents_sol_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Through simulations we show that we need about 32-33 observations to obtain a power of about 90%.</p>
 <p>This is similar to what we would obtain with the close form formula that can be applied for a two group design</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">delta =</span> lm1<span class="sc">$</span>coef[<span class="dv">2</span>], <span class="at">sd =</span> <span class="fu">sigma</span>(lm1), <span class="at">power =</span> .<span class="dv">9</span>)</span></code></pre></div>
-<pre><code>## 
-##      Two-sample t test power calculation 
-## 
-##               n = 32.52035
-##           delta = 93.125
-##              sd = 114.067
-##       sig.level = 0.05
-##           power = 0.9
-##     alternative = two.sided
-## 
-## NOTE: n is number in *each* group</code></pre>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">delta =</span> lm1<span class="sc">$</span>coef[<span class="dv">2</span>], <span class="at">sd =</span> <span class="fu">sigma</span>(lm1), <span class="at">power =</span> .<span class="dv">9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Two-sample t test power calculation 
+
+              n = 32.52035
+          delta = 93.125
+             sd = 114.067
+      sig.level = 0.05
+          power = 0.9
+    alternative = two.sided
+
+NOTE: n is number in *each* group</code></pre>
 </div>
-<div id="impact-of-effect-size" class="section level1" number="7">
-<h1><span class="header-section-number">7</span> Impact of effect size</h1>
-<p>Suppose that we would like to pick up an effect size of <span class="math inline">\(\beta_1 = 60 g/kg\)</span>.
-how many samples would be required in each group to obtain a power of 90%?
-Note, that</p>
+</div>
+</section>
+<section id="impact-of-effect-size" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Impact of effect size</h1>
+<p>Suppose that we would like to pick up an effect size of <span class="math inline">\(\beta_1 = 60 g/kg\)</span>. how many samples would be required in each group to obtain a power of 90%? Note, that</p>
 <ul>
 <li>we do a two-sided test so the sign of the effect size is arbitrary.</li>
 <li>the intercept in the power analysis is also arbitrary so we could also set it at 0.</li>
 </ul>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1400</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>betas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">60</span>)</span>
-<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>form <span class="ot">&lt;-</span> <span class="er">~</span>group</span>
-<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sigma</span>(lm1)</span>
-<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a>power2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">n =</span> <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dv">5</span>), <span class="at">power =</span> <span class="cn">NA</span>)</span>
-<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">makeContrasts</span>(<span class="st">&quot;grouptreat&quot;</span>, <span class="at">levels =</span> <span class="fu">names</span>(lm1<span class="sc">$</span>coefficients))</span></code></pre></div>
-<pre><code>## Warning in limma::makeContrasts(&quot;grouptreat&quot;, levels =
-## names(lm1$coefficients)): Renaming (Intercept) to Intercept</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(power2))</span>
-<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>{</span>
-<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> power2<span class="sc">$</span>n[i]</span>
-<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a>  predictorData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;ctrl&quot;</span>, <span class="st">&quot;treat&quot;</span>), <span class="fu">c</span>(n1, n2)) <span class="sc">%&gt;%</span> <span class="fu">as.factor</span>())</span>
-<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a>  power2<span class="sc">$</span>power[i] <span class="ot">&lt;-</span> <span class="fu">simFast</span>(form, predictorData, betas, sd, <span class="at">contrasts =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">nSim =</span> nSim)</span>
-<span id="cb29-6"><a href="#cb29-6" tabindex="-1"></a>}</span>
-<span id="cb29-7"><a href="#cb29-7" tabindex="-1"></a>power2</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1400</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>betas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">60</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>form <span class="ot">&lt;-</span> <span class="er">~</span>group</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sigma</span>(lm1)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>power2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">n =</span> <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dv">5</span>), <span class="at">power =</span> <span class="cn">NA</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">makeContrasts</span>(<span class="st">"grouptreat"</span>, <span class="at">levels =</span> <span class="fu">names</span>(lm1<span class="sc">$</span>coefficients))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Renaming (Intercept) to Intercept</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(power2))</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> power2<span class="sc">$</span>n[i]</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  predictorData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"ctrl"</span>, <span class="st">"treat"</span>), <span class="fu">c</span>(n1, n2)) <span class="sc">|&gt;</span> <span class="fu">as.factor</span>())</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  power2<span class="sc">$</span>power[i] <span class="ot">&lt;-</span> <span class="fu">simFast</span>(form, predictorData, betas, sd, <span class="at">contrasts =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">nSim =</span> nSim)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>power2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["n"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["power"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"5","2":"0.1071"},{"1":"10","2":"0.2017"},{"1":"15","2":"0.2841"},{"1":"20","2":"0.3660"},{"1":"25","2":"0.4431"},{"1":"30","2":"0.5105"},{"1":"35","2":"0.5829"},{"1":"40","2":"0.6473"},{"1":"45","2":"0.6844"},{"1":"50","2":"0.7405"},{"1":"55","2":"0.7818"},{"1":"60","2":"0.8146"},{"1":"65","2":"0.8481"},{"1":"70","2":"0.8701"},{"1":"75","2":"0.8959"},{"1":"80","2":"0.9141"},{"1":"85","2":"0.9310"},{"1":"90","2":"0.9414"},{"1":"95","2":"0.9492"},{"1":"100","2":"0.9599"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>power2 <span class="sc">%&gt;%</span></span>
-<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> power)) <span class="sc">+</span></span>
-<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> .<span class="dv">9</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
-<p><img src="08_ExperimentalDesignII_1_rodents_sol_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>power2 <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> power)) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> .<span class="dv">9</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="08_ExperimentalDesignII_1_rodents_sol_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>We observe that we need between 75-80 observations to obtain a power of 90%.</p>
 <p>This is confirmed with the power functions for the two sample t-test.</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">60</span></span>
-<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>power <span class="ot">&lt;-</span> .<span class="dv">9</span></span>
-<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">d =</span> b1, <span class="at">sd =</span> <span class="fu">sigma</span>(lm1), <span class="at">type =</span> <span class="st">&quot;two.sample&quot;</span>, <span class="at">power =</span> power)</span></code></pre></div>
-<pre><code>## 
-##      Two-sample t test power calculation 
-## 
-##               n = 76.926
-##           delta = 60
-##              sd = 114.067
-##       sig.level = 0.05
-##           power = 0.9
-##     alternative = two.sided
-## 
-## NOTE: n is number in *each* group</code></pre>
-<p>Note, that we would require a much larger sample size. This is because the
-desired effect size that we would like to pick up is small compared to the
-variability (standard deviation) in the population.</p>
-</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">60</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>power <span class="ot">&lt;-</span> .<span class="dv">9</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">d =</span> b1, <span class="at">sd =</span> <span class="fu">sigma</span>(lm1), <span class="at">type =</span> <span class="st">"two.sample"</span>, <span class="at">power =</span> power)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Two-sample t test power calculation 
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRXhwZXJpbWVudGFsIERlc2lnbiBJSTogcmVwbGljYXRpb24gYW5kIHBvd2VyIGV4ZXJjaXNlIDEgLSBzb2x1dGlvbiIKYXV0aG9yOiAiTGlldmVuIENsZW1lbnQgJiBBbGV4YW5kcmUgU2VnZXJzIgpkYXRlOiAic3RhdE9taWNzLCBHaGVudCBVbml2ZXJzaXR5IChodHRwczovL3N0YXRvbWljcy5naXRodWIuaW8pIgotLS0KCgo8YSByZWw9ImxpY2Vuc2UiIGhyZWY9Imh0dHBzOi8vY3JlYXRpdmVjb21tb25zLm9yZy9saWNlbnNlcy9ieS1uYy1zYS80LjAiPjxpbWcgYWx0PSJDcmVhdGl2ZSBDb21tb25zIExpY2Vuc2UiIHN0eWxlPSJib3JkZXItd2lkdGg6MCIgc3JjPSJodHRwczovL2kuY3JlYXRpdmVjb21tb25zLm9yZy9sL2J5LW5jLXNhLzQuMC84OHgzMS5wbmciIC8+PC9hPgoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQpgYGAKCiMgUG93ZXIKClRoZSBwb3dlciBvZiBhIHRlc3QgaXMgZGVmaW5lZCBhczoKCiQkUChwIDwKXGFscGhhIHwgSF8xKSQkClRoaXMgaXMgdGhlIHByb2JhYmlsaXR5IHRvIHJlamVjdCB0aGUgbnVsaHlwb3RoZXNpcyBhdCB0aGUgc2lnbmlmaWNhbmNlIGxldmVsICRcYWxwaGEkIGdpdmVuIHRoYXQgdGhlIGFsdGVybmF0aXZlIGh5cG90aGVzaXMgaXMgdHJ1ZS4KClRoZSBwb3dlciBkZXBlbmRzIG9uOgoKLSB0aGUgcmVhbCBlZmZlY3Qgc2l6ZSBpbiB0aGUgcG9wdWxhdGlvbiAkXG1hdGhiZntMfV5UXGJvbGRzeW1ib2x7XGJldGF9JC4KLSB0aGUgbnVtYmVyIG9mIG9ic2VydmF0aW9uczogU0UgYW5kIGRmLgotIENob2ljZSBvZiBkZXNpZ25wb2ludHMKLSBDaG9pY2Ugb2Ygc2lnbmlmaWNhbmNlLWxldmVsICRcYWxwaGEkLgoKV2Ugd2lsbCBldmFsdWF0ZSB0aGUgcG93ZXIgdXNpbmcgc2ltdWxhdGlvbi4KCiMgUm9kZW50cwoKQSBiaW9sb2dpc3QgZXhhbWluZWQgdGhlIGVmZmVjdCBvZiBhIGZ1bmdhbCBpbmZlY3Rpb24gb24gdGhlIGVhdGluZyBiZWhhdmlvciBvZiByb2RlbnRzLgpJbmZlY3RlZCBhcHBsZXMgd2VyZSBvZmZlcmVkIHRvIGEgZ3JvdXAgb2YgZWlnaHQgcm9kZW50cywgYW5kIHN0ZXJpbGUgYXBwbGVzIHdlcmUgb2ZmZXJlZCB0byBhIGdyb3VwIG9mIDQgcm9kZW50cy4gVGhlIGFtb3VudCBvZiBncmFtcyBvZiBhcHBsZXMgY29uc3VtZWQgcGVyIGtnIGJvZHkgd2VpZ2h0IGFyZSBnaXZlbiBpbiB0aGUgZGF0YXNldCBiZWxvdy4KCmBgYHtyfQpyb2RlbnRzIDwtIGRhdGEuZnJhbWUod2VpZ2h0ID0gYygxMSwgMzMsIDQ4LCAzNCwgMTEyLCAzNjksIDY0LCA0NCwgMTc3LCA4MCwgMTQxLCAzMzIpLCBncm91cCA9IGFzLmZhY3RvcihjKHJlcCgidHJlYXQiLCA4KSwgcmVwKCJjdHJsIiwgNCkpKSkKcm9kZW50cwpgYGAKCiMjIERhdGEgZXhwbG9yYXRpb24KCmBgYHtyfQpyb2RlbnRzICU+JQogIGdncGxvdChhZXMoeCA9IGdyb3VwLCB5ID0gd2VpZ2h0KSkgKwogIGdlb21fYm94cGxvdChvdXRsaWVyLnNoYXBlID0gTkEpICsKICBnZW9tX2ppdHRlcigpCgpyb2RlbnRzICU+JQogIGdncGxvdChhZXMoc2FtcGxlID0gd2VpZ2h0KSkgKwogIGdlb21fcXEoKSArCiAgZ2VvbV9xcV9saW5lKCkgKwogIGZhY2V0X3dyYXAofmdyb3VwKQpgYGAKCkluIHRoZSBkYXRhIGV4cGxvcmF0aW9uIHdlIGRvIG5vdCBoYXZlIGVub3VnaCBkYXRhIHRvIGV2YWx1YXRlIHRoZSBhc3N1bXB0aW9ucy4KClN1cHBvc2UgdGhhdCB0aGUgYXNzdW1wdGlvbnMgYXJlIHZhbGlkIGFuZCB0aGF0IHN0YW5kYXJkIGRldmlhdGlvbiBpbiB0aGUgcG9wdWxhdGlvbiB3b3VsZCBiZSBlcXVhbCB0byB0aGUgb25lcyB5b3Ugb2JzZXJ2ZWQgaW4gdGhlIGV4cGVyaW1lbnQuCgoxLiBXaGF0IGlzIHRoZSBwb3dlciBvZiB0aGUgZXhwZXJpbWVudCBpZiB0aGUgZWZmZWN0IHNpemUgYW5kIHN0YW5kYXJkIGRldmlhdGlvbiBpbiB0aGUgcG9wdWxhdGlvbiB3b3VsZCBiZSBlcXVhbCB0byB0aGUgb25lcyB5b3Ugb2JzZXJ2ZWQgaW4gdGhlIGV4cGVyaW1lbnQKMi4gV2hhdCB3b3VsZCB0aGUgcG93ZXIgYnkgaWYgbnVtYmVyIG9mIHJvZGVudHMgd291bGQgIGJhbGFuY2VkIGluIGJvdGggZ3JvdXBzCjMuIEhvdyBtYW55IG9ic2VydmF0aW9ucyB3b3VsZCB5b3UgbmVlZCB0byBwaWNrIHVwIHRoZSB0cmVhdG1lbnQgZWZmZWN0IHdpdGggYSBwb3dlciBvZiA5MCU/CjQuIEhvdyBtYW55IG9ic2VydmF0aW9ucyB3b3VsZCB5b3UgbmVlZCB0byBwaWNrIHVwIHRoZSB0cmVhdG1lbnQgZWZmZWN0IG9mIDYwIGcva2cgd2l0aCBhIHBvd2VyIG9mIDkwJT8KCiMgQW5hbHlzaXMKCldlIHdpbGwgbW9kZWwgdGhlIGRhdGEgdXNpbmcgYSBsaW5lYXIgbW9kZWwgd2l0aCBvbmUgZHVtbXkgdmFyaWFibGUuCgokJAp5X2kgPSBcYmV0YV8wICsgXGJldGFfMSB4X3t0LGl9ICsKXGVwc2lsb25faQokJAp3aXRoICR4X3twLGl9ID0gMCQgaWYgdGhlIHJvZGVudCBpcyBzdWJqZWN0ZWQgdGhlIGNvbnRyb2wgdHJlYXRtZW50IHdpdGggc3RlcmlsZSBhcHBsZXMgYW5kICR4X3t0LGl9ID0gMSQgaWYgcm9kZW50IHJlY2VpdmVzIHRoZSB0cmVhdG1lbnQgd2l0aCBpbmZlY3RlZCBhcHBsZXMuCgotIEVzdGltYXRlZCBlZmZlY3Qgc2l6ZT8KClRoZSBhdmVyYWdlIGRpZmZlcmVuY2UgaW4gcmVsYXRpdmUgYWJ1bmRhbmNlIG9mIFN0YXBoeWxvY29jY3VzIG9mIHBhdGllbnRzCm9mIHRoZSB0cmFuc3BsYW50IGFuZCB0aGUgcGxhY2VibyBncm91cC4KCiQkClxoYXQgXGJldGFfMSA9IFxiYXIgeV90IC0gXGJhciB5X2MKJCQKCi0gJEhfMCQ6IHJvZGVudHMgZWF0IGNvbnN1bWUgb24gYXZlcmFnZSB0aGUgc2FtZSBhbW91bnQgb2YgYXBwbGVzIHBlciBrZyBib2R5IHdlaWdodCB3aGVuIHRoZXkgYXJlIGZlZCB3aXRoIHN0ZXJpbGUgb3Igd2l0aCBpbmZlY3RlZCBhcHBsZXMuCi0gJEhfMSQ6IHRoZSBhdmVyYWdlIGFtb3VudCBvZiBhcHBsZXMgaW4gZy9rZyBib2R5IHdlaWdodCBpcyBkaWZmZXJlbnQgd2hlbiByb2RlbnRzIGFyZSBmZWQgd2l0aCBzdGVyaWxlIHRoZW4gYXMgd2hlbiB0aGV5IGFyZSBmZWQgd2l0aCBpbmZlY3RlZCBhcHBsZXMuCgpgYGB7cn0KbG0xIDwtIGxtKHdlaWdodCB+IGdyb3VwLCByb2RlbnRzKQpzdW1tYXJ5KGxtMSkKYGBgCgpXaXRoIHRoZSBjdXJyZW50IHN0dWR5IGFuZCB3aGVuIHdlIGFzc3VtZSB0aGF0IHRoZSBhc3N1bXB0aW9ucyBvZiB0aGUgbW9kZWwgaG9sZCwgd2UgY29uY2x1ZGUgdGhhdCB0aGUgYW1vdW50IG9mIGFwcGxlcyB0aGF0IHJvZGVudHMgb24gYXZlcmFnZSBjb25zdW1lIGRvZXMgbm90IGRpZmZlciBzaWduaWZpY2FudGx5IGJldHdlZW4gdGhlIGdyb3VwIHRoYXQgd2FzIGZlZCB3aXRoIHN0ZXJpbGUgYXBwbGVzIGFuZCB0aGUgZ3JvdXAgdGhhdCB3YXMgZmVkIHdpdGggaW5mZWN0ZWQgYXBwbGVzLgoKIyBQb3dlciBvZiB0aGUgdGVzdCB0byBkZXRlY3QgdGhlIHNhbWUgZWZmZWN0IHNpemUgYXMgb2JzZXJ2ZWQgaW4gb3VyIGRhdGFzZXQgd2l0aCBvdXIgZXhwZXJpbWVudGFsIGRlc2lnbj8KCiMjIFNpbXVsYXRpb24gZnVuY3Rpb24KCkZ1bmN0aW9uIHRvIHNpbXVsYXRlIGRhdGEgc2ltaWxhciB0byB0aGF0IG9mIG91ciBleHBlcmltZW50IHVuZGVyIG91ciBtb2RlbCBhc3N1bXB0aW9ucy4KCmBgYHtyfQpzaW1GYXN0IDwtIGZ1bmN0aW9uKGZvcm0sIGRhdGEsIGJldGFzLCBzZCwgY29udHJhc3RzLCBhbHBoYSA9IC4wNSwgblNpbSA9IDEwMDAwKSB7CiAgeVNpbSA8LSBybm9ybShucm93KGRhdGEpICogblNpbSwgc2QgPSBzZCkKICBkaW0oeVNpbSkgPC0gYyhucm93KGRhdGEpLCBuU2ltKQogIGRlc2lnbiA8LSBtb2RlbC5tYXRyaXgoZm9ybSwgZGF0YSkKICB5U2ltIDwtIHlTaW0gKyBjKGRlc2lnbiAlKiUgYmV0YXMpCiAgeVNpbSA8LSB0KHlTaW0pCgogICMjIyBGaXR0aW5nCiAgZml0QWxsIDwtIGxpbW1hOjpsbUZpdCh5U2ltLCBkZXNpZ24pCgogICMjIyBJbmZlcmVuY2UKICB2YXJVbnNjYWxlZCA8LSBjKHQoY29udHJhc3RzKSAlKiUgZml0QWxsJGNvdi5jb2VmZmljaWVudHMgJSolIGNvbnRyYXN0cykKICBjb250cmFzdHMgPC0gZml0QWxsJGNvZWZmaWNpZW50cyAlKiUgY29udHJhc3RzCiAgc2VDb250cmFzdHMgPC0gdmFyVW5zY2FsZWReLjUgKiBmaXRBbGwkc2lnbWEKICB0c3RhdHMgPC0gY29udHJhc3RzIC8gc2VDb250cmFzdHMKICBwdmFscyA8LSBwdChhYnModHN0YXRzKSwgZml0QWxsJGRmLnJlc2lkdWFsLCBsb3dlci50YWlsID0gRkFMU0UpICogMgogIHJldHVybihtZWFuKHB2YWxzIDwgYWxwaGEpKQp9CmBgYAoKIyMgU2ltdWxhdGlvbgoKYGBge3J9CmJldGFzIDwtIGxtMSRjb2VmZmljaWVudHMKCm5TaW0gPC0gMTAwMDAKZm9ybSA8LSB+Z3JvdXAKc2QgPC0gc2lnbWEobG0xKQpjb250cmFzdCA8LSBsaW1tYTo6bWFrZUNvbnRyYXN0cygiZ3JvdXB0cmVhdCIsIGxldmVscyA9IG5hbWVzKGxtMSRjb2VmZmljaWVudHMpKQphbHBoYSA8LSAwLjA1Cgpwb3dlciA8LSBzaW1GYXN0KGZvcm0sIHJvZGVudHMsIGJldGFzLCBzZCwgY29udHJhc3RzID0gY29udHJhc3QsIGFscGhhID0gYWxwaGEsIG5TaW0gPSBuU2ltKQpwb3dlcgpgYGAKCldlIG9ic2VydmUgdGhhdCB0aGUgZXhwZXJpbWVudCBpcyBzZXZlcmx5IHVuZGVycG93ZXJlZC4gV2Ugb25seSBoYXZlIGEgcG93ZXIgb2YgYHIgcm91bmQocG93ZXIqMTAwLDEpYCUgdG8gcGljayB1cCB0aGUgdHJlYXRtZW50IGVmZmVjdC4KCiMgUG93ZXIgZm9yIGEgYmFsYW5jZWQgZGVzaWduCgpgYGB7cn0KYmV0YXMgPC0gbG0xJGNvZWZmaWNpZW50cwpuU2ltIDwtIDEwMDAwCmZvcm0gPC0gfmdyb3VwCnNkIDwtIHNpZ21hKGxtMSkKY29udHJhc3QgPC0gbGltbWE6Om1ha2VDb250cmFzdHMoImdyb3VwdHJlYXQiLCBsZXZlbHMgPSBuYW1lcyhsbTEkY29lZmZpY2llbnRzKSkKbjEgPC0gbjIgPC0gbnJvdyhyb2RlbnRzKSAvIDIKcHJlZGljdG9yRGF0YSA8LSBkYXRhLmZyYW1lKGdyb3VwID0gcmVwKGMoImN0cmwiLCAidHJlYXQiKSwgYyhuMSwgbjIpKSAlPiUgYXMuZmFjdG9yKCkpCgpwb3dlckJhbGFuY2VkIDwtIHNpbUZhc3QoZm9ybSwgcHJlZGljdG9yRGF0YSwgYmV0YXMsIHNkLCBjb250cmFzdHMgPSBjb250cmFzdCwgYWxwaGEgPSBhbHBoYSwgblNpbSA9IG5TaW0pCnBvd2VyQmFsYW5jZWQKYGBgCgpXZSBvYnNlcnZlIHRoYXQgdGhlIHBvd2VyIGlzIGxhcmdlciBmb3IgdGhlIGJhbGFuY2VkIGRlc2lnbi4KV2UgY291bGQgYWxzbyBoYXZlIGtub3duIHRoaXMgZnJvbSBmb3JtdWxhIG9mIHRoZSBzdGFuZGFyZCBlcnJvciBmcm9tIHRoZSB0d28tc2FtcGxlIHQtdGVzdC4KCiQkClNFID0gXGhhdCBcc2lnbWEgXHNxcnR7MS9uMSArIDEvbjJ9CiQkCkluZGVlZCwKCmBgYHtyfQpzcXJ0KDEgLyBzdW0ocm9kZW50cyRncm91cCA9PSAidHJlYXQiKSArIDEgLyBzdW0ocm9kZW50cyRncm91cCA9PSAiY3RybCIpKQpzcXJ0KDEgLyBuMSArIDEgLyBuMSkKYGBgCgpTbyB0aGUgU0UgaXMgbGFyZ2VyIHdoZW4gdGhlIGRlc2lnbiBpcyBub3QgYmFsYW5jZWQuCgoKIyBSZXF1aXJlZCBzYW1wbGUgc2l6ZSB0byBvYnRhaW4gYSBwb3dlciBvZiA5MCAlPwoKYGBge3J9CnNldC5zZWVkKDE0MDApCmJldGFzIDwtIGxtMSRjb2VmZmljaWVudHMKblNpbSA8LSAxMDAwMApmb3JtIDwtIH5ncm91cApzZCA8LSBzaWdtYShsbTEpCnBvd2VyIDwtIGRhdGEuZnJhbWUobiA9IHNlcSg1LCA1MCwgNSksIHBvd2VyID0gTkEpCmFscGhhIDwtIDAuMDUKY29udHJhc3QgPC0gbGltbWE6Om1ha2VDb250cmFzdHMoImdyb3VwdHJlYXQiLCBsZXZlbHMgPSBuYW1lcyhsbTEkY29lZmZpY2llbnRzKSkKCmZvciAoaSBpbiAxOm5yb3cocG93ZXIpKQp7CiAgbjEgPC0gbjIgPC0gcG93ZXIkbltpXQogIHByZWRpY3RvckRhdGEgPC0gZGF0YS5mcmFtZShncm91cCA9IHJlcChjKCJjdHJsIiwgInRyZWF0IiksIGMobjEsIG4yKSkgJT4lIGFzLmZhY3RvcigpKQogIHBvd2VyJHBvd2VyW2ldIDwtIHNpbUZhc3QoZm9ybSwgcHJlZGljdG9yRGF0YSwgYmV0YXMsIHNkLCBjb250cmFzdHMgPSBjb250cmFzdCwgYWxwaGEgPSBhbHBoYSwgblNpbSA9IG5TaW0pCn0KcG93ZXIKYGBgCgpgYGB7cn0KcG93ZXIgJT4lCiAgZ2dwbG90KGFlcyh4ID0gbiwgeSA9IHBvd2VyKSkgKwogIGdlb21fbGluZSgpCmBgYAoKVGhyb3VnaCBzaW11bGF0aW9ucyB3ZSBzaG93IHRoYXQgd2UgbmVlZCBhYm91dCAzMi0zMyBvYnNlcnZhdGlvbnMgdG8gb2J0YWluIGEgcG93ZXIgb2YgYWJvdXQgOTAlLgoKClRoaXMgaXMgc2ltaWxhciB0byB3aGF0IHdlIHdvdWxkIG9idGFpbiB3aXRoIHRoZSBjbG9zZSBmb3JtIGZvcm11bGEgdGhhdCBjYW4gYmUgYXBwbGllZCBmb3IgYSB0d28gZ3JvdXAgZGVzaWduCgpgYGB7cn0KcG93ZXIudC50ZXN0KGRlbHRhID0gbG0xJGNvZWZbMl0sIHNkID0gc2lnbWEobG0xKSwgcG93ZXIgPSAuOSkKYGBgCgoKIyBJbXBhY3Qgb2YgZWZmZWN0IHNpemUKClN1cHBvc2UgdGhhdCB3ZSB3b3VsZCBsaWtlIHRvIHBpY2sgdXAgYW4gZWZmZWN0IHNpemUgb2YgJFxiZXRhXzEgPSA2MCBnL2tnJC4KaG93IG1hbnkgc2FtcGxlcyB3b3VsZCBiZSByZXF1aXJlZCBpbiBlYWNoIGdyb3VwIHRvIG9idGFpbiBhIHBvd2VyIG9mIDkwJT8KTm90ZSwgdGhhdAoKLSB3ZSBkbyBhIHR3by1zaWRlZCB0ZXN0IHNvIHRoZSBzaWduIG9mIHRoZSBlZmZlY3Qgc2l6ZSBpcyBhcmJpdHJhcnkuCi0gdGhlIGludGVyY2VwdCBpbiB0aGUgcG93ZXIgYW5hbHlzaXMgaXMgYWxzbyBhcmJpdHJhcnkgc28gd2UgY291bGQgYWxzbyBzZXQgaXQgYXQgMC4KCmBgYHtyfQpzZXQuc2VlZCgxNDAwKQpiZXRhcyA8LSBjKDAsIDYwKQpuU2ltIDwtIDEwMDAwCmZvcm0gPC0gfmdyb3VwCnNkIDwtIHNpZ21hKGxtMSkKcG93ZXIyIDwtIGRhdGEuZnJhbWUobiA9IHNlcSg1LCAxMDAsIDUpLCBwb3dlciA9IE5BKQphbHBoYSA8LSAwLjA1CmNvbnRyYXN0IDwtIGxpbW1hOjptYWtlQ29udHJhc3RzKCJncm91cHRyZWF0IiwgbGV2ZWxzID0gbmFtZXMobG0xJGNvZWZmaWNpZW50cykpCgpmb3IgKGkgaW4gMTpucm93KHBvd2VyMikpCnsKICBuMSA8LSBuMiA8LSBwb3dlcjIkbltpXQogIHByZWRpY3RvckRhdGEgPC0gZGF0YS5mcmFtZShncm91cCA9IHJlcChjKCJjdHJsIiwgInRyZWF0IiksIGMobjEsIG4yKSkgJT4lIGFzLmZhY3RvcigpKQogIHBvd2VyMiRwb3dlcltpXSA8LSBzaW1GYXN0KGZvcm0sIHByZWRpY3RvckRhdGEsIGJldGFzLCBzZCwgY29udHJhc3RzID0gY29udHJhc3QsIGFscGhhID0gYWxwaGEsIG5TaW0gPSBuU2ltKQp9CnBvd2VyMgpgYGAKCmBgYHtyfQpwb3dlcjIgJT4lCiAgZ2dwbG90KGFlcyh4ID0gbiwgeSA9IHBvd2VyKSkgKwogIGdlb21fbGluZSgpICsKICBnZW9tX2hsaW5lKHlpbnRlcmNlcHQgPSAuOSwgbHR5ID0gMikKYGBgCgpXZSBvYnNlcnZlIHRoYXQgd2UgbmVlZCBiZXR3ZWVuIDc1LTgwIG9ic2VydmF0aW9ucyB0byBvYnRhaW4gYSBwb3dlciBvZiA5MCUuCgpUaGlzIGlzIGNvbmZpcm1lZCB3aXRoIHRoZSBwb3dlciBmdW5jdGlvbnMgZm9yIHRoZSB0d28gc2FtcGxlIHQtdGVzdC4KCmBgYHtyfQpiMSA8LSAtNjAKcG93ZXIgPC0gLjkKcG93ZXIudC50ZXN0KGQgPSBiMSwgc2QgPSBzaWdtYShsbTEpLCB0eXBlID0gInR3by5zYW1wbGUiLCBwb3dlciA9IHBvd2VyKQpgYGAKCk5vdGUsIHRoYXQgd2Ugd291bGQgcmVxdWlyZSBhIG11Y2ggbGFyZ2VyIHNhbXBsZSBzaXplLiBUaGlzIGlzIGJlY2F1c2UgdGhlCmRlc2lyZWQgZWZmZWN0IHNpemUgdGhhdCB3ZSB3b3VsZCBsaWtlIHRvIHBpY2sgdXAgaXMgc21hbGwgY29tcGFyZWQgdG8gdGhlCnZhcmlhYmlsaXR5IChzdGFuZGFyZCBkZXZpYXRpb24pIGluIHRoZSBwb3B1bGF0aW9uLgo=</div>
-<div class="footer">
-    <hr>
-    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
-    CC BY-NC-SA 4.0</a> licence.
-</div>
+              n = 76.926
+          delta = 60
+             sd = 114.067
+      sig.level = 0.05
+          power = 0.9
+    alternative = two.sided
 
-
+NOTE: n is number in *each* group</code></pre>
 </div>
 </div>
-
-</div>
-
-<script>
-
-// add bootstrap table styles to pandoc tables
-function bootstrapStylePandocTables() {
-  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
-}
-$(document).ready(function () {
-  bootstrapStylePandocTables();
-});
+<p>Note, that we would require a much larger sample size. This is because the desired effect size that we would like to pick up is small compared to the variability (standard deviation) in the population.</p>
 
 
-</script>
+<!-- -->
 
-<!-- tabsets -->
+</section>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open');
-  });
-});
-</script>
-
-<!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeSourceEmbed("08_ExperimentalDesignII_1_rodents_sol.Rmd");
-  window.initializeCodeFolding("show" === "show");
-});
-</script>
-
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    options.showAndHide = true;
-    options.smoothScroll = true;
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Experimental Design II: replication and power exercise 1 - solution"</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Lieven Clement &amp; Alexandre Segers"</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "statOmics, Ghent University (https://statomics.github.io)"</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> rel</span><span class="op">=</span><span class="st">"license"</span><span class="ot"> href</span><span class="op">=</span><span class="st">"https://creativecommons.org/licenses/by-nc-sa/4.0"</span><span class="dt">&gt;&lt;</span><span class="kw">img</span><span class="ot"> alt</span><span class="op">=</span><span class="st">"Creative Commons License"</span><span class="ot"> style</span><span class="op">=</span><span class="st">"border-width:0"</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"</span><span class="ot"> </span><span class="dt">/&gt;&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Power</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>The power of a test is defined as:</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>$$P(p &lt;</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>\alpha | H_1)$$</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>This is the probability to reject the nulhypothesis at the significance level $\alpha$ given that the alternative hypothesis is true.</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>The power depends on:</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the real effect size in the population $\mathbf{L}^T\boldsymbol{\beta}$.</span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the number of observations: SE and df.</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Choice of designpoints</span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Choice of significance-level $\alpha$.</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>We will evaluate the power using simulation.</span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a><span class="fu"># Rodents</span></span>
+<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>A biologist examined the effect of a fungal infection on the eating behavior of rodents.</span>
+<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a>Infected apples were offered to a group of eight rodents, and sterile apples were offered to a group of 4 rodents. The amount of grams of apples consumed per kg body weight are given in the dataset below.</span>
+<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-41"><a href="#cb33-41" aria-hidden="true" tabindex="-1"></a>rodents <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">weight =</span> <span class="fu">c</span>(<span class="dv">11</span>, <span class="dv">33</span>, <span class="dv">48</span>, <span class="dv">34</span>, <span class="dv">112</span>, <span class="dv">369</span>, <span class="dv">64</span>, <span class="dv">44</span>, <span class="dv">177</span>, <span class="dv">80</span>, <span class="dv">141</span>, <span class="dv">332</span>), <span class="at">group =</span> <span class="fu">as.factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"treat"</span>, <span class="dv">8</span>), <span class="fu">rep</span>(<span class="st">"ctrl"</span>, <span class="dv">4</span>))))</span>
+<span id="cb33-42"><a href="#cb33-42" aria-hidden="true" tabindex="-1"></a>rodents</span>
+<span id="cb33-43"><a href="#cb33-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-44"><a href="#cb33-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-45"><a href="#cb33-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data exploration</span></span>
+<span id="cb33-46"><a href="#cb33-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-49"><a href="#cb33-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-50"><a href="#cb33-50" aria-hidden="true" tabindex="-1"></a>rodents <span class="sc">|&gt;</span></span>
+<span id="cb33-51"><a href="#cb33-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> weight)) <span class="sc">+</span></span>
+<span id="cb33-52"><a href="#cb33-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb33-53"><a href="#cb33-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>()</span>
+<span id="cb33-54"><a href="#cb33-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-55"><a href="#cb33-55" aria-hidden="true" tabindex="-1"></a>rodents <span class="sc">|&gt;</span></span>
+<span id="cb33-56"><a href="#cb33-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> weight)) <span class="sc">+</span></span>
+<span id="cb33-57"><a href="#cb33-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb33-58"><a href="#cb33-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb33-59"><a href="#cb33-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>group)</span>
+<span id="cb33-60"><a href="#cb33-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-61"><a href="#cb33-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-62"><a href="#cb33-62" aria-hidden="true" tabindex="-1"></a>In the data exploration we do not have enough data to evaluate the assumptions.</span>
+<span id="cb33-63"><a href="#cb33-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-64"><a href="#cb33-64" aria-hidden="true" tabindex="-1"></a>Suppose that the assumptions are valid and that standard deviation in the population would be equal to the ones you observed in the experiment.</span>
+<span id="cb33-65"><a href="#cb33-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-66"><a href="#cb33-66" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>What is the power of the experiment if the effect size and standard deviation in the population would be equal to the ones you observed in the experiment</span>
+<span id="cb33-67"><a href="#cb33-67" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>What would the power by if number of rodents would  balanced in both groups</span>
+<span id="cb33-68"><a href="#cb33-68" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>How many observations would you need to pick up the treatment effect with a power of 90%?</span>
+<span id="cb33-69"><a href="#cb33-69" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>How many observations would you need to pick up the treatment effect of 60 g/kg with a power of 90%?</span>
+<span id="cb33-70"><a href="#cb33-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-71"><a href="#cb33-71" aria-hidden="true" tabindex="-1"></a><span class="fu"># Analysis</span></span>
+<span id="cb33-72"><a href="#cb33-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-73"><a href="#cb33-73" aria-hidden="true" tabindex="-1"></a>We will model the data using a linear model with one dummy variable.</span>
+<span id="cb33-74"><a href="#cb33-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-75"><a href="#cb33-75" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-76"><a href="#cb33-76" aria-hidden="true" tabindex="-1"></a>y_i = \beta_0 + \beta_1 x_{t,i} +</span>
+<span id="cb33-77"><a href="#cb33-77" aria-hidden="true" tabindex="-1"></a>\epsilon_i</span>
+<span id="cb33-78"><a href="#cb33-78" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-79"><a href="#cb33-79" aria-hidden="true" tabindex="-1"></a>with $x_{p,i} = 0$ if the rodent is subjected the control treatment with sterile apples and $x_{t,i} = 1$ if rodent receives the treatment with infected apples.</span>
+<span id="cb33-80"><a href="#cb33-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-81"><a href="#cb33-81" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Estimated effect size?</span>
+<span id="cb33-82"><a href="#cb33-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-83"><a href="#cb33-83" aria-hidden="true" tabindex="-1"></a>The average difference in relative abundance of Staphylococcus of patients</span>
+<span id="cb33-84"><a href="#cb33-84" aria-hidden="true" tabindex="-1"></a>of the transplant and the placebo group.</span>
+<span id="cb33-85"><a href="#cb33-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-86"><a href="#cb33-86" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-87"><a href="#cb33-87" aria-hidden="true" tabindex="-1"></a>\hat \beta_1 = \bar y_t - \bar y_c</span>
+<span id="cb33-88"><a href="#cb33-88" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-89"><a href="#cb33-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-90"><a href="#cb33-90" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$H_0$: rodents eat consume on average the same amount of apples per kg body weight when they are fed with sterile or with infected apples.</span>
+<span id="cb33-91"><a href="#cb33-91" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$H_1$: the average amount of apples in g/kg body weight is different when rodents are fed with sterile then as when they are fed with infected apples.</span>
+<span id="cb33-92"><a href="#cb33-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-95"><a href="#cb33-95" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-96"><a href="#cb33-96" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> group, rodents)</span>
+<span id="cb33-97"><a href="#cb33-97" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm1)</span>
+<span id="cb33-98"><a href="#cb33-98" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-99"><a href="#cb33-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-100"><a href="#cb33-100" aria-hidden="true" tabindex="-1"></a>With the current study and when we assume that the assumptions of the model hold, we conclude that the amount of apples that rodents on average consume does not differ significantly between the group that was fed with sterile apples and the group that was fed with infected apples.</span>
+<span id="cb33-101"><a href="#cb33-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-102"><a href="#cb33-102" aria-hidden="true" tabindex="-1"></a><span class="fu"># Power of the test to detect the same effect size as observed in our dataset with our experimental design?</span></span>
+<span id="cb33-103"><a href="#cb33-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-104"><a href="#cb33-104" aria-hidden="true" tabindex="-1"></a><span class="fu">## Simulation function</span></span>
+<span id="cb33-105"><a href="#cb33-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-106"><a href="#cb33-106" aria-hidden="true" tabindex="-1"></a>Function to simulate data similar to that of our experiment under our model assumptions.</span>
+<span id="cb33-107"><a href="#cb33-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-110"><a href="#cb33-110" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-111"><a href="#cb33-111" aria-hidden="true" tabindex="-1"></a>simFast <span class="ot">&lt;-</span> <span class="cf">function</span>(form, data, betas, sd, contrasts, <span class="at">alpha =</span> .<span class="dv">05</span>, <span class="at">nSim =</span> <span class="dv">10000</span>) {</span>
+<span id="cb33-112"><a href="#cb33-112" aria-hidden="true" tabindex="-1"></a>  ySim <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(data) <span class="sc">*</span> nSim, <span class="at">sd =</span> sd)</span>
+<span id="cb33-113"><a href="#cb33-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dim</span>(ySim) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">nrow</span>(data), nSim)</span>
+<span id="cb33-114"><a href="#cb33-114" aria-hidden="true" tabindex="-1"></a>  design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(form, data)</span>
+<span id="cb33-115"><a href="#cb33-115" aria-hidden="true" tabindex="-1"></a>  ySim <span class="ot">&lt;-</span> ySim <span class="sc">+</span> <span class="fu">c</span>(design <span class="sc">%*%</span> betas)</span>
+<span id="cb33-116"><a href="#cb33-116" aria-hidden="true" tabindex="-1"></a>  ySim <span class="ot">&lt;-</span> <span class="fu">t</span>(ySim)</span>
+<span id="cb33-117"><a href="#cb33-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-118"><a href="#cb33-118" aria-hidden="true" tabindex="-1"></a>  <span class="do">### Fitting</span></span>
+<span id="cb33-119"><a href="#cb33-119" aria-hidden="true" tabindex="-1"></a>  fitAll <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">lmFit</span>(ySim, design)</span>
+<span id="cb33-120"><a href="#cb33-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-121"><a href="#cb33-121" aria-hidden="true" tabindex="-1"></a>  <span class="do">### Inference</span></span>
+<span id="cb33-122"><a href="#cb33-122" aria-hidden="true" tabindex="-1"></a>  varUnscaled <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">t</span>(contrasts) <span class="sc">%*%</span> fitAll<span class="sc">$</span>cov.coefficients <span class="sc">%*%</span> contrasts)</span>
+<span id="cb33-123"><a href="#cb33-123" aria-hidden="true" tabindex="-1"></a>  contrasts <span class="ot">&lt;-</span> fitAll<span class="sc">$</span>coefficients <span class="sc">%*%</span> contrasts</span>
+<span id="cb33-124"><a href="#cb33-124" aria-hidden="true" tabindex="-1"></a>  seContrasts <span class="ot">&lt;-</span> varUnscaled<span class="sc">^</span>.<span class="dv">5</span> <span class="sc">*</span> fitAll<span class="sc">$</span>sigma</span>
+<span id="cb33-125"><a href="#cb33-125" aria-hidden="true" tabindex="-1"></a>  tstats <span class="ot">&lt;-</span> contrasts <span class="sc">/</span> seContrasts</span>
+<span id="cb33-126"><a href="#cb33-126" aria-hidden="true" tabindex="-1"></a>  pvals <span class="ot">&lt;-</span> <span class="fu">pt</span>(<span class="fu">abs</span>(tstats), fitAll<span class="sc">$</span>df.residual, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>) <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb33-127"><a href="#cb33-127" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">mean</span>(pvals <span class="sc">&lt;</span> alpha))</span>
+<span id="cb33-128"><a href="#cb33-128" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-129"><a href="#cb33-129" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-130"><a href="#cb33-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-131"><a href="#cb33-131" aria-hidden="true" tabindex="-1"></a><span class="fu">## Simulation</span></span>
+<span id="cb33-132"><a href="#cb33-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-135"><a href="#cb33-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-136"><a href="#cb33-136" aria-hidden="true" tabindex="-1"></a>betas <span class="ot">&lt;-</span> lm1<span class="sc">$</span>coefficients</span>
+<span id="cb33-137"><a href="#cb33-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-138"><a href="#cb33-138" aria-hidden="true" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb33-139"><a href="#cb33-139" aria-hidden="true" tabindex="-1"></a>form <span class="ot">&lt;-</span> <span class="er">~</span>group</span>
+<span id="cb33-140"><a href="#cb33-140" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sigma</span>(lm1)</span>
+<span id="cb33-141"><a href="#cb33-141" aria-hidden="true" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">makeContrasts</span>(<span class="st">"grouptreat"</span>, <span class="at">levels =</span> <span class="fu">names</span>(lm1<span class="sc">$</span>coefficients))</span>
+<span id="cb33-142"><a href="#cb33-142" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb33-143"><a href="#cb33-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-144"><a href="#cb33-144" aria-hidden="true" tabindex="-1"></a>power <span class="ot">&lt;-</span> <span class="fu">simFast</span>(form, rodents, betas, sd, <span class="at">contrasts =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">nSim =</span> nSim)</span>
+<span id="cb33-145"><a href="#cb33-145" aria-hidden="true" tabindex="-1"></a>power</span>
+<span id="cb33-146"><a href="#cb33-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-147"><a href="#cb33-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-148"><a href="#cb33-148" aria-hidden="true" tabindex="-1"></a>We observe that the experiment is severly underpowered. We only have a power of <span class="in">`r round(power*100,1)`</span>% to pick up the treatment effect.</span>
+<span id="cb33-149"><a href="#cb33-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-150"><a href="#cb33-150" aria-hidden="true" tabindex="-1"></a><span class="fu"># Power for a balanced design</span></span>
+<span id="cb33-151"><a href="#cb33-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-154"><a href="#cb33-154" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-155"><a href="#cb33-155" aria-hidden="true" tabindex="-1"></a>betas <span class="ot">&lt;-</span> lm1<span class="sc">$</span>coefficients</span>
+<span id="cb33-156"><a href="#cb33-156" aria-hidden="true" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb33-157"><a href="#cb33-157" aria-hidden="true" tabindex="-1"></a>form <span class="ot">&lt;-</span> <span class="er">~</span>group</span>
+<span id="cb33-158"><a href="#cb33-158" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sigma</span>(lm1)</span>
+<span id="cb33-159"><a href="#cb33-159" aria-hidden="true" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">makeContrasts</span>(<span class="st">"grouptreat"</span>, <span class="at">levels =</span> <span class="fu">names</span>(lm1<span class="sc">$</span>coefficients))</span>
+<span id="cb33-160"><a href="#cb33-160" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> <span class="fu">nrow</span>(rodents) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb33-161"><a href="#cb33-161" aria-hidden="true" tabindex="-1"></a>predictorData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"ctrl"</span>, <span class="st">"treat"</span>), <span class="fu">c</span>(n1, n2)) <span class="sc">|&gt;</span> <span class="fu">as.factor</span>())</span>
+<span id="cb33-162"><a href="#cb33-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-163"><a href="#cb33-163" aria-hidden="true" tabindex="-1"></a>powerBalanced <span class="ot">&lt;-</span> <span class="fu">simFast</span>(form, predictorData, betas, sd, <span class="at">contrasts =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">nSim =</span> nSim)</span>
+<span id="cb33-164"><a href="#cb33-164" aria-hidden="true" tabindex="-1"></a>powerBalanced</span>
+<span id="cb33-165"><a href="#cb33-165" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-166"><a href="#cb33-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-167"><a href="#cb33-167" aria-hidden="true" tabindex="-1"></a>We observe that the power is larger for the balanced design.</span>
+<span id="cb33-168"><a href="#cb33-168" aria-hidden="true" tabindex="-1"></a>We could also have known this from formula of the standard error from the two-sample t-test.</span>
+<span id="cb33-169"><a href="#cb33-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-170"><a href="#cb33-170" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-171"><a href="#cb33-171" aria-hidden="true" tabindex="-1"></a>SE = \hat \sigma \sqrt{1/n1 + 1/n2}</span>
+<span id="cb33-172"><a href="#cb33-172" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-173"><a href="#cb33-173" aria-hidden="true" tabindex="-1"></a>Indeed,</span>
+<span id="cb33-174"><a href="#cb33-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-177"><a href="#cb33-177" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-178"><a href="#cb33-178" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> <span class="fu">sum</span>(rodents<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"treat"</span>) <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">sum</span>(rodents<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"ctrl"</span>))</span>
+<span id="cb33-179"><a href="#cb33-179" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> n1 <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> n1)</span>
+<span id="cb33-180"><a href="#cb33-180" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-181"><a href="#cb33-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-182"><a href="#cb33-182" aria-hidden="true" tabindex="-1"></a>So the SE is larger when the design is not balanced.</span>
+<span id="cb33-183"><a href="#cb33-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-184"><a href="#cb33-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-185"><a href="#cb33-185" aria-hidden="true" tabindex="-1"></a><span class="fu"># Required sample size to obtain a power of 90 %?</span></span>
+<span id="cb33-186"><a href="#cb33-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-189"><a href="#cb33-189" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-190"><a href="#cb33-190" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1400</span>)</span>
+<span id="cb33-191"><a href="#cb33-191" aria-hidden="true" tabindex="-1"></a>betas <span class="ot">&lt;-</span> lm1<span class="sc">$</span>coefficients</span>
+<span id="cb33-192"><a href="#cb33-192" aria-hidden="true" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb33-193"><a href="#cb33-193" aria-hidden="true" tabindex="-1"></a>form <span class="ot">&lt;-</span> <span class="er">~</span>group</span>
+<span id="cb33-194"><a href="#cb33-194" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sigma</span>(lm1)</span>
+<span id="cb33-195"><a href="#cb33-195" aria-hidden="true" tabindex="-1"></a>power <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">n =</span> <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">5</span>), <span class="at">power =</span> <span class="cn">NA</span>)</span>
+<span id="cb33-196"><a href="#cb33-196" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb33-197"><a href="#cb33-197" aria-hidden="true" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">makeContrasts</span>(<span class="st">"grouptreat"</span>, <span class="at">levels =</span> <span class="fu">names</span>(lm1<span class="sc">$</span>coefficients))</span>
+<span id="cb33-198"><a href="#cb33-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-199"><a href="#cb33-199" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(power))</span>
+<span id="cb33-200"><a href="#cb33-200" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb33-201"><a href="#cb33-201" aria-hidden="true" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> power<span class="sc">$</span>n[i]</span>
+<span id="cb33-202"><a href="#cb33-202" aria-hidden="true" tabindex="-1"></a>  predictorData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"ctrl"</span>, <span class="st">"treat"</span>), <span class="fu">c</span>(n1, n2)) <span class="sc">|&gt;</span> <span class="fu">as.factor</span>())</span>
+<span id="cb33-203"><a href="#cb33-203" aria-hidden="true" tabindex="-1"></a>  power<span class="sc">$</span>power[i] <span class="ot">&lt;-</span> <span class="fu">simFast</span>(form, predictorData, betas, sd, <span class="at">contrasts =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">nSim =</span> nSim)</span>
+<span id="cb33-204"><a href="#cb33-204" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-205"><a href="#cb33-205" aria-hidden="true" tabindex="-1"></a>power</span>
+<span id="cb33-206"><a href="#cb33-206" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-207"><a href="#cb33-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-210"><a href="#cb33-210" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-211"><a href="#cb33-211" aria-hidden="true" tabindex="-1"></a>power <span class="sc">|&gt;</span></span>
+<span id="cb33-212"><a href="#cb33-212" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> power)) <span class="sc">+</span></span>
+<span id="cb33-213"><a href="#cb33-213" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span>
+<span id="cb33-214"><a href="#cb33-214" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-215"><a href="#cb33-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-216"><a href="#cb33-216" aria-hidden="true" tabindex="-1"></a>Through simulations we show that we need about 32-33 observations to obtain a power of about 90%.</span>
+<span id="cb33-217"><a href="#cb33-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-218"><a href="#cb33-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-219"><a href="#cb33-219" aria-hidden="true" tabindex="-1"></a>This is similar to what we would obtain with the close form formula that can be applied for a two group design</span>
+<span id="cb33-220"><a href="#cb33-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-223"><a href="#cb33-223" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-224"><a href="#cb33-224" aria-hidden="true" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">delta =</span> lm1<span class="sc">$</span>coef[<span class="dv">2</span>], <span class="at">sd =</span> <span class="fu">sigma</span>(lm1), <span class="at">power =</span> .<span class="dv">9</span>)</span>
+<span id="cb33-225"><a href="#cb33-225" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-226"><a href="#cb33-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-227"><a href="#cb33-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-228"><a href="#cb33-228" aria-hidden="true" tabindex="-1"></a><span class="fu"># Impact of effect size</span></span>
+<span id="cb33-229"><a href="#cb33-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-230"><a href="#cb33-230" aria-hidden="true" tabindex="-1"></a>Suppose that we would like to pick up an effect size of $\beta_1 = 60 g/kg$.</span>
+<span id="cb33-231"><a href="#cb33-231" aria-hidden="true" tabindex="-1"></a>how many samples would be required in each group to obtain a power of 90%?</span>
+<span id="cb33-232"><a href="#cb33-232" aria-hidden="true" tabindex="-1"></a>Note, that</span>
+<span id="cb33-233"><a href="#cb33-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-234"><a href="#cb33-234" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>we do a two-sided test so the sign of the effect size is arbitrary.</span>
+<span id="cb33-235"><a href="#cb33-235" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the intercept in the power analysis is also arbitrary so we could also set it at 0.</span>
+<span id="cb33-236"><a href="#cb33-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-239"><a href="#cb33-239" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-240"><a href="#cb33-240" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1400</span>)</span>
+<span id="cb33-241"><a href="#cb33-241" aria-hidden="true" tabindex="-1"></a>betas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">60</span>)</span>
+<span id="cb33-242"><a href="#cb33-242" aria-hidden="true" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb33-243"><a href="#cb33-243" aria-hidden="true" tabindex="-1"></a>form <span class="ot">&lt;-</span> <span class="er">~</span>group</span>
+<span id="cb33-244"><a href="#cb33-244" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sigma</span>(lm1)</span>
+<span id="cb33-245"><a href="#cb33-245" aria-hidden="true" tabindex="-1"></a>power2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">n =</span> <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="dv">5</span>), <span class="at">power =</span> <span class="cn">NA</span>)</span>
+<span id="cb33-246"><a href="#cb33-246" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb33-247"><a href="#cb33-247" aria-hidden="true" tabindex="-1"></a>contrast <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">makeContrasts</span>(<span class="st">"grouptreat"</span>, <span class="at">levels =</span> <span class="fu">names</span>(lm1<span class="sc">$</span>coefficients))</span>
+<span id="cb33-248"><a href="#cb33-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-249"><a href="#cb33-249" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(power2))</span>
+<span id="cb33-250"><a href="#cb33-250" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb33-251"><a href="#cb33-251" aria-hidden="true" tabindex="-1"></a>  n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> power2<span class="sc">$</span>n[i]</span>
+<span id="cb33-252"><a href="#cb33-252" aria-hidden="true" tabindex="-1"></a>  predictorData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"ctrl"</span>, <span class="st">"treat"</span>), <span class="fu">c</span>(n1, n2)) <span class="sc">|&gt;</span> <span class="fu">as.factor</span>())</span>
+<span id="cb33-253"><a href="#cb33-253" aria-hidden="true" tabindex="-1"></a>  power2<span class="sc">$</span>power[i] <span class="ot">&lt;-</span> <span class="fu">simFast</span>(form, predictorData, betas, sd, <span class="at">contrasts =</span> contrast, <span class="at">alpha =</span> alpha, <span class="at">nSim =</span> nSim)</span>
+<span id="cb33-254"><a href="#cb33-254" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-255"><a href="#cb33-255" aria-hidden="true" tabindex="-1"></a>power2</span>
+<span id="cb33-256"><a href="#cb33-256" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-257"><a href="#cb33-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-260"><a href="#cb33-260" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-261"><a href="#cb33-261" aria-hidden="true" tabindex="-1"></a>power2 <span class="sc">|&gt;</span></span>
+<span id="cb33-262"><a href="#cb33-262" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> power)) <span class="sc">+</span></span>
+<span id="cb33-263"><a href="#cb33-263" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb33-264"><a href="#cb33-264" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> .<span class="dv">9</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb33-265"><a href="#cb33-265" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-266"><a href="#cb33-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-267"><a href="#cb33-267" aria-hidden="true" tabindex="-1"></a>We observe that we need between 75-80 observations to obtain a power of 90%.</span>
+<span id="cb33-268"><a href="#cb33-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-269"><a href="#cb33-269" aria-hidden="true" tabindex="-1"></a>This is confirmed with the power functions for the two sample t-test.</span>
+<span id="cb33-270"><a href="#cb33-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-273"><a href="#cb33-273" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb33-274"><a href="#cb33-274" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">60</span></span>
+<span id="cb33-275"><a href="#cb33-275" aria-hidden="true" tabindex="-1"></a>power <span class="ot">&lt;-</span> .<span class="dv">9</span></span>
+<span id="cb33-276"><a href="#cb33-276" aria-hidden="true" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">d =</span> b1, <span class="at">sd =</span> <span class="fu">sigma</span>(lm1), <span class="at">type =</span> <span class="st">"two.sample"</span>, <span class="at">power =</span> power)</span>
+<span id="cb33-277"><a href="#cb33-277" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-278"><a href="#cb33-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-279"><a href="#cb33-279" aria-hidden="true" tabindex="-1"></a>Note, that we would require a much larger sample size. This is because the</span>
+<span id="cb33-280"><a href="#cb33-280" aria-hidden="true" tabindex="-1"></a>desired effect size that we would like to pick up is small compared to the</span>
+<span id="cb33-281"><a href="#cb33-281" aria-hidden="true" tabindex="-1"></a>variability (standard deviation) in the population.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
 
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
-</body>
-</html>
+
+</body></html>

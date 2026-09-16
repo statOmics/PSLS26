@@ -1,0 +1,21 @@
+{
+  "hash": "03d9113763cb534b4f15434743b92ed2",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Exercise 6.1: Linear regression on puromycin data\"\nauthor: \"Lieven Clement, Alexandre Segers and Milan Malfait\"\nsubtitle: \"statOmics, Ghent University (https://statomics.github.io)\"\n---\n\n<a rel=\"license\" href=\"https://creativecommons.org/licenses/by-nc-sa/4.0\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png\" /></a>\n\n# Puromycin dataset\n\nData on the velocity of an enzymatic reaction were obtained by Treloar (1974).\nThe number of counts per minute of radioactive product from the reaction was\nmeasured as a function of substrate concentration in parts per million (ppm) and\nfrom these counts the initial rate (or velocity) of the reaction was calculated (counts/min/min). The experiment was conducted once with the enzyme treated\nwith Puromycin, and once with the enzyme untreated.\n\n# Goal\n\nAssess if there is an association between the substrate concentration and rate\nfor the **treated** enzyme.\n\nImport libraries\n\n\n::: {.cell}\n\n:::\n\n\n# Import data\n\nIn contrast to the other datasets we have worked with so far, this dataset is\nnot available through a URL link. In stead, the data is directly available from\nan R package that was pre-installed in your R working environment. As such, we\ncan simply do\n\n\n::: {.cell}\n\n```{.r .cell-code}\ndata(Puromycin)\n```\n:::\n\n\nand an object called `Puromycin` is immediately available in your working\nenvironment.\n\n# Data wrangling\n\nFor this exercise, we only want to assess if there is an association between\nthe substrate concentration and rate for the **treated** enzyme. As such, we\nshould filter the data so that we are left with only the treated enzymes.\n\n\n::: {.cell}\n\n:::\n\n\n# Data exploration\n\nMake a visualization that allows for exploring if there is a linear relationship\nbetween the substrate concentration and enzyme's rate.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nPuromycin |>\n  ggplot(...) + # select which elements of the dataset we need to visualize\n  ... # use a relevant plotting geometry\n... # you can add some extra elements like axis labels, title, ...\n```\n:::\n\n\nDoes the relationship look linear? Can you think of any other steps that we\nmight take to assess this relationship?\n\n\n::: {.cell}\n\n:::\n\n\nNow may we assume a linear relationship between the substrate concentration and\nthe enzyme's rate?\n\n# Linear regression\n\n## Formulate the research question\n\n## Check the assumptions\n\n## Interpret the model parameters of the linear model\n\n## Interpret the results, both for the intercept as well as for the slope\n\n## Write a conclusion that answers the research hypothesis.\n",
+    "supporting": [
+      "06_1_puromycin_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

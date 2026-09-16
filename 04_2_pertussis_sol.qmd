@@ -1,0 +1,158 @@
+---
+title: "Exercise 4.2: Exploring the pertussis dataset"
+author: "Lieven Clement, and Milan Malfait"
+subtitle: "statOmics, Ghent University (https://statomics.github.io)"
+---
+
+# Aim of this exercise
+
+An exploratory data analysis is a crucial step in a data analysis to get
+insight in the nature and distribution of the data, and to assess the
+assumptions of the downstream data analysis.
+
+In this exercise you will acquired the skills to conduct a data exploration for a two group comparison in R and to interpret the results.
+
+# Background
+
+Researchers wanted to study the immune response on pertussis.
+They have set up an experiments with 40 rats.
+16 rats were infected with pertussis and 24 rats received a control treatment.
+Researchers measured the white blood cell concentration (WBC) in each rat (count per mm$^3$.
+
+De data consists of two variables:
+
+- WBC: white blood cell count (counts/mm$^3$).
+- trt: treatment
+
+    - control: rat recieved control treatment
+    - pertussis: rat was infected with pertussis
+
+Load the libraries
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+# Import the dataset
+
+Data path:
+
+  `https://raw.githubusercontent.com/statOmics/PSLSData/main/wbcon.csv`
+
+
+```{r}
+wbcon <- read_csv("https://raw.githubusercontent.com/statOmics/PSLSData/main/wbcon.csv")
+```
+
+```{r}
+glimpse(wbcon)
+```
+
+## Aim of the study
+
+The overarching goal of this study was to assess if the white blood cell count changes upon pertussis infection. To this end, researchers randomized 40 rats
+to two treatments: A control treatment and a treatment in which the rat was infected with pertussis.
+
+We will explore the data to get insight on the impact of the pertussis infection on the white blood cell count.
+
+A secondary goal of the data exploration is to assess assumptions that will be required to use a formal statistical test to assess if the white blood cell count is on average different between infected and control rats (see later exercises).
+
+For this test to be valid, we have to assess following assumptions:
+
+1. The data in each treatment group are normally distributed.
+
+2. The data from the two treatment groups has the same variance.
+
+
+# Data visualization
+
+A crucial first step in a data analysis is to visualize and to explore the raw
+data.
+
+## Histogram
+
+First, make a histogram of the data. Fill in the
+missing parts in the chunk of code below:
+
+```{r}
+wbcon |>
+  ggplot() +
+  geom_histogram(aes(x = WBC, fill = trt), color = "black") +
+  facet_grid(rows = vars(trt)) +
+  theme_bw() +
+  xlab("WBC (count/mm3)")
+```
+
+Based on this plot, it seems that the white blood cell counts
+are higher for rats that were infected with pertussis than for rats that received the control treatment.
+
+## Boxplots
+
+However, given the relative small sample size a better option to visualize these data are `boxplots`.
+Histograms get useful in larger datasets,  30 observations per group are a bare minimum.
+
+```{r}
+wbcon |> ggplot(aes(x = trt, y = WBC, fill = trt)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_point(position = "jitter") +
+  ylab("WBC (count/mm3)") +
+  xlab("treatment") +
+  stat_summary(
+    fun = mean, geom = "point",
+    shape = 5, size = 3, color = "black"
+  )
+```
+
+What do you observe?
+
+Both the mean and variance of the data seems to differ between control rats and rats infected with pertussis.
+
+## QQ-plots
+
+To assess the assumption that the data are normally distributed in each treatment group, we will use QQ plots.
+
+```{r}
+wbcon |>
+  ggplot(aes(sample = WBC)) +
+  geom_qq() +
+  geom_qq_line() +
+  facet_grid(cols = vars(trt))
+```
+
+What do you observe?
+
+The white blood cell counts appear to be normally distributed in both treatment groups.
+
+# Descriptive statistics
+
+Here, we will generate some informative descriptive statistics
+for the dataset.
+
+We first summarize the data and calculate the mean, standard
+deviation, number of observations and standard error and store the
+result in an object wbcSum via 'wbcSum<-`
+
+1. We pipe the `wbcon` dataframe to the group_by function to group
+the data by treatment groep `group_by(trt)`
+2. We pipe the result to the `summarize()` function to summarize
+the "WBC" variable and calculate the mean, standard deviation and
+the number of observations
+3. We pipe the result to the `mutate` function to make a new
+variable in the data frame that is named `se` for which we calculate the
+standard error ($\sigma / n$)
+
+```{r}
+wbcSum <- wbcon |>
+  group_by(trt) |>
+  summarize(
+      mean = mean(WBC, na.rm = TRUE),
+      sd = sd(WBC, na.rm = TRUE),
+      n = n()
+  ) |>
+  mutate(se = sd / sqrt(n))
+wbcSum
+```
+
+
+This concludes the data exploration. In the next exercise sessions, we will learn how to formally
+test if the observed difference in WBC between rats that were infected with pertussis and those receiving the control treatment is **statistically significant**.

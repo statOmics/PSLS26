@@ -1,0 +1,21 @@
+{
+  "hash": "55c2d984bf60efd02191decdf3e74b49",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"8.3. Multiple regression with interaction: puromycin example\"\nauthor: \"Lieven Clement & Jeroen Gilis\"\nsubtitle: \"statOmics, Ghent University (https://statomics.github.io)\"\n---\n\n<a rel=\"license\" href=\"https://creativecommons.org/licenses/by-nc-sa/4.0\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png\" /></a>\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tidyverse)\n```\n:::\n\n\n# Puromycin data\n\nData on the velocity of an enzymatic reaction were obtained by Treloar (1974).\nThe number of counts per minute of radioactive product from the reaction was\nmeasured as a function of substrate concentration in parts per million (ppm) and\nfrom these counts the initial rate (or velocity) of the reaction was calculated (counts/min/min). The experiment was conducted once with the enzyme treated\nwith Puromycin, and once with the enzyme untreated.\n\nAssess if there is an association between the substrate concentration and rate\n**for both the treated and untreated enzymes.**\n\n# Import data\n\n\n::: {.cell}\n\n```{.r .cell-code}\ndata(Puromycin)\n```\n:::\n\n\n# Data wrangling\n\nFor a clearer interpretation of the model parameters later on, we will make\nthe untreated state enzymes the reference category.\n\n\n::: {.cell}\n\n:::\n\n\n## Data Exploration\n\nFirst, we visualize the association between the concentration and the enzyme\nrate, for both of the enzyme states.\n\n\n::: {.cell}\n\n:::\n\n\n# Linear regression\n\nWe will model the data that explains enzyme rates in function of a main effect\nfor concentration, a main effect for enzyme state and an interaction term\nbetween these two variables.\n\n## Assess model assumptions\n\n## Inference\n\nUse the model to test the parameters of interest. We are now interested in\nassessing if\n\n1. the association between velocity and the concentration is significant in\nthe untreated group\n\n2. the association between velocity and the concentration is significant in\nthe treated group\n\n3. the association between velocity and the concentration is different between\ntreated and untreated group\n\nStep 1: translate these research questions into parameters (cobinations of\nparameters) of the linear model.\nStep 2: test the relevant parameters. This can be done for the three hypotheses\nat once using the package `multcomp`.\n\n## Conclusion\n",
+    "supporting": [
+      "08_3_puromycin_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

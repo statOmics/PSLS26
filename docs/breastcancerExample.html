@@ -1,67 +1,33 @@
 <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<html>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
 
-<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta name="author" content="Lieven Clement">
 
-
-<meta name="author" content="Lieven Clement" />
-
-
-<title>Breast cancer example</title>
-
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
-<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<style>h1 {font-size: 34px;}
-       h1.title {font-size: 38px;}
-       h2 {font-size: 30px;}
-       h3 {font-size: 24px;}
-       h4 {font-size: 18px;}
-       h5 {font-size: 16px;}
-       h6 {font-size: 12px;}
-       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
-       pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
-<script src="site_libs/navigation-1.1/sourceembed.js"></script>
-<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
-
-
-
-<style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
-</style>
-<style type="text/css" data-origin="pandoc">
+<title>Breast cancer example – PSLS26 - Practical Statistics for the Life Sciences</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -72,7 +38,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -86,477 +52,285 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
-  {  background-color: #f8f8f8; }
+  {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ef2929; } /* Alert */
-code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #204a87; } /* Attribute */
-code span.bn { color: #0000cf; } /* BaseN */
-code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4e9a06; } /* Char */
-code span.cn { color: #8f5902; } /* Constant */
-code span.co { color: #8f5902; font-style: italic; } /* Comment */
-code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code span.dt { color: #204a87; } /* DataType */
-code span.dv { color: #0000cf; } /* DecVal */
-code span.er { color: #a40000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #0000cf; } /* Float */
-code span.fu { color: #204a87; font-weight: bold; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code span.ot { color: #8f5902; } /* Other */
-code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
-code span.ss { color: #4e9a06; } /* SpecialString */
-code span.st { color: #4e9a06; } /* String */
-code span.va { color: #000000; } /* Variable */
-code span.vs { color: #4e9a06; } /* VerbatimString */
-code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-
-.sourceCode .row {
-  width: 100%;
-}
-.sourceCode {
-  overflow-x: auto;
-}
-.code-folding-btn {
-  margin-right: -30px;
-}
 </style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    var j = 0;
-    while (j < rules.length) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
-        j++;
-        continue;
-      }
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') {
-        j++;
-        continue;
-      }
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f79c7fb6db380d32be398468f2fb58cf.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-2c9dadc89b91d1343c807e0fac51702d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
-})();
-</script>
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
-
-<style type="text/css">
-#rmd-source-code {
-  display: none;
-}
-</style>
-
-
-<link rel="stylesheet" href="style.css" type="text/css" />
-
-
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-img {
-  max-width:100%;
-}
-.tabbed-pane {
-  padding-top: 12px;
-}
-.html-widget {
-  margin-bottom: 20px;
-}
-button.code-folding-btn:focus {
-  outline: none;
-}
-summary {
-  display: list-item;
-}
-details > summary > p:only-child {
-  display: inline;
-}
-pre code {
-  padding: 0;
-}
-</style>
-
-
-<style type="text/css">
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  border-radius: 0 6px 6px 6px;
-}
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #cccccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-.dropdown-submenu:hover>a:after {
-  border-left-color: #adb5bd;
-}
-.dropdown-submenu.pull-left {
-  float: none;
-}
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  border-radius: 6px 0 6px 6px;
-}
-</style>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-// manage active state of menu based on current page
-$(document).ready(function () {
-  // active menu anchor
-  href = window.location.pathname
-  href = href.substr(href.lastIndexOf('/') + 1)
-  if (href === "")
-    href = "index.html";
-  var menuAnchor = $('a[href="' + href + '"]');
-
-  // mark the anchor link active (and if it's in a dropdown, also mark that active)
-  var dropdown = menuAnchor.closest('li.dropdown');
-  if (window.bootstrap) { // Bootstrap 4+
-    menuAnchor.addClass('active');
-    dropdown.find('> .dropdown-toggle').addClass('active');
-  } else { // Bootstrap 3
-    menuAnchor.parent().addClass('active');
-    dropdown.addClass('active');
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
   }
-
-  // Navbar adjustments
-  var navHeight = $(".navbar").first().height() + 15;
-  var style = document.createElement('style');
-  var pt = "padding-top: " + navHeight + "px; ";
-  var mt = "margin-top: -" + navHeight + "px; ";
-  var css = "";
-  // offset scroll position for anchor links (for fixed navbar)
-  for (var i = 1; i <= 6; i++) {
-    css += ".section h" + i + "{ " + pt + mt + "}\n";
-  }
-  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
-  document.head.appendChild(style);
-});
+}
+window.Quarto = {
+  typesetMath
+};
 </script>
 
-<!-- tabsets -->
-
-<style type="text/css">
-.tabset-dropdown > .nav-tabs {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "\e259";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "\e258";
-  font-family: 'Glyphicons Halflings';
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs > li.active {
-  display: block;
-}
-
-.tabset-dropdown > .nav-tabs > li > a,
-.tabset-dropdown > .nav-tabs > li > a:focus,
-.tabset-dropdown > .nav-tabs > li > a:hover {
-  border: none;
-  display: inline-block;
-  border-radius: 4px;
-  background-color: transparent;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
-  display: block;
-  float: none;
-}
-
-.tabset-dropdown > .nav-tabs > li {
-  display: none;
-}
-</style>
-
-<!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
-
-
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
-
+<link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="floating nav-fixed quarto-light">
 
-
-<div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
-
-
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html"></a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">PSLS26 - Practical Statistics for the Life Sciences</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-easel" role="img">
+</i> 
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
         <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-  </a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-chalkboard-teacher"></span>
-     
-    Topics
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="01-intro.html">1. Introduction</a>
-    </li>
-    <li>
-      <a href="02-concepts.html">2. Concepts</a>
-    </li>
-    <li>
-      <a href="03-experimentalDesign.html">3. Experimental Design I</a>
-    </li>
-    <li>
-      <a href="04-dataExploration.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference.html">5.1 Statistical Inference 1</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference-twosampleT.html">5.2 Statistical Inference 2</a>
-    </li>
-    <li>
-      <a href="06-linearRegression.html">6. Linear Regression</a>
-    </li>
-    <li>
-      <a href="07-Anova.html">7. Analysis of Variance</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression.html">8. Multiple Regression</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression-SpecificDesigns.html">8.2 Multiple Regression: Factorial Designs</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign2.html">8.3. Experimental Design II</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign3.html">8.4. Experimental Design III</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-WilcoxonMannWithney.html">9.1. Nonparametric Statistics 1</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-KruskalWallis.html">9.2. Nonparametric Statistics 2</a>
-    </li>
-    <li>
-      <a href="10-categoricalDataAnalysis.html">10. Categorical Data Analysis</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-laptop"></span>
-     
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="04_exercises.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05_exercises.html">5. Statistical inference</a>
-    </li>
-    <li>
-      <a href="06_exercises.html">6. Simple linear regression</a>
-    </li>
-    <li>
-      <a href="07_exercises.html">7. ANOVA</a>
-    </li>
-    <li>
-      <a href="08_exercises.html">8. Multiple linear regression</a>
-    </li>
-    <li>
-      <a href="09_exercises.html">9. Non-parametric statistics</a>
-    </li>
-  </ul>
-</li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
+    <a class="dropdown-item" href="./01-intro.html">
+ <span class="dropdown-text">1. Introduction</span></a>
+  </li>  
         <li>
-  <a href="http://statomics.github.io/">statOmics</a>
-</li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container -->
-</div><!--/.navbar -->
-
-<div id="header">
-
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-<li role="separator" class="divider"></li>
-<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+    <a class="dropdown-item" href="./02-concepts.html">
+ <span class="dropdown-text">2. Concepts</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-experimentalDesign.html">
+ <span class="dropdown-text">3. Experimental Design I</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-dataExploration.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference.html">
+ <span class="dropdown-text">5.1 Statistical Inference 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference-twosampleT.html">
+ <span class="dropdown-text">5.2 Statistical Inference 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06-linearRegression.html">
+ <span class="dropdown-text">6. Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07-Anova.html">
+ <span class="dropdown-text">7. Analysis of Variance</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression.html">
+ <span class="dropdown-text">8. Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression-SpecificDesigns.html">
+ <span class="dropdown-text">8.2 Multiple Regression: Factorial Designs</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign2.html">
+ <span class="dropdown-text">8.3. Experimental Design II</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign3.html">
+ <span class="dropdown-text">8.4. Experimental Design III</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-WilcoxonMannWithney.html">
+ <span class="dropdown-text">9.1. Nonparametric Statistics 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-KruskalWallis.html">
+ <span class="dropdown-text">9.2. Nonparametric Statistics 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./10-categoricalDataAnalysis.html">
+ <span class="dropdown-text">10. Categorical Data Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-exercises" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-laptop" role="img">
+</i> 
+ <span class="menu-text">Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-exercises">    
+        <li>
+    <a class="dropdown-item" href="./04_exercises.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05_exercises.html">
+ <span class="dropdown-text">5. Statistical inference</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06_exercises.html">
+ <span class="dropdown-text">6. Simple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07_exercises.html">
+ <span class="dropdown-text">7. ANOVA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08_exercises.html">
+ <span class="dropdown-text">8. Multiple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09_exercises.html">
+ <span class="dropdown-text">9. Non-parametric statistics</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="http://statomics.github.io/"> 
+<span class="menu-text">statOmics</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#breast-cancer-dataset" id="toc-breast-cancer-dataset" class="nav-link active" data-scroll-target="#breast-cancer-dataset"><span class="header-section-number">1</span> Breast cancer dataset</a></li>
+  <li><a href="#research-question" id="toc-research-question" class="nav-link" data-scroll-target="#research-question"><span class="header-section-number">2</span> Research question</a></li>
+  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration"><span class="header-section-number">3</span> Data exploration</a></li>
+  <li><a href="#descriptive-statistics" id="toc-descriptive-statistics" class="nav-link" data-scroll-target="#descriptive-statistics"><span class="header-section-number">4</span> Descriptive statistics</a></li>
+  <li><a href="#model" id="toc-model" class="nav-link" data-scroll-target="#model"><span class="header-section-number">5</span> Model</a>
+  <ul class="collapse">
+  <li><a href="#model-fitting" id="toc-model-fitting" class="nav-link" data-scroll-target="#model-fitting"><span class="header-section-number">5.1</span> Model fitting</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">6</span> Conclusion</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Breast cancer example</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<p class="subtitle lead">statOmics, Ghent University (https://statomics.github.io)</p>
 </div>
 
 
 
-<h1 class="title toc-ignore">Breast cancer example</h1>
-<h4 class="author">Lieven Clement</h4>
-<h4 class="date">statOmics, Ghent University (<a href="https://statomics.github.io" class="uri">https://statomics.github.io</a>)</h4>
+<div class="quarto-title-meta">
 
-</div>
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lieven Clement </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
 
 
-<div id="breast-cancer-dataset" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Breast cancer dataset</h1>
+</header>
+
+
+<section id="breast-cancer-dataset" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Breast cancer dataset</h1>
 <ul>
-<li><p>Subset of study <a href="https://doi.org/10.1093/jnci/djj052" class="uri">https://doi.org/10.1093/jnci/djj052</a></p></li>
+<li><p>Subset of study https://doi.org/10.1093/jnci/djj052</p></li>
 <li><p>32 breast cancer patients with estrogen receptor positive tumour that had tamoxifen chemotherapy. Variables:</p>
 <ul>
 <li>grade: histological grade of tumour (grade 1 vs 3),</li>
@@ -570,87 +344,180 @@ div.tocify {
 <li><p>Proteins of S100 family often dysregulated in cancer</p></li>
 <li><p>S100A8 expression represses immune system in tumour en creates an environment of inflammation that promotes tumour growth.</p></li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(GGally)</span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>brca <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/GTPB/PSLS20/master/data/breastcancer.csv&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>brca</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>brca <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/GTPB/PSLS20/master/data/breastcancer.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>brca</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["sample_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["filename"],"name":[2],"type":["chr"],"align":["left"]},{"label":["treatment"],"name":[3],"type":["chr"],"align":["left"]},{"label":["er"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["grade"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["node"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["size"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["age"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["ESR1"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["S100A8"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"OXFT_209","2":"gsm65344.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"1","7":"2.5","8":"66","9":"1939.1990","10":"207.19682"},{"1":"OXFT_1769","2":"gsm65345.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"1","7":"3.5","8":"86","9":"2751.9521","10":"36.98611"},{"1":"OXFT_2093","2":"gsm65347.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"1","7":"2.2","8":"74","9":"379.1951","10":"2364.18306"},{"1":"OXFT_1770","2":"gsm65348.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"1","7":"1.7","8":"69","9":"2531.7473","10":"23.61504"},{"1":"OXFT_1342","2":"gsm65350.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"0","7":"2.5","8":"62","9":"141.0508","10":"3218.74109"},{"1":"OXFT_2338","2":"gsm65352.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"1","7":"1.4","8":"63","9":"1495.4213","10":"107.56868"},{"1":"OXFT_2341","2":"gsm65353.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"1","7":"3.3","8":"76","9":"3405.7294","10":"13.99662"},{"1":"OXFT_1902","2":"gsm65354.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"0","7":"2.4","8":"61","9":"2812.8034","10":"68.38262"},{"1":"OXFT_1982","2":"gsm65355.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"0","7":"1.7","8":"62","9":"949.9327","10":"74.18828"},{"1":"OXFT_5210","2":"gsm65356.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"0","7":"3.5","8":"65","9":"1052.9142","10":"182.32133"},{"1":"OXFT_2027","2":"gsm65357.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"0","7":"1.4","8":"63","9":"1838.7705","10":"27.51279"},{"1":"OXFT_1133","2":"gsm65358.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"0","7":"2.0","8":"70","9":"3707.8010","10":"26.70991"},{"1":"OXFT_1441","2":"gsm65359.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"0","7":"3.2","8":"78","9":"2240.4095","10":"26.28934"},{"1":"OXFT_1432","2":"gsm65360.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"0","7":"2.0","8":"71","9":"2698.5507","10":"56.30524"},{"1":"OXFT_1125","2":"gsm65361.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"0","7":"1.6","8":"68","9":"2459.7793","10":"14.17095"},{"1":"OXFT_1070","2":"gsm65362.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"0","7":"0.2","8":"45","9":"689.2472","10":"282.68343"},{"1":"OXFT_700","2":"gsm65363.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"0","7":"3.5","8":"57","9":"2625.8917","10":"18.67950"},{"1":"OXFT_742","2":"gsm65364.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"1","7":"1.7","8":"67","9":"1665.5595","10":"18.11686"},{"1":"OXFT_738","2":"gsm65365.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"1","7":"1.8","8":"74","9":"3336.0416","10":"26.00373"},{"1":"OXFT_669","2":"gsm65366.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"0","7":"4.0","8":"60","9":"3057.5784","10":"22.59829"},{"1":"OXFT_3597","2":"gsm65367.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"0","7":"1.1","8":"60","9":"164.2995","10":"6225.02863"},{"1":"OXFT_638","2":"gsm65368.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"1","7":"2.3","8":"63","9":"2909.6771","10":"78.53095"},{"1":"OXFT_2188","2":"gsm65369.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"0","7":"3.3","8":"69","9":"1925.8788","10":"82.15699"},{"1":"OXFT_2069","2":"gsm65370.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"1","7":"2.3","8":"66","9":"1864.3941","10":"65.50852"},{"1":"OXFT_596","2":"gsm65371.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"0","7":"3.0","8":"66","9":"3037.2311","10":"21.68372"},{"1":"OXFT_619","2":"gsm65372.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"0","7":"1.9","8":"49","9":"1449.9249","10":"27.11254"},{"1":"OXFT_680","2":"gsm65373.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"1","7":"4.5","8":"61","9":"3967.2038","10":"26.73890"},{"1":"OXFT_443","2":"gsm65374.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"0","7":"2.1","8":"45","9":"396.0846","10":"219.23261"},{"1":"OXFT_1579","2":"gsm65376.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"0","7":"2.0","8":"40","9":"976.9015","10":"116.66995"},{"1":"OXFT_4904","2":"gsm65377.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"1","7":"5.0","8":"69","9":"2036.9399","10":"102.14641"},{"1":"OXFT_511","2":"gsm65378.cel.gz","3":"tamoxifen","4":"1","5":"3","6":"1","7":"5.5","8":"64","9":"1004.3520","10":"294.16364"},{"1":"OXFT_736","2":"gsm65379.cel.gz","3":"tamoxifen","4":"1","5":"1","6":"0","7":"1.4","8":"48","9":"2163.5382","10":"45.28436"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
-<div id="research-question" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Research question</h1>
-<p>Is the expression of the S100A8 gene associated with that of that of the ESR1 gene?</p>
 </div>
-<div id="data-exploration" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Data exploration</h1>
+</section>
+<section id="research-question" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Research question</h1>
+<p>Is the expression of the S100A8 gene associated with that of that of the ESR1 gene?</p>
+</section>
+<section id="data-exploration" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Data exploration</h1>
 <p>There are many variables in the data, we will plot all variables in a scatterplot matrix using the GGally package.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">ggpairs</span>(brca[, <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)])</span></code></pre></div>
-<p><img src="breastcancerExample_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(brca[, <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="breastcancerExample_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>We now focus on the association between S100A8 expression and the ESR1 expression.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>brca <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ESR1, <span class="at">y =</span> S100A8)) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>) <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<p><img src="breastcancerExample_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="cell" data-layout-align="center">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>brca <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ESR1, <span class="at">y =</span> S100A8)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="breastcancerExample_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>The association of S100A and ESR1 does not appear to be linear.</p>
 <ul>
 <li>Concentration measurements are often skewed.</li>
 <li>We will log2 transform the data.</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>brca <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log2</span>(ESR1), <span class="at">y =</span> <span class="fu">log2</span>(S100A8))) <span class="sc">+</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<p><img src="breastcancerExample_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Upon log transformation the data are showing a linear association. Is this association strong enough to be able to conclude that the S100A8 gene expression is associated to the ESR1 gene expression?</p>
+<div class="cell" data-layout-align="center">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>brca <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log2</span>(ESR1), <span class="at">y =</span> <span class="fu">log2</span>(S100A8))) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="breastcancerExample_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
 </div>
-<div id="descriptive-statistics" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Descriptive statistics</h1>
+</div>
+</div>
+<p>Upon log transformation the data are showing a linear association. Is this association strong enough to be able to conclude that the S100A8 gene expression is associated to the ESR1 gene expression?</p>
+</section>
+<section id="descriptive-statistics" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Descriptive statistics</h1>
 <p>We first calculate the Pearson and Spearman correlation based on the original data and the log2 transformed data</p>
 <p>Pearson correlation</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>brca <span class="ot">&lt;-</span> brca <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">S100A8_log2 =</span> <span class="fu">log2</span>(S100A8), <span class="at">ESR1_log2 =</span> <span class="fu">log2</span>(ESR1))</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>brca <span class="sc">%&gt;%</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="fu">select</span>(S100A8_log2, ESR1_log2) <span class="sc">%&gt;%</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="fu">cor</span>()</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>brca <span class="ot">&lt;-</span> brca <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">S100A8_log2 =</span> <span class="fu">log2</span>(S100A8), <span class="at">ESR1_log2 =</span> <span class="fu">log2</span>(ESR1))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>brca <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(S100A8_log2, ESR1_log2) <span class="sc">|&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>            S100A8_log2 ESR1_log2
 S100A8_log2    1.000000 -0.891199
 ESR1_log2     -0.891199  1.000000</code></pre>
+</div>
+</div>
 <p>Spearman correlation</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>brca <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">select</span>(S100A8_log2, ESR1_log2) <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">cor</span>(<span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>)</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>brca <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(S100A8_log2, ESR1_log2) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(<span class="at">method =</span> <span class="st">"spearman"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>            S100A8_log2 ESR1_log2
 S100A8_log2    1.000000 -0.733871
 ESR1_log2     -0.733871  1.000000</code></pre>
-<p>Both the Pearson and Spearman correlation are negative. Note, that the Spearman correlation is much larger in absolute value than the Pearson correlation on the original expression measurements. Indeed, the Pearson correlation is affected by the non linear association at the original scale.</p>
-<p>On the log scale the Pearson correlation is much higher.
-The spearman correlation, however, remains because it is based on rank transformed data.</p>
 </div>
-<div id="model" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Model</h1>
+</div>
+<p>Both the Pearson and Spearman correlation are negative. Note, that the Spearman correlation is much larger in absolute value than the Pearson correlation on the original expression measurements. Indeed, the Pearson correlation is affected by the non linear association at the original scale.</p>
+<p>On the log scale the Pearson correlation is much higher. The spearman correlation, however, remains because it is based on rank transformed data.</p>
+</section>
+<section id="model" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Model</h1>
 <p>We will model the data on the log2 scale and we assume the following statistical model:</p>
 <p><span class="math display">\[Y_i\vert X_i\sim N(\beta_0+\beta_1X_i,\sigma^2)\]</span></p>
 <p>with <span class="math inline">\(Y_i\)</span> the log2 transformed S100A8 gene expression and <span class="math inline">\(X_i\)</span> the log2 transformed ESR1 gene expression.</p>
-<div id="model-fitting" class="section level2" number="5.1">
-<h2><span class="header-section-number">5.1</span> Model fitting</h2>
+<section id="model-fitting" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="model-fitting"><span class="header-section-number">5.1</span> Model fitting</h2>
 <p>We fit the model to the data using the lm function and we first assess the assumptions. Because the subjects were selected at random from the population they are independent. We still have to check the following assumptions.</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Linearity</li>
 <li>Equality of the variance</li>
 <li>The residuals are normally distribution.</li>
 </ol>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(S100A8_log2 <span class="sc">~</span> ESR1_log2, <span class="at">data =</span> brca)</span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">plot</span>(lm2)</span></code></pre></div>
-<p><img src="breastcancerExample_files/figure-html/unnamed-chunk-7-1.png" width="672" /><img src="breastcancerExample_files/figure-html/unnamed-chunk-7-2.png" width="672" /><img src="breastcancerExample_files/figure-html/unnamed-chunk-7-3.png" width="672" /><img src="breastcancerExample_files/figure-html/unnamed-chunk-7-4.png" width="672" /></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">summary</span>(lm2)</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(S100A8_log2 <span class="sc">~</span> ESR1_log2, <span class="at">data =</span> brca)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lm2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="breastcancerExample_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="breastcancerExample_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="breastcancerExample_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="breastcancerExample_files/figure-html/unnamed-chunk-7-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
 lm(formula = S100A8_log2 ~ ESR1_log2, data = brca)
@@ -664,20 +531,25 @@ Coefficients:
 (Intercept)   23.401      1.603   14.60 3.57e-15 ***
 ESR1_log2     -1.615      0.150  -10.76 8.07e-12 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Residual standard error: 1.026 on 30 degrees of freedom
 Multiple R-squared:  0.7942,    Adjusted R-squared:  0.7874 
 F-statistic: 115.8 on 1 and 30 DF,  p-value: 8.07e-12</code></pre>
+</div>
+</div>
 <p>In the residuals vs fitted values plot we observe that the residuals are nicely spread around zero with more or less the same variance and we do not observed a trend in the residuals so there is no indication on deviations from linearity and homoscedasticity.</p>
 <p>The QQ-plot further shows no substantial deviations from normality. So the assumptions hold.</p>
 <p>We can now assess a formal hypothesis test to for the linear association between the S100A8 gene and the ESR1 gene expression at the log2 scale.</p>
-<p>We can translate the hypothesis that there is an association between the S100A8 and ESR1 gene expression in terms of the slope of the model, so under the alternative hypothesis <span class="math inline">\(\beta_1\)</span> is different from zero.
-<span class="math display">\[H_1: \beta_1 \neq 0\]</span></p>
+<p>We can translate the hypothesis that there is an association between the S100A8 and ESR1 gene expression in terms of the slope of the model, so under the alternative hypothesis <span class="math inline">\(\beta_1\)</span> is different from zero. <span class="math display">\[H_1: \beta_1 \neq 0\]</span></p>
 <p>With data we can never prove a hypothesis, so we therefore falsify the opposite: the null hypothesis the there is no association between the expression of both genes:</p>
-<p><span class="math display">\[H_0: \beta_0 = 0\]</span>
-We can do this by adopting a t-test on the slope and by using confidence intervals on the slope.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">summary</span>(lm2)</span></code></pre></div>
+<p><span class="math display">\[H_0: \beta_0 = 0\]</span> We can do this by adopting a t-test on the slope and by using confidence intervals on the slope.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
 lm(formula = S100A8_log2 ~ ESR1_log2, data = brca)
@@ -691,120 +563,684 @@ Coefficients:
 (Intercept)   23.401      1.603   14.60 3.57e-15 ***
 ESR1_log2     -1.615      0.150  -10.76 8.07e-12 ***
 ---
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Residual standard error: 1.026 on 30 degrees of freedom
 Multiple R-squared:  0.7942,    Adjusted R-squared:  0.7874 
 F-statistic: 115.8 on 1 and 30 DF,  p-value: 8.07e-12</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">confint</span>(lm2)</span></code></pre></div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(lm2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>                2.5 %    97.5 %
 (Intercept) 20.128645 26.674023
 ESR1_log2   -1.921047 -1.308185</code></pre>
-<p>Both the t-test and the confidence interval indicate that association is extremely significant.
-The interval moreover shows that the association is biologically relevant.</p>
+</div>
+</div>
+<p>Both the t-test and the confidence interval indicate that association is extremely significant. The interval moreover shows that the association is biologically relevant.</p>
 <p>We will transform slope and the confidence interval back to the original scale to interpret the results in terms of fold changes.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span>(<span class="fu">coef</span>(lm2))</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span>(<span class="fu">coef</span>(lm2))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code> (Intercept)    ESR1_log2 
 1.107908e+07 3.265519e-01 </code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span><span class="fu">confint</span>(lm2)</span></code></pre></div>
+</div>
+</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span><span class="fu">confint</span>(lm2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
 <pre><code>                   2.5 %       97.5 %
 (Intercept) 1.146373e+06 1.070733e+08
 ESR1_log2   2.640628e-01 4.038287e-01</code></pre>
 </div>
 </div>
-<div id="conclusion" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Conclusion</h1>
+</section>
+</section>
+<section id="conclusion" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Conclusion</h1>
 <p>There is an extremely significant negative association between the S100A8 gene expression and that of ESR1 (<span class="math inline">\(p&lt;&lt;0.001\)</span>).</p>
 <p>A patient with an ESR1 expression that is 2 times the expression of that of another patient will on average have an S100A8 expression that is 3.06 times lower (95% CI [2.48,3.79]).</p>
-</div>
-
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiQnJlYXN0IGNhbmNlciBleGFtcGxlIgphdXRob3I6ICJMaWV2ZW4gQ2xlbWVudCIKZGF0ZTogInN0YXRPbWljcywgR2hlbnQgVW5pdmVyc2l0eSAoaHR0cHM6Ly9zdGF0b21pY3MuZ2l0aHViLmlvKSIKLS0tCgpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KGluY2x1ZGUgPSBUUlVFLCBjb21tZW50ID0gTkEsIGVjaG8gPSBUUlVFLAogICAgICAgICAgICAgICAgICAgICAgbWVzc2FnZSA9IEZBTFNFLCB3YXJuaW5nID0gRkFMU0UpCmBgYAoKCiMgQnJlYXN0IGNhbmNlciBkYXRhc2V0Ci0gU3Vic2V0IG9mIHN0dWR5IGh0dHBzOi8vZG9pLm9yZy8xMC4xMDkzL2puY2kvZGpqMDUyCgotIDMyIGJyZWFzdCBjYW5jZXIgcGF0aWVudHMgd2l0aCBlc3Ryb2dlbiByZWNlcHRvciBwb3NpdGl2ZSB0dW1vdXIgdGhhdCBoYWQgdGFtb3hpZmVuIGNoZW1vdGhlcmFweS4gVmFyaWFibGVzOgoKICAgIC0gZ3JhZGU6IGhpc3RvbG9naWNhbCBncmFkZSBvZiB0dW1vdXIgKGdyYWRlIDEgdnMgMyksCiAgICAtIG5vZGU6IGx5bXBoIG5vZGUgc3RhdHVzICAoMDogbm90IGFmZmVjdGVkLCAxOiBseW1waCBub2RlcyBhZmZlY3RlZCBhbmQgcmVtb3ZlZCksCiAgICAtIHNpemU6IHR1bW91ciBzaXplIGluIGNtLAogICAgLSBFU1IxIGFuZCBTMTAwQTggZ2VuZSBleHByZXNzaW9uIGluIHR1bW91ciBiaW9wc3kgKG1pY3JvYXJyYXkgdGVjaG5vbG9neSkKCgotIEVTUjEgaW4gYWN0aXZlIGluICRccG0kIDc1JSBvZiBicmVhc3QgY2FuY2VyIHR1bW91cnMuCgotIEV4cHJlc3Npb24gb2YgRVIgZ2VuZSBwb3NpdGl2ZSBmb3IgdHJlYXRtZW50OiB0dW1vdXIgcmVzcG9uZHMgdG8gaG9ybW9uZSB0aGVyYXB5CgotIFRhbW94aWZlbiBpbnRlcmFjdHMgd2l0aCBFUiBhbmQgbW9kdWxhdGVzIGdlbmUgZXhwcmVzc2lvbi4KCi0gUHJvdGVpbnMgb2YgUzEwMCBmYW1pbHkgb2Z0ZW4gZHlzcmVndWxhdGVkIGluIGNhbmNlcgoKLSBTMTAwQTggZXhwcmVzc2lvbiByZXByZXNzZXMgaW1tdW5lIHN5c3RlbSBpbiB0dW1vdXIgZW4gY3JlYXRlcyBhbiBlbnZpcm9ubWVudCBvZiBpbmZsYW1tYXRpb24gdGhhdCBwcm9tb3RlcyB0dW1vdXIgZ3Jvd3RoLgoKCmBgYHtyIGxpYnJhcmllcywgbWVzc2FnZT1GQUxTRX0KbGlicmFyeShSbWlzYykKbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoR0dhbGx5KQpgYGAKCmBgYHtyfQpicmNhIDwtIHJlYWRfY3N2KCJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vR1RQQi9QU0xTMjAvbWFzdGVyL2RhdGEvYnJlYXN0Y2FuY2VyLmNzdiIpCmJyY2EKYGBgCgoKIyBSZXNlYXJjaCBxdWVzdGlvbgoKSXMgdGhlIGV4cHJlc3Npb24gb2YgdGhlIFMxMDBBOCBnZW5lIGFzc29jaWF0ZWQgd2l0aCB0aGF0IG9mIHRoYXQgb2YgdGhlIEVTUjEgZ2VuZT8KCiMgRGF0YSBleHBsb3JhdGlvbgoKVGhlcmUgYXJlIG1hbnkgdmFyaWFibGVzIGluIHRoZSBkYXRhLCB3ZSB3aWxsIHBsb3QgYWxsIHZhcmlhYmxlcyBpbiBhIHNjYXR0ZXJwbG90IG1hdHJpeCB1c2luZyB0aGUgR0dhbGx5IHBhY2thZ2UuCgpgYGB7cn0KZ2dwYWlycyhicmNhWywgLSgxOjQpXSkKYGBgCgpXZSBub3cgZm9jdXMgb24gdGhlIGFzc29jaWF0aW9uIGJldHdlZW4gUzEwMEE4IGV4cHJlc3Npb24gYW5kIHRoZSBFU1IxIGV4cHJlc3Npb24uCgpgYGB7ciBmaWcuYWxpZ249J2NlbnRlcid9CmJyY2EgJT4lCiAgZ2dwbG90KGFlcyh4ID0gRVNSMSwgeSA9IFMxMDBBOCkpICsKICBnZW9tX3BvaW50KCkgKwogIGdlb21fc21vb3RoKHNlID0gRkFMU0UsIGNvbCA9ICJncmV5IikgKwogIGdlb21fc21vb3RoKG1ldGhvZCA9ICJsbSIsIHNlID0gRkFMU0UpCmBgYAoKVGhlIGFzc29jaWF0aW9uIG9mIFMxMDBBIGFuZCBFU1IxIGRvZXMgbm90IGFwcGVhciB0byBiZSBsaW5lYXIuCgotIENvbmNlbnRyYXRpb24gbWVhc3VyZW1lbnRzIGFyZSBvZnRlbiBza2V3ZWQuCi0gV2Ugd2lsbCBsb2cyIHRyYW5zZm9ybSB0aGUgZGF0YS4KCmBgYHtyIGZpZy5hbGlnbj0nY2VudGVyJ30KYnJjYSAlPiUKICBnZ3Bsb3QoYWVzKHggPSBsb2cyKEVTUjEpLCB5ID0gbG9nMihTMTAwQTgpKSkgKwogIGdlb21fcG9pbnQoKSArCiAgZ2VvbV9zbW9vdGgoc2UgPSBGQUxTRSwgY29sID0gImdyZXkiKSArCiAgZ2VvbV9zbW9vdGgobWV0aG9kID0gImxtIiwgc2UgPSBGQUxTRSkKYGBgCgpVcG9uIGxvZyB0cmFuc2Zvcm1hdGlvbiB0aGUgZGF0YSBhcmUgc2hvd2luZyBhIGxpbmVhciBhc3NvY2lhdGlvbi4gSXMgdGhpcyBhc3NvY2lhdGlvbiBzdHJvbmcgZW5vdWdoIHRvIGJlIGFibGUgdG8gY29uY2x1ZGUgdGhhdCB0aGUgUzEwMEE4IGdlbmUgZXhwcmVzc2lvbiBpcyBhc3NvY2lhdGVkIHRvIHRoZSBFU1IxIGdlbmUgZXhwcmVzc2lvbj8KCiMgRGVzY3JpcHRpdmUgc3RhdGlzdGljcwoKV2UgZmlyc3QgY2FsY3VsYXRlIHRoZSBQZWFyc29uIGFuZCBTcGVhcm1hbiBjb3JyZWxhdGlvbiBiYXNlZCBvbiB0aGUgb3JpZ2luYWwgZGF0YSBhbmQgdGhlIGxvZzIgdHJhbnNmb3JtZWQgZGF0YQoKUGVhcnNvbiAgY29ycmVsYXRpb24KYGBge3J9CmJyY2EgPC0gYnJjYSAlPiUKICBtdXRhdGUoUzEwMEE4X2xvZzIgPSBsb2cyKFMxMDBBOCksIEVTUjFfbG9nMiA9IGxvZzIoRVNSMSkpCgpicmNhICU+JQogIHNlbGVjdChTMTAwQThfbG9nMiwgRVNSMV9sb2cyKSAlPiUKICBjb3IoKQpgYGAKClNwZWFybWFuIGNvcnJlbGF0aW9uCmBgYHtyfQpicmNhICU+JQogIHNlbGVjdChTMTAwQThfbG9nMiwgRVNSMV9sb2cyKSAlPiUKICBjb3IobWV0aG9kID0gInNwZWFybWFuIikKYGBgCgpCb3RoIHRoZSBQZWFyc29uIGFuZCBTcGVhcm1hbiBjb3JyZWxhdGlvbiBhcmUgbmVnYXRpdmUuIE5vdGUsIHRoYXQgdGhlIFNwZWFybWFuIGNvcnJlbGF0aW9uIGlzIG11Y2ggbGFyZ2VyIGluIGFic29sdXRlIHZhbHVlIHRoYW4gdGhlIFBlYXJzb24gY29ycmVsYXRpb24gb24gdGhlIG9yaWdpbmFsIGV4cHJlc3Npb24gbWVhc3VyZW1lbnRzLiBJbmRlZWQsIHRoZSBQZWFyc29uIGNvcnJlbGF0aW9uIGlzIGFmZmVjdGVkIGJ5IHRoZSBub24gbGluZWFyIGFzc29jaWF0aW9uIGF0IHRoZSBvcmlnaW5hbCBzY2FsZS4KCk9uIHRoZSBsb2cgc2NhbGUgdGhlIFBlYXJzb24gY29ycmVsYXRpb24gaXMgbXVjaCBoaWdoZXIuClRoZSBzcGVhcm1hbiBjb3JyZWxhdGlvbiwgaG93ZXZlciwgcmVtYWlucyBiZWNhdXNlIGl0IGlzIGJhc2VkIG9uIHJhbmsgdHJhbnNmb3JtZWQgZGF0YS4KCiMgTW9kZWwKCldlIHdpbGwgbW9kZWwgdGhlIGRhdGEgb24gdGhlIGxvZzIgc2NhbGUgYW5kIHdlIGFzc3VtZSB0aGUgZm9sbG93aW5nIHN0YXRpc3RpY2FsIG1vZGVsOgoKJCRZX2lcdmVydCBYX2lcc2ltIE4oXGJldGFfMCtcYmV0YV8xWF9pLFxzaWdtYV4yKSQkCgp3aXRoICRZX2kkIHRoZSBsb2cyIHRyYW5zZm9ybWVkIFMxMDBBOCBnZW5lIGV4cHJlc3Npb24gYW5kICRYX2kkIHRoZSBsb2cyIHRyYW5zZm9ybWVkIEVTUjEgZ2VuZSBleHByZXNzaW9uLgoKIyMgTW9kZWwgZml0dGluZwoKV2UgZml0IHRoZSBtb2RlbCB0byB0aGUgZGF0YSB1c2luZyB0aGUgbG0gZnVuY3Rpb24gYW5kIHdlIGZpcnN0IGFzc2VzcyB0aGUgYXNzdW1wdGlvbnMuIEJlY2F1c2UgdGhlIHN1YmplY3RzIHdlcmUgc2VsZWN0ZWQgYXQgcmFuZG9tIGZyb20gdGhlIHBvcHVsYXRpb24gdGhleSBhcmUgaW5kZXBlbmRlbnQuIFdlIHN0aWxsIGhhdmUgdG8gY2hlY2sgdGhlIGZvbGxvd2luZyBhc3N1bXB0aW9ucy4KCjEuIExpbmVhcml0eQoyLiBFcXVhbGl0eSBvZiB0aGUgdmFyaWFuY2UKMy4gVGhlIHJlc2lkdWFscyBhcmUgbm9ybWFsbHkgZGlzdHJpYnV0aW9uLgoKYGBge3J9CmxtMiA8LSBsbShTMTAwQThfbG9nMiB+IEVTUjFfbG9nMiwgZGF0YSA9IGJyY2EpCnBsb3QobG0yKQpzdW1tYXJ5KGxtMikKYGBgCgpJbiB0aGUgcmVzaWR1YWxzIHZzIGZpdHRlZCB2YWx1ZXMgcGxvdCB3ZSBvYnNlcnZlIHRoYXQgdGhlIHJlc2lkdWFscyBhcmUgbmljZWx5IHNwcmVhZCBhcm91bmQgemVybyB3aXRoIG1vcmUgb3IgbGVzcyB0aGUgc2FtZSB2YXJpYW5jZSBhbmQgd2UgZG8gbm90IG9ic2VydmVkIGEgdHJlbmQgaW4gdGhlIHJlc2lkdWFscyBzbyB0aGVyZSBpcyBubyBpbmRpY2F0aW9uIG9uIGRldmlhdGlvbnMgZnJvbSBsaW5lYXJpdHkgYW5kIGhvbW9zY2VkYXN0aWNpdHkuCgpUaGUgUVEtcGxvdCBmdXJ0aGVyIHNob3dzIG5vIHN1YnN0YW50aWFsIGRldmlhdGlvbnMgZnJvbSBub3JtYWxpdHkuIFNvIHRoZSBhc3N1bXB0aW9ucyBob2xkLgoKV2UgY2FuIG5vdyBhc3Nlc3MgYSBmb3JtYWwgaHlwb3RoZXNpcyB0ZXN0IHRvIGZvciB0aGUgbGluZWFyIGFzc29jaWF0aW9uIGJldHdlZW4gdGhlIFMxMDBBOCBnZW5lIGFuZCB0aGUgRVNSMSBnZW5lIGV4cHJlc3Npb24gYXQgdGhlIGxvZzIgc2NhbGUuCgpXZSBjYW4gdHJhbnNsYXRlIHRoZSBoeXBvdGhlc2lzIHRoYXQgdGhlcmUgaXMgYW4gYXNzb2NpYXRpb24gYmV0d2VlbiB0aGUgUzEwMEE4IGFuZCBFU1IxIGdlbmUgZXhwcmVzc2lvbiBpbiB0ZXJtcyBvZiB0aGUgc2xvcGUgb2YgdGhlIG1vZGVsLCBzbyB1bmRlciB0aGUgYWx0ZXJuYXRpdmUgaHlwb3RoZXNpcyAkXGJldGFfMSQgaXMgZGlmZmVyZW50IGZyb20gemVyby4KJCRIXzE6IFxiZXRhXzEgXG5lcSAwJCQKCldpdGggZGF0YSB3ZSBjYW4gbmV2ZXIgcHJvdmUgYSBoeXBvdGhlc2lzLCBzbyB3ZSB0aGVyZWZvcmUgZmFsc2lmeSB0aGUgb3Bwb3NpdGU6IHRoZSBudWxsIGh5cG90aGVzaXMgdGhlIHRoZXJlIGlzIG5vIGFzc29jaWF0aW9uIGJldHdlZW4gdGhlIGV4cHJlc3Npb24gb2YgYm90aCBnZW5lczoKCiQkSF8wOiBcYmV0YV8wID0gMCQkCldlIGNhbiBkbyB0aGlzIGJ5IGFkb3B0aW5nIGEgdC10ZXN0IG9uIHRoZSBzbG9wZSBhbmQgYnkgdXNpbmcgY29uZmlkZW5jZSBpbnRlcnZhbHMgb24gdGhlIHNsb3BlLgoKYGBge3J9CnN1bW1hcnkobG0yKQpjb25maW50KGxtMikKYGBgCgpCb3RoIHRoZSB0LXRlc3QgYW5kIHRoZSBjb25maWRlbmNlIGludGVydmFsIGluZGljYXRlIHRoYXQgYXNzb2NpYXRpb24gaXMgZXh0cmVtZWx5IHNpZ25pZmljYW50LgpUaGUgaW50ZXJ2YWwgbW9yZW92ZXIgc2hvd3MgdGhhdCB0aGUgYXNzb2NpYXRpb24gaXMgYmlvbG9naWNhbGx5IHJlbGV2YW50LgoKV2Ugd2lsbCB0cmFuc2Zvcm0gc2xvcGUgYW5kIHRoZSBjb25maWRlbmNlIGludGVydmFsIGJhY2sgdG8gdGhlIG9yaWdpbmFsIHNjYWxlIHRvIGludGVycHJldCB0aGUgcmVzdWx0cyBpbiB0ZXJtcyBvZiBmb2xkIGNoYW5nZXMuCgpgYGB7cn0KMl4oY29lZihsbTIpKQpgYGAKCmBgYHtyfQoyXmNvbmZpbnQobG0yKQpgYGAKCgojIENvbmNsdXNpb24KClRoZXJlIGlzIGFuIGV4dHJlbWVseSBzaWduaWZpY2FudCBuZWdhdGl2ZSBhc3NvY2lhdGlvbiBiZXR3ZWVuIHRoZSBTMTAwQTggZ2VuZSBleHByZXNzaW9uIGFuZCB0aGF0IG9mIEVTUjEgKCRwPDwwLjAwMSQpLgoKQSBwYXRpZW50IHdpdGggYW4gRVNSMSBleHByZXNzaW9uIHRoYXQgaXMgMiB0aW1lcyB0aGUgZXhwcmVzc2lvbiBvZiB0aGF0IG9mIGFub3RoZXIgcGF0aWVudCB3aWxsIG9uIGF2ZXJhZ2UgaGF2ZSBhbiAgUzEwMEE4IGV4cHJlc3Npb24gdGhhdCBpcyBgciByb3VuZCgyXi1sbTIkY29lZlsyXQosMilgIHRpbWVzIGxvd2VyICg5NVwlIENJIFtgciBwYXN0ZShzb3J0KHJvdW5kKDJeLWNvbmZpbnQobG0yKVsyLF0sMikpLGNvbGxhcHNlPSIsIilgXSkuCg==</div>
-<div class="footer">
-    <hr>
-    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
-    CC BY-NC-SA 4.0</a> licence.
-</div>
 
 
-</div>
-</div>
+<!-- -->
 
-</div>
+</section>
 
-<script>
-
-// add bootstrap table styles to pandoc tables
-function bootstrapStylePandocTables() {
-  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
-}
-$(document).ready(function () {
-  bootstrapStylePandocTables();
-});
-
-
-</script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open');
-  });
-});
-</script>
-
-<!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeSourceEmbed("breastcancerExample.Rmd");
-  window.initializeCodeFolding("show" === "show");
-});
-</script>
-
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    options.showAndHide = true;
-    options.smoothScroll = true;
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Breast cancer example"</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Lieven Clement"</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "statOmics, Ghent University (https://statomics.github.io)"</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">include =</span> <span class="cn">TRUE</span>, <span class="at">comment =</span> <span class="cn">NA</span>, <span class="at">echo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">message =</span> <span class="cn">FALSE</span>, <span class="at">warning =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="fu"># Breast cancer dataset</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Subset of study https://doi.org/10.1093/jnci/djj052</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>32 breast cancer patients with estrogen receptor positive tumour that had tamoxifen chemotherapy. Variables:</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>grade: histological grade of tumour (grade 1 vs 3),</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>node: lymph node status  (0: not affected, 1: lymph nodes affected and removed),</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>size: tumour size in cm,</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>ESR1 and S100A8 gene expression in tumour biopsy (microarray technology)</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>ESR1 in active in $\pm$ 75% of breast cancer tumours.</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Expression of ER gene positive for treatment: tumour responds to hormone therapy</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Tamoxifen interacts with ER and modulates gene expression.</span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Proteins of S100 family often dysregulated in cancer</span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>S100A8 expression represses immune system in tumour en creates an environment of inflammation that promotes tumour growth.</span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{r libraries, message=FALSE}</span></span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmisc)</span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>brca <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/GTPB/PSLS20/master/data/breastcancer.csv"</span>)</span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a>brca</span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a><span class="fu"># Research question</span></span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>Is the expression of the S100A8 gene associated with that of that of the ESR1 gene?</span>
+<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data exploration</span></span>
+<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a>There are many variables in the data, we will plot all variables in a scatterplot matrix using the GGally package.</span>
+<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-59"><a href="#cb21-59" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(brca[, <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)])</span>
+<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a>We now focus on the association between S100A8 expression and the ESR1 expression.</span>
+<span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-65"><a href="#cb21-65" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig.align='center'}</span></span>
+<span id="cb21-66"><a href="#cb21-66" aria-hidden="true" tabindex="-1"></a>brca <span class="sc">|&gt;</span></span>
+<span id="cb21-67"><a href="#cb21-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ESR1, <span class="at">y =</span> S100A8)) <span class="sc">+</span></span>
+<span id="cb21-68"><a href="#cb21-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb21-69"><a href="#cb21-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb21-70"><a href="#cb21-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb21-71"><a href="#cb21-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-72"><a href="#cb21-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-73"><a href="#cb21-73" aria-hidden="true" tabindex="-1"></a>The association of S100A and ESR1 does not appear to be linear.</span>
+<span id="cb21-74"><a href="#cb21-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-75"><a href="#cb21-75" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Concentration measurements are often skewed.</span>
+<span id="cb21-76"><a href="#cb21-76" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>We will log2 transform the data.</span>
+<span id="cb21-77"><a href="#cb21-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-78"><a href="#cb21-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{r fig.align='center'}</span></span>
+<span id="cb21-79"><a href="#cb21-79" aria-hidden="true" tabindex="-1"></a>brca <span class="sc">|&gt;</span></span>
+<span id="cb21-80"><a href="#cb21-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log2</span>(ESR1), <span class="at">y =</span> <span class="fu">log2</span>(S100A8))) <span class="sc">+</span></span>
+<span id="cb21-81"><a href="#cb21-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb21-82"><a href="#cb21-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb21-83"><a href="#cb21-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb21-84"><a href="#cb21-84" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-85"><a href="#cb21-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-86"><a href="#cb21-86" aria-hidden="true" tabindex="-1"></a>Upon log transformation the data are showing a linear association. Is this association strong enough to be able to conclude that the S100A8 gene expression is associated to the ESR1 gene expression?</span>
+<span id="cb21-87"><a href="#cb21-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-88"><a href="#cb21-88" aria-hidden="true" tabindex="-1"></a><span class="fu"># Descriptive statistics</span></span>
+<span id="cb21-89"><a href="#cb21-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-90"><a href="#cb21-90" aria-hidden="true" tabindex="-1"></a>We first calculate the Pearson and Spearman correlation based on the original data and the log2 transformed data</span>
+<span id="cb21-91"><a href="#cb21-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-92"><a href="#cb21-92" aria-hidden="true" tabindex="-1"></a>Pearson  correlation</span>
+<span id="cb21-95"><a href="#cb21-95" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-96"><a href="#cb21-96" aria-hidden="true" tabindex="-1"></a>brca <span class="ot">&lt;-</span> brca <span class="sc">|&gt;</span></span>
+<span id="cb21-97"><a href="#cb21-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">S100A8_log2 =</span> <span class="fu">log2</span>(S100A8), <span class="at">ESR1_log2 =</span> <span class="fu">log2</span>(ESR1))</span>
+<span id="cb21-98"><a href="#cb21-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-99"><a href="#cb21-99" aria-hidden="true" tabindex="-1"></a>brca <span class="sc">|&gt;</span></span>
+<span id="cb21-100"><a href="#cb21-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(S100A8_log2, ESR1_log2) <span class="sc">|&gt;</span></span>
+<span id="cb21-101"><a href="#cb21-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>()</span>
+<span id="cb21-102"><a href="#cb21-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-103"><a href="#cb21-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-104"><a href="#cb21-104" aria-hidden="true" tabindex="-1"></a>Spearman correlation</span>
+<span id="cb21-107"><a href="#cb21-107" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-108"><a href="#cb21-108" aria-hidden="true" tabindex="-1"></a>brca <span class="sc">|&gt;</span></span>
+<span id="cb21-109"><a href="#cb21-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(S100A8_log2, ESR1_log2) <span class="sc">|&gt;</span></span>
+<span id="cb21-110"><a href="#cb21-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(<span class="at">method =</span> <span class="st">"spearman"</span>)</span>
+<span id="cb21-111"><a href="#cb21-111" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-112"><a href="#cb21-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-113"><a href="#cb21-113" aria-hidden="true" tabindex="-1"></a>Both the Pearson and Spearman correlation are negative. Note, that the Spearman correlation is much larger in absolute value than the Pearson correlation on the original expression measurements. Indeed, the Pearson correlation is affected by the non linear association at the original scale.</span>
+<span id="cb21-114"><a href="#cb21-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-115"><a href="#cb21-115" aria-hidden="true" tabindex="-1"></a>On the log scale the Pearson correlation is much higher.</span>
+<span id="cb21-116"><a href="#cb21-116" aria-hidden="true" tabindex="-1"></a>The spearman correlation, however, remains because it is based on rank transformed data.</span>
+<span id="cb21-117"><a href="#cb21-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-118"><a href="#cb21-118" aria-hidden="true" tabindex="-1"></a><span class="fu"># Model</span></span>
+<span id="cb21-119"><a href="#cb21-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-120"><a href="#cb21-120" aria-hidden="true" tabindex="-1"></a>We will model the data on the log2 scale and we assume the following statistical model:</span>
+<span id="cb21-121"><a href="#cb21-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-122"><a href="#cb21-122" aria-hidden="true" tabindex="-1"></a>$$Y_i\vert X_i\sim N(\beta_0+\beta_1X_i,\sigma^2)$$</span>
+<span id="cb21-123"><a href="#cb21-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-124"><a href="#cb21-124" aria-hidden="true" tabindex="-1"></a>with $Y_i$ the log2 transformed S100A8 gene expression and $X_i$ the log2 transformed ESR1 gene expression.</span>
+<span id="cb21-125"><a href="#cb21-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-126"><a href="#cb21-126" aria-hidden="true" tabindex="-1"></a><span class="fu">## Model fitting</span></span>
+<span id="cb21-127"><a href="#cb21-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-128"><a href="#cb21-128" aria-hidden="true" tabindex="-1"></a>We fit the model to the data using the lm function and we first assess the assumptions. Because the subjects were selected at random from the population they are independent. We still have to check the following assumptions.</span>
+<span id="cb21-129"><a href="#cb21-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-130"><a href="#cb21-130" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Linearity</span>
+<span id="cb21-131"><a href="#cb21-131" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Equality of the variance</span>
+<span id="cb21-132"><a href="#cb21-132" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>The residuals are normally distribution.</span>
+<span id="cb21-133"><a href="#cb21-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-136"><a href="#cb21-136" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-137"><a href="#cb21-137" aria-hidden="true" tabindex="-1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(S100A8_log2 <span class="sc">~</span> ESR1_log2, <span class="at">data =</span> brca)</span>
+<span id="cb21-138"><a href="#cb21-138" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lm2)</span>
+<span id="cb21-139"><a href="#cb21-139" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm2)</span>
+<span id="cb21-140"><a href="#cb21-140" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-141"><a href="#cb21-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-142"><a href="#cb21-142" aria-hidden="true" tabindex="-1"></a>In the residuals vs fitted values plot we observe that the residuals are nicely spread around zero with more or less the same variance and we do not observed a trend in the residuals so there is no indication on deviations from linearity and homoscedasticity.</span>
+<span id="cb21-143"><a href="#cb21-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-144"><a href="#cb21-144" aria-hidden="true" tabindex="-1"></a>The QQ-plot further shows no substantial deviations from normality. So the assumptions hold.</span>
+<span id="cb21-145"><a href="#cb21-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-146"><a href="#cb21-146" aria-hidden="true" tabindex="-1"></a>We can now assess a formal hypothesis test to for the linear association between the S100A8 gene and the ESR1 gene expression at the log2 scale.</span>
+<span id="cb21-147"><a href="#cb21-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-148"><a href="#cb21-148" aria-hidden="true" tabindex="-1"></a>We can translate the hypothesis that there is an association between the S100A8 and ESR1 gene expression in terms of the slope of the model, so under the alternative hypothesis $\beta_1$ is different from zero.</span>
+<span id="cb21-149"><a href="#cb21-149" aria-hidden="true" tabindex="-1"></a>$$H_1: \beta_1 \neq 0$$</span>
+<span id="cb21-150"><a href="#cb21-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-151"><a href="#cb21-151" aria-hidden="true" tabindex="-1"></a>With data we can never prove a hypothesis, so we therefore falsify the opposite: the null hypothesis the there is no association between the expression of both genes:</span>
+<span id="cb21-152"><a href="#cb21-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-153"><a href="#cb21-153" aria-hidden="true" tabindex="-1"></a>$$H_0: \beta_0 = 0$$</span>
+<span id="cb21-154"><a href="#cb21-154" aria-hidden="true" tabindex="-1"></a>We can do this by adopting a t-test on the slope and by using confidence intervals on the slope.</span>
+<span id="cb21-155"><a href="#cb21-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-158"><a href="#cb21-158" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-159"><a href="#cb21-159" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm2)</span>
+<span id="cb21-160"><a href="#cb21-160" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(lm2)</span>
+<span id="cb21-161"><a href="#cb21-161" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-162"><a href="#cb21-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-163"><a href="#cb21-163" aria-hidden="true" tabindex="-1"></a>Both the t-test and the confidence interval indicate that association is extremely significant.</span>
+<span id="cb21-164"><a href="#cb21-164" aria-hidden="true" tabindex="-1"></a>The interval moreover shows that the association is biologically relevant.</span>
+<span id="cb21-165"><a href="#cb21-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-166"><a href="#cb21-166" aria-hidden="true" tabindex="-1"></a>We will transform slope and the confidence interval back to the original scale to interpret the results in terms of fold changes.</span>
+<span id="cb21-167"><a href="#cb21-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-170"><a href="#cb21-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-171"><a href="#cb21-171" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span>(<span class="fu">coef</span>(lm2))</span>
+<span id="cb21-172"><a href="#cb21-172" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-173"><a href="#cb21-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-176"><a href="#cb21-176" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-177"><a href="#cb21-177" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span><span class="fu">confint</span>(lm2)</span>
+<span id="cb21-178"><a href="#cb21-178" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-179"><a href="#cb21-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-180"><a href="#cb21-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-181"><a href="#cb21-181" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusion</span></span>
+<span id="cb21-182"><a href="#cb21-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-183"><a href="#cb21-183" aria-hidden="true" tabindex="-1"></a>There is an extremely significant negative association between the S100A8 gene expression and that of ESR1 ($p&lt;&lt;0.001$).</span>
+<span id="cb21-184"><a href="#cb21-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-185"><a href="#cb21-185" aria-hidden="true" tabindex="-1"></a>A patient with an ESR1 expression that is 2 times the expression of that of another patient will on average have an  S100A8 expression that is `r round(2^-lm2$coef<span class="co">[</span><span class="ot">2</span><span class="co">]</span></span>
+<span id="cb21-186"><a href="#cb21-186" aria-hidden="true" tabindex="-1"></a>,2)<span class="in">` times lower (95\% CI [`</span>r paste(sort(round(2^-confint(lm2)<span class="co">[</span><span class="ot">2,</span><span class="co">]</span>,2)),collapse=",")`]).</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
 
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
-</body>
-</html>
+
+</body></html>

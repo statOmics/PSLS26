@@ -1,67 +1,33 @@
 <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<html>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
 
-<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta name="author" content="Lieven Clement, Jeroen Gilis and Milan Malfait">
 
-
-<meta name="author" content="Lieven Clement, Jeroen Gilis and Milan Malfait" />
-
-
-<title>Exercise 8.2: Non-additive linear model on the poison dataset</title>
-
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
-<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<style>h1 {font-size: 34px;}
-       h1.title {font-size: 38px;}
-       h2 {font-size: 30px;}
-       h3 {font-size: 24px;}
-       h4 {font-size: 18px;}
-       h5 {font-size: 16px;}
-       h6 {font-size: 12px;}
-       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
-       pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
-<script src="site_libs/navigation-1.1/sourceembed.js"></script>
-<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
-
-
-
-<style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
-</style>
-<style type="text/css" data-origin="pandoc">
+<title>Exercise 8.2: Non-additive linear model on the poison dataset – PSLS26 - Practical Statistics for the Life Sciences</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -72,7 +38,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -86,824 +52,1302 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
-  {  background-color: #f8f8f8; }
+  {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ef2929; } /* Alert */
-code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #204a87; } /* Attribute */
-code span.bn { color: #0000cf; } /* BaseN */
-code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4e9a06; } /* Char */
-code span.cn { color: #8f5902; } /* Constant */
-code span.co { color: #8f5902; font-style: italic; } /* Comment */
-code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code span.dt { color: #204a87; } /* DataType */
-code span.dv { color: #0000cf; } /* DecVal */
-code span.er { color: #a40000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #0000cf; } /* Float */
-code span.fu { color: #204a87; font-weight: bold; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code span.ot { color: #8f5902; } /* Other */
-code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
-code span.ss { color: #4e9a06; } /* SpecialString */
-code span.st { color: #4e9a06; } /* String */
-code span.va { color: #000000; } /* Variable */
-code span.vs { color: #4e9a06; } /* VerbatimString */
-code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-
-.sourceCode .row {
-  width: 100%;
-}
-.sourceCode {
-  overflow-x: auto;
-}
-.code-folding-btn {
-  margin-right: -30px;
-}
 </style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    var j = 0;
-    while (j < rules.length) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
-        j++;
-        continue;
-      }
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') {
-        j++;
-        continue;
-      }
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f79c7fb6db380d32be398468f2fb58cf.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-2c9dadc89b91d1343c807e0fac51702d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
-})();
-</script>
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
-
-<style type="text/css">
-#rmd-source-code {
-  display: none;
-}
-</style>
-
-
-<link rel="stylesheet" href="style.css" type="text/css" />
-
-
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-img {
-  max-width:100%;
-}
-.tabbed-pane {
-  padding-top: 12px;
-}
-.html-widget {
-  margin-bottom: 20px;
-}
-button.code-folding-btn:focus {
-  outline: none;
-}
-summary {
-  display: list-item;
-}
-details > summary > p:only-child {
-  display: inline;
-}
-pre code {
-  padding: 0;
-}
-</style>
-
-
-<style type="text/css">
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  border-radius: 0 6px 6px 6px;
-}
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #cccccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-.dropdown-submenu:hover>a:after {
-  border-left-color: #adb5bd;
-}
-.dropdown-submenu.pull-left {
-  float: none;
-}
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  border-radius: 6px 0 6px 6px;
-}
-</style>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-// manage active state of menu based on current page
-$(document).ready(function () {
-  // active menu anchor
-  href = window.location.pathname
-  href = href.substr(href.lastIndexOf('/') + 1)
-  if (href === "")
-    href = "index.html";
-  var menuAnchor = $('a[href="' + href + '"]');
-
-  // mark the anchor link active (and if it's in a dropdown, also mark that active)
-  var dropdown = menuAnchor.closest('li.dropdown');
-  if (window.bootstrap) { // Bootstrap 4+
-    menuAnchor.addClass('active');
-    dropdown.find('> .dropdown-toggle').addClass('active');
-  } else { // Bootstrap 3
-    menuAnchor.parent().addClass('active');
-    dropdown.addClass('active');
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
   }
-
-  // Navbar adjustments
-  var navHeight = $(".navbar").first().height() + 15;
-  var style = document.createElement('style');
-  var pt = "padding-top: " + navHeight + "px; ";
-  var mt = "margin-top: -" + navHeight + "px; ";
-  var css = "";
-  // offset scroll position for anchor links (for fixed navbar)
-  for (var i = 1; i <= 6; i++) {
-    css += ".section h" + i + "{ " + pt + mt + "}\n";
-  }
-  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
-  document.head.appendChild(style);
-});
+}
+window.Quarto = {
+  typesetMath
+};
 </script>
 
-<!-- tabsets -->
-
-<style type="text/css">
-.tabset-dropdown > .nav-tabs {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "\e259";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "\e258";
-  font-family: 'Glyphicons Halflings';
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs > li.active {
-  display: block;
-}
-
-.tabset-dropdown > .nav-tabs > li > a,
-.tabset-dropdown > .nav-tabs > li > a:focus,
-.tabset-dropdown > .nav-tabs > li > a:hover {
-  border: none;
-  display: inline-block;
-  border-radius: 4px;
-  background-color: transparent;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
-  display: block;
-  float: none;
-}
-
-.tabset-dropdown > .nav-tabs > li {
-  display: none;
-}
-</style>
-
-<!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
-
-
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
-
+<link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="floating nav-fixed quarto-light">
 
-
-<div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
-
-
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html"></a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">PSLS26 - Practical Statistics for the Life Sciences</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-easel" role="img">
+</i> 
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
         <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-  </a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-chalkboard-teacher"></span>
-     
-    Topics
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="01-intro.html">1. Introduction</a>
-    </li>
-    <li>
-      <a href="02-concepts.html">2. Concepts</a>
-    </li>
-    <li>
-      <a href="03-experimentalDesign.html">3. Experimental Design I</a>
-    </li>
-    <li>
-      <a href="04-dataExploration.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference.html">5.1 Statistical Inference 1</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference-twosampleT.html">5.2 Statistical Inference 2</a>
-    </li>
-    <li>
-      <a href="06-linearRegression.html">6. Linear Regression</a>
-    </li>
-    <li>
-      <a href="07-Anova.html">7. Analysis of Variance</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression.html">8. Multiple Regression</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression-SpecificDesigns.html">8.2 Multiple Regression: Factorial Designs</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign2.html">8.3. Experimental Design II</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign3.html">8.4. Experimental Design III</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-WilcoxonMannWithney.html">9.1. Nonparametric Statistics 1</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-KruskalWallis.html">9.2. Nonparametric Statistics 2</a>
-    </li>
-    <li>
-      <a href="10-categoricalDataAnalysis.html">10. Categorical Data Analysis</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-laptop"></span>
-     
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="04_exercises.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05_exercises.html">5. Statistical inference</a>
-    </li>
-    <li>
-      <a href="06_exercises.html">6. Simple linear regression</a>
-    </li>
-    <li>
-      <a href="07_exercises.html">7. ANOVA</a>
-    </li>
-    <li>
-      <a href="08_exercises.html">8. Multiple linear regression</a>
-    </li>
-    <li>
-      <a href="09_exercises.html">9. Non-parametric statistics</a>
-    </li>
-  </ul>
-</li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
+    <a class="dropdown-item" href="./01-intro.html">
+ <span class="dropdown-text">1. Introduction</span></a>
+  </li>  
         <li>
-  <a href="http://statomics.github.io/">statOmics</a>
-</li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container -->
-</div><!--/.navbar -->
-
-<div id="header">
-
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-<li role="separator" class="divider"></li>
-<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+    <a class="dropdown-item" href="./02-concepts.html">
+ <span class="dropdown-text">2. Concepts</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-experimentalDesign.html">
+ <span class="dropdown-text">3. Experimental Design I</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-dataExploration.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference.html">
+ <span class="dropdown-text">5.1 Statistical Inference 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference-twosampleT.html">
+ <span class="dropdown-text">5.2 Statistical Inference 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06-linearRegression.html">
+ <span class="dropdown-text">6. Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07-Anova.html">
+ <span class="dropdown-text">7. Analysis of Variance</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression.html">
+ <span class="dropdown-text">8. Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression-SpecificDesigns.html">
+ <span class="dropdown-text">8.2 Multiple Regression: Factorial Designs</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign2.html">
+ <span class="dropdown-text">8.3. Experimental Design II</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign3.html">
+ <span class="dropdown-text">8.4. Experimental Design III</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-WilcoxonMannWithney.html">
+ <span class="dropdown-text">9.1. Nonparametric Statistics 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-KruskalWallis.html">
+ <span class="dropdown-text">9.2. Nonparametric Statistics 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./10-categoricalDataAnalysis.html">
+ <span class="dropdown-text">10. Categorical Data Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-exercises" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-laptop" role="img">
+</i> 
+ <span class="menu-text">Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-exercises">    
+        <li>
+    <a class="dropdown-item" href="./04_exercises.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05_exercises.html">
+ <span class="dropdown-text">5. Statistical inference</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06_exercises.html">
+ <span class="dropdown-text">6. Simple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07_exercises.html">
+ <span class="dropdown-text">7. ANOVA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08_exercises.html">
+ <span class="dropdown-text">8. Multiple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09_exercises.html">
+ <span class="dropdown-text">9. Non-parametric statistics</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="http://statomics.github.io/"> 
+<span class="menu-text">statOmics</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-poison-dataset" id="toc-the-poison-dataset" class="nav-link active" data-scroll-target="#the-poison-dataset"><span class="header-section-number">1</span> The poison dataset</a></li>
+  <li><a href="#goal" id="toc-goal" class="nav-link" data-scroll-target="#goal"><span class="header-section-number">2</span> Goal</a></li>
+  <li><a href="#import-the-data" id="toc-import-the-data" class="nav-link" data-scroll-target="#import-the-data"><span class="header-section-number">3</span> Import the data</a></li>
+  <li><a href="#data-tidying" id="toc-data-tidying" class="nav-link" data-scroll-target="#data-tidying"><span class="header-section-number">4</span> Data tidying</a></li>
+  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration"><span class="header-section-number">5</span> Data exploration</a></li>
+  <li><a href="#analysis-with-main-effect-and-interaction-for-dose-and-weight" id="toc-analysis-with-main-effect-and-interaction-for-dose-and-weight" class="nav-link" data-scroll-target="#analysis-with-main-effect-and-interaction-for-dose-and-weight"><span class="header-section-number">6</span> Analysis with main effect and interaction for dose and weight</a>
+  <ul class="collapse">
+  <li><a href="#model-specification" id="toc-model-specification" class="nav-link" data-scroll-target="#model-specification"><span class="header-section-number">6.1</span> Model specification</a></li>
+  <li><a href="#assumptions" id="toc-assumptions" class="nav-link" data-scroll-target="#assumptions"><span class="header-section-number">6.2</span> Assumptions</a></li>
+  <li><a href="#inference" id="toc-inference" class="nav-link" data-scroll-target="#inference"><span class="header-section-number">6.3</span> Inference</a></li>
+  <li><a href="#interpretation-of-model-parameters" id="toc-interpretation-of-model-parameters" class="nav-link" data-scroll-target="#interpretation-of-model-parameters"><span class="header-section-number">6.4</span> Interpretation of model parameters</a></li>
+  <li><a href="#inference-1" id="toc-inference-1" class="nav-link" data-scroll-target="#inference-1"><span class="header-section-number">6.5</span> Inference</a></li>
+  <li><a href="#conventional-approach" id="toc-conventional-approach" class="nav-link" data-scroll-target="#conventional-approach"><span class="header-section-number">6.6</span> Conventional approach</a>
+  <ul class="collapse">
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">6.6.1</span> Conclusion</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#remark" id="toc-remark" class="nav-link" data-scroll-target="#remark"><span class="header-section-number">7</span> Remark</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Exercise 8.2: Non-additive linear model on the poison dataset</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<p class="subtitle lead">statOmics, Ghent University (https://statomics.github.io)</p>
 </div>
 
 
 
-<h1 class="title toc-ignore">Exercise 8.2: Non-additive linear model on the poison dataset</h1>
-<h4 class="author">Lieven Clement, Jeroen Gilis and Milan Malfait</h4>
-<h4 class="date">statOmics, Ghent University (<a href="https://statomics.github.io" class="uri">https://statomics.github.io</a>)</h4>
+<div class="quarto-title-meta">
 
-</div>
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lieven Clement, Jeroen Gilis and Milan Malfait </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
 
 
-<div id="the-poison-dataset" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> The poison dataset</h1>
-<p>In this experiment, 96 fish (dojofish, goldfish and zebrafish)
-were placed separately in a tank with two liters of water and
-a certain dose (in mg) of the poison EI-43,064. The resistance
-of the fish against the poison was measured as the amount of
-minutes the fish survived after being exposed to the poison (<code>Surv_time</code>, in
-minutes). Additionally, the weight of each fish was measured.</p>
-</div>
-<div id="goal" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Goal</h1>
-<p>Suppose that researchers are ,mainly interested in studying the effect of
-poison dose on the survival of fish. They know however that the weight can
-also impact the survival and might also change the effect of the poison dose.</p>
-<p>In this tutorial session we will focus on Dojofish and we will model the
-survival time in function of the dose and the weight of the fish,
-<strong>and including an interaction between dose and weight.</strong></p>
+</header>
+
+
+<section id="the-poison-dataset" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> The poison dataset</h1>
+<p>In this experiment, 96 fish (dojofish, goldfish and zebrafish) were placed separately in a tank with two liters of water and a certain dose (in mg) of the poison EI-43,064. The resistance of the fish against the poison was measured as the amount of minutes the fish survived after being exposed to the poison (<code>Surv_time</code>, in minutes). Additionally, the weight of each fish was measured.</p>
+</section>
+<section id="goal" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Goal</h1>
+<p>Suppose that researchers are ,mainly interested in studying the effect of poison dose on the survival of fish. They know however that the weight can also impact the survival and might also change the effect of the poison dose.</p>
+<p>In this tutorial session we will focus on Dojofish and we will model the survival time in function of the dose and the weight of the fish, <strong>and including an interaction between dose and weight.</strong></p>
 <p>Load libraries</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># install.packages(&quot;GGally&quot;)</span></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(car)</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("GGally")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div id="import-the-data" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Import the data</h1>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>poison <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/statOmics/PSLSData/main/poison.csv&quot;</span>)</span></code></pre></div>
+</section>
+<section id="import-the-data" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Import the data</h1>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>poison <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/statOmics/PSLSData/main/poison.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div id="data-tidying" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Data tidying</h1>
+</section>
+<section id="data-tidying" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Data tidying</h1>
 <p>We can see a couple of things in the data that can be improved:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><p>Capitalise the fist column name</p></li>
 <li><p>Set the Species column as a factor</p></li>
-<li><p>Change the species factor levels from 0, 1 and 2 to
-Dojofish, Goldfish and Zebrafish. <em>Hint</em>: use the <code>fct_recode</code> function.</p></li>
-<li><p>In previous analysis on this dataset (<code>Simple linear regression session</code>), we
-performed a log-transformation on the response variable <code>Surv_time</code> to meet the
-normality and homoscedasticity assumptions of the linear model. Here, we will
-immediately work with log-transformed survival times; store these in the new
-variable <code>log2Surv_time</code> and remove the non-transformed values.</p></li>
+<li><p>Change the species factor levels from 0, 1 and 2 to Dojofish, Goldfish and Zebrafish. <em>Hint</em>: use the <code>fct_recode</code> function.</p></li>
+<li><p>In previous analysis on this dataset (<code>Simple linear regression session</code>), we performed a log-transformation on the response variable <code>Surv_time</code> to meet the normality and homoscedasticity assumptions of the linear model. Here, we will immediately work with log-transformed survival times; store these in the new variable <code>log2Surv_time</code> and remove the non-transformed values.</p></li>
 <li><p>Subset the data to only retain <strong>Dojofish</strong>.</p></li>
 </ol>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>poison <span class="ot">&lt;-</span> poison <span class="sc">%&gt;%</span></span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">&quot;Species&quot;</span> <span class="ot">=</span> <span class="st">&quot;species&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Species =</span> <span class="fu">as.factor</span>(Species)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Species =</span> <span class="fu">fct_recode</span>(Species,</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="at">Dojofish =</span> <span class="st">&quot;0&quot;</span>, <span class="at">Goldfish =</span> <span class="st">&quot;1&quot;</span>, <span class="at">Zebrafish =</span> <span class="st">&quot;2&quot;</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log2Surv_time =</span> <span class="fu">log2</span>(Surv_time)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Surv_time) <span class="sc">%&gt;%</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="fu">filter</span>(Species <span class="sc">==</span> <span class="st">&quot;Dojofish&quot;</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>poison</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>poison <span class="ot">&lt;-</span> poison <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"Species"</span> <span class="ot">=</span> <span class="st">"species"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Species =</span> <span class="fu">as.factor</span>(Species)) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Species =</span> <span class="fu">fct_recode</span>(Species,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Dojofish =</span> <span class="st">"0"</span>, <span class="at">Goldfish =</span> <span class="st">"1"</span>, <span class="at">Zebrafish =</span> <span class="st">"2"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log2Surv_time =</span> <span class="fu">log2</span>(Surv_time)) <span class="sc">|&gt;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Surv_time) <span class="sc">|&gt;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Species <span class="sc">==</span> <span class="st">"Dojofish"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>poison</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["Species"],"name":[1],"type":["fct"],"align":["left"]},{"label":["Weight"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Dose"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["log2Surv_time"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Dojofish","2":"1.884359","3":"1.0","4":"1.7913944"},{"1":"Dojofish","2":"2.114166","3":"1.4","4":"1.7126482"},{"1":"Dojofish","2":"1.854602","3":"1.5","4":"1.5634296"},{"1":"Dojofish","2":"1.801606","3":"1.8","4":"0.7264799"},{"1":"Dojofish","2":"1.912098","3":"2.0","4":"1.4300631"},{"1":"Dojofish","2":"2.032760","3":"1.0","4":"2.5984588"},{"1":"Dojofish","2":"2.263284","3":"1.1","4":"1.8107746"},{"1":"Dojofish","2":"1.924464","3":"1.3","4":"1.7921807"},{"1":"Dojofish","2":"2.153471","3":"1.4","4":"1.6704941"},{"1":"Dojofish","2":"2.171603","3":"1.5","4":"1.9964936"},{"1":"Dojofish","2":"2.023775","3":"1.7","4":"1.2161339"},{"1":"Dojofish","2":"2.028244","3":"2.1","4":"1.3091564"},{"1":"Dojofish","2":"1.819958","3":"1.1","4":"1.5203981"},{"1":"Dojofish","2":"2.780534","3":"1.9","4":"1.9370554"},{"1":"Dojofish","2":"1.874389","3":"2.0","4":"0.5591844"},{"1":"Dojofish","2":"2.405112","3":"2.1","4":"1.4068060"},{"1":"Dojofish","2":"2.183263","3":"1.1","4":"1.8067023"},{"1":"Dojofish","2":"2.529784","3":"1.3","4":"1.7155055"},{"1":"Dojofish","2":"2.180245","3":"1.6","4":"1.3055830"},{"1":"Dojofish","2":"1.935201","3":"1.8","4":"0.9364046"},{"1":"Dojofish","2":"2.461620","3":"2.0","4":"1.0728604"},{"1":"Dojofish","2":"2.339549","3":"1.0","4":"3.2262044"},{"1":"Dojofish","2":"2.068002","3":"1.3","4":"1.2162506"},{"1":"Dojofish","2":"2.089716","3":"1.7","4":"1.0297561"},{"1":"Dojofish","2":"2.060077","3":"1.8","4":"1.8128863"},{"1":"Dojofish","2":"2.075058","3":"2.0","4":"0.7084601"},{"1":"Dojofish","2":"1.585098","3":"1.0","4":"1.5635633"},{"1":"Dojofish","2":"2.384177","3":"1.2","4":"2.8585554"},{"1":"Dojofish","2":"2.255311","3":"1.4","4":"1.3666770"},{"1":"Dojofish","2":"2.290878","3":"1.8","4":"1.5919838"},{"1":"Dojofish","2":"2.220584","3":"1.1","4":"2.3998886"},{"1":"Dojofish","2":"2.066648","3":"1.3","4":"1.4367386"},{"1":"Dojofish","2":"1.976426","3":"1.4","4":"1.4519491"},{"1":"Dojofish","2":"1.994567","3":"1.5","4":"2.1620821"},{"1":"Dojofish","2":"2.078708","3":"1.9","4":"1.6801749"},{"1":"Dojofish","2":"2.582141","3":"1.2","4":"2.2998343"},{"1":"Dojofish","2":"2.331042","3":"1.6","4":"2.1906231"},{"1":"Dojofish","2":"2.360538","3":"1.7","4":"2.5006866"},{"1":"Dojofish","2":"2.027935","3":"2.0","4":"1.4414622"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
-<div id="data-exploration" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Data exploration</h1>
-<p>Prior to the analysis, we should explore our data.
-To start our data exploration, we will make use of the <code>ggpairs</code> function of the
-<code>GGally</code> R package. This function will generate a visualization containing
-multiple panels, which display (1) univariate plots of the different variables
-in our dataset, (2) bivariate plots and (3) correlation coefficients between
-the different variables.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>  <span class="fu">ggpairs</span>(poison)</span></code></pre></div>
-<p><img src="08_2_poison2_sol_files/figure-html/unnamed-chunk-4-1.png" width="1152" /></p>
+</div>
+</section>
+<section id="data-exploration" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Data exploration</h1>
+<p>Prior to the analysis, we should explore our data. To start our data exploration, we will make use of the <code>ggpairs</code> function of the <code>GGally</code> R package. This function will generate a visualization containing multiple panels, which display (1) univariate plots of the different variables in our dataset, (2) bivariate plots and (3) correlation coefficients between the different variables.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggpairs</span>(poison)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="08_2_poison2_sol_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Based on these plots, we observe that:</p>
 <ul>
 <li>The survival time seems to be associated with dose and fish weight.</li>
 </ul>
-<p>From the tutorial of H6 we have seen that the fish weights were not nicely
-uniform across the different poison dosages due to the randomisation.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>poison <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">filter</span>(Species <span class="sc">==</span> <span class="st">&quot;Dojofish&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> Weight)) <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Association between dose and weight&quot;</span>) <span class="sc">+</span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>    <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">&quot;point&quot;</span>,</span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">size =</span> <span class="dv">4</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">24</span>, <span class="at">fill =</span> <span class="st">&quot;red&quot;</span></span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="08_2_poison2_sol_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>From the tutorial of H6 we have seen that the fish weights were not nicely uniform across the different poison dosages due to the randomisation.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>poison <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Species <span class="sc">==</span> <span class="st">"Dojofish"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> Weight)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Association between dose and weight"</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">4</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">24</span>, <span class="at">fill =</span> <span class="st">"red"</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="08_2_poison2_sol_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<div id="analysis-with-main-effect-and-interaction-for-dose-and-weight" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Analysis with main effect and interaction for dose and weight</h1>
-<div id="model-specification" class="section level2" number="6.1">
-<h2><span class="header-section-number">6.1</span> Model specification</h2>
+</div>
+</div>
+</section>
+<section id="analysis-with-main-effect-and-interaction-for-dose-and-weight" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Analysis with main effect and interaction for dose and weight</h1>
+<section id="model-specification" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="model-specification"><span class="header-section-number">6.1</span> Model specification</h2>
 <p><span class="math display">\[
 y_i=\beta_0+\beta_d x_d + \beta_g x_g +\beta_{d:g} x_d x_g+ \epsilon_i,
 \]</span></p>
 <p>with <span class="math inline">\(\epsilon_i \text{ i.i.d. } N(0,\sigma^2)\)</span></p>
-</div>
-<div id="assumptions" class="section level2" number="6.2">
-<h2><span class="header-section-number">6.2</span> Assumptions</h2>
+</section>
+<section id="assumptions" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="assumptions"><span class="header-section-number">6.2</span> Assumptions</h2>
 <p>The model will again be fit to allow for assessing the model assumptions</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># lm_Int &lt;- lm(log2Surv_time ~ Dose+Weight+Dose:Weight, data = poison) # equivalent</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>lm_Int <span class="ot">&lt;-</span> <span class="fu">lm</span>(log2Surv_time <span class="sc">~</span> Dose <span class="sc">*</span> Weight, <span class="at">data =</span> poison) <span class="co"># * -&gt; short notation</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">plot</span>(lm_Int)</span></code></pre></div>
-<p><img src="08_2_poison2_sol_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lm_Int &lt;- lm(log2Surv_time ~ Dose+Weight+Dose:Weight, data = poison) # equivalent</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>lm_Int <span class="ot">&lt;-</span> <span class="fu">lm</span>(log2Surv_time <span class="sc">~</span> Dose <span class="sc">*</span> Weight, <span class="at">data =</span> poison) <span class="co"># * -&gt; short notation</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lm_Int)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="08_2_poison2_sol_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>The plots look very similar to those of the additive model from the previous exercise so we know that all assumptions are <strong>met</strong>.</p>
-</div>
-<div id="inference" class="section level2" number="6.3">
-<h2><span class="header-section-number">6.3</span> Inference</h2>
+</section>
+<section id="inference" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="inference"><span class="header-section-number">6.3</span> Inference</h2>
 <p>We then inspect the results.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">summary</span>(lm_Int)</span></code></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = log2Surv_time ~ Dose * Weight, data = poison)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.62807 -0.34662 -0.05587  0.30656  0.79086 
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)  -0.2851     2.4062  -0.118    0.906
-## Dose         -0.2217     1.5440  -0.144    0.887
-## Weight        1.6061     1.1325   1.418    0.165
-## Dose:Weight  -0.3485     0.7242  -0.481    0.633
-## 
-## Residual standard error: 0.416 on 35 degrees of freedom
-## Multiple R-squared:  0.5173, Adjusted R-squared:  0.4759 
-## F-statistic:  12.5 on 3 and 35 DF,  p-value: 1.036e-05</code></pre>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_Int)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log2Surv_time ~ Dose * Weight, data = poison)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.62807 -0.34662 -0.05587  0.30656  0.79086 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)  -0.2851     2.4062  -0.118    0.906
+Dose         -0.2217     1.5440  -0.144    0.887
+Weight        1.6061     1.1325   1.418    0.165
+Dose:Weight  -0.3485     0.7242  -0.481    0.633
+
+Residual standard error: 0.416 on 35 degrees of freedom
+Multiple R-squared:  0.5173,    Adjusted R-squared:  0.4759 
+F-statistic:  12.5 on 3 and 35 DF,  p-value: 1.036e-05</code></pre>
 </div>
-<div id="interpretation-of-model-parameters" class="section level2" number="6.4">
-<h2><span class="header-section-number">6.4</span> Interpretation of model parameters</h2>
+</div>
+</section>
+<section id="interpretation-of-model-parameters" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="interpretation-of-model-parameters"><span class="header-section-number">6.4</span> Interpretation of model parameters</h2>
 <p>We may interpret the estimate parameters as follows:</p>
 <ul>
-<li><p>When we compare the log2 survival of fish with weight <span class="math inline">\(x_g\)</span> that are exposed to a dose that differs with 1 mg/l, the expected log2 survival time will be
-<span class="math inline">\(\beta_d+\beta_{d:g}*x_g\)</span> higher for the fish that were exposed to the highest dose.</p></li>
-<li><p>When we compare the log2 survival of fish exposed to dose <span class="math inline">\(x_g\)</span>, but that have a weight that differs with 1 g, the expected log2 survival time
-will be <span class="math inline">\(\beta_d+\beta_{d:g}*x_g\)</span> higher for fish with the highest weight.</p></li>
+<li><p>When we compare the log2 survival of fish with weight <span class="math inline">\(x_g\)</span> that are exposed to a dose that differs with 1 mg/l, the expected log2 survival time will be <span class="math inline">\(\beta_d+\beta_{d:g}*x_g\)</span> higher for the fish that were exposed to the highest dose.</p></li>
+<li><p>When we compare the log2 survival of fish exposed to dose <span class="math inline">\(x_g\)</span>, but that have a weight that differs with 1 g, the expected log2 survival time will be <span class="math inline">\(\beta_d+\beta_{d:g}*x_g\)</span> higher for fish with the highest weight.</p></li>
 </ul>
-<p>The parameter <span class="math inline">\(\beta_{d:g}\)</span> thus shows that the effect of dose on the log2 survival time is dependent on the
-weight of the fish, and, that the effect
-of weight on the log2 survival time dependents on the dose that was
-administered.</p>
-</div>
-<div id="inference-1" class="section level2" number="6.5">
-<h2><span class="header-section-number">6.5</span> Inference</h2>
-<p>The effect of dose is now parameterized by two model parameters (<span class="math inline">\(\beta_d\)</span>
-and <span class="math inline">\(\beta_{d:g}\)</span>). We first evaluate an <em>omnibus</em> hypotheses that there is
-no effect of dose, i.e., no main effect nor an interaction effect. We can test
-this with an F-test that compares a <em>full</em> model (1) containing a main effect
-for dose, a main effect for weight and an interaction between dose and weight
-with a model (2) that only contains a main effect for weight (i.e. no effect
-for dose).</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>lmDojo_weight <span class="ot">&lt;-</span> <span class="fu">lm</span>(log2Surv_time <span class="sc">~</span> Weight, <span class="at">data =</span> poison)</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">anova</span>(lmDojo_weight, lm_Int)</span></code></pre></div>
+<p>The parameter <span class="math inline">\(\beta_{d:g}\)</span> thus shows that the effect of dose on the log2 survival time is dependent on the weight of the fish, and, that the effect of weight on the log2 survival time dependents on the dose that was administered.</p>
+</section>
+<section id="inference-1" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="inference-1"><span class="header-section-number">6.5</span> Inference</h2>
+<p>The effect of dose is now parameterized by two model parameters (<span class="math inline">\(\beta_d\)</span> and <span class="math inline">\(\beta_{d:g}\)</span>). We first evaluate an <em>omnibus</em> hypotheses that there is no effect of dose, i.e., no main effect nor an interaction effect. We can test this with an F-test that compares a <em>full</em> model (1) containing a main effect for dose, a main effect for weight and an interaction between dose and weight with a model (2) that only contains a main effect for weight (i.e.&nbsp;no effect for dose).</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lmDojo_weight <span class="ot">&lt;-</span> <span class="fu">lm</span>(log2Surv_time <span class="sc">~</span> Weight, <span class="at">data =</span> poison)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lmDojo_weight, lm_Int)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Res.Df"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["RSS"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Df"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Sum of Sq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["F"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"37","2":"10.470626","3":"NA","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"35","2":"6.058125","3":"2","4":"4.412501","5":"12.74631","6":"6.940617e-05","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>We observe an extremely significant (overall, or global) effect for dose on
-the log2 survival time of dojofish
-(p-value &lt;&lt;0.001)`.</p>
 </div>
-<div id="conventional-approach" class="section level2" number="6.6">
-<h2><span class="header-section-number">6.6</span> Conventional approach</h2>
-<p>We already established that there is a significant overall effect of dose.
-Now, we will test if there is a significant interaction effect between dose
-and weight. Since we only have one interaction term in this model, this can
-be achieved in several ways:</p>
-<ol style="list-style-type: decimal">
+</div>
+<p>We observe an extremely significant (overall, or global) effect for dose on the log2 survival time of dojofish (p-value &lt;&lt;0.001)`.</p>
+</section>
+<section id="conventional-approach" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="conventional-approach"><span class="header-section-number">6.6</span> Conventional approach</h2>
+<p>We already established that there is a significant overall effect of dose. Now, we will test if there is a significant interaction effect between dose and weight. Since we only have one interaction term in this model, this can be achieved in several ways:</p>
+<ol type="1">
 <li>The <code>summary</code> function</li>
 <li>An F-test comparing models with and without the interaction effect</li>
 <li>An ANOVA table with type III sum of squares</li>
 </ol>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">summary</span>(lm_Int) <span class="co"># 1</span></span></code></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = log2Surv_time ~ Dose * Weight, data = poison)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.62807 -0.34662 -0.05587  0.30656  0.79086 
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)  -0.2851     2.4062  -0.118    0.906
-## Dose         -0.2217     1.5440  -0.144    0.887
-## Weight        1.6061     1.1325   1.418    0.165
-## Dose:Weight  -0.3485     0.7242  -0.481    0.633
-## 
-## Residual standard error: 0.416 on 35 degrees of freedom
-## Multiple R-squared:  0.5173, Adjusted R-squared:  0.4759 
-## F-statistic:  12.5 on 3 and 35 DF,  p-value: 1.036e-05</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>lm_additive <span class="ot">&lt;-</span> <span class="fu">lm</span>(log2Surv_time <span class="sc">~</span> Dose <span class="sc">+</span> Weight, <span class="at">data =</span> poison) <span class="co"># 2</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">anova</span>(lm_additive, lm_Int) <span class="co"># 2</span></span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_Int) <span class="co"># 1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log2Surv_time ~ Dose * Weight, data = poison)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.62807 -0.34662 -0.05587  0.30656  0.79086 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)  -0.2851     2.4062  -0.118    0.906
+Dose         -0.2217     1.5440  -0.144    0.887
+Weight        1.6061     1.1325   1.418    0.165
+Dose:Weight  -0.3485     0.7242  -0.481    0.633
+
+Residual standard error: 0.416 on 35 degrees of freedom
+Multiple R-squared:  0.5173,    Adjusted R-squared:  0.4759 
+F-statistic:  12.5 on 3 and 35 DF,  p-value: 1.036e-05</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lm_additive <span class="ot">&lt;-</span> <span class="fu">lm</span>(log2Surv_time <span class="sc">~</span> Dose <span class="sc">+</span> Weight, <span class="at">data =</span> poison) <span class="co"># 2</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_additive, lm_Int) <span class="co"># 2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Res.Df"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["RSS"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Df"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Sum of Sq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["F"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"36","2":"6.098213","3":"NA","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"35","2":"6.058125","3":"1","4":"0.04008759","5":"0.2316006","6":"0.6333347","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">Anova</span>(lm_Int, <span class="at">type =</span> <span class="st">&quot;III&quot;</span>) <span class="co"># 3</span></span></code></pre></div>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(lm_Int, <span class="at">type =</span> <span class="st">"III"</span>) <span class="co"># 3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Sum Sq"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Df"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["F value"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.002430229","2":"1","3":"0.01404032","4":"0.9063554","_rn_":"(Intercept)"},{"1":"0.003567063","2":"1","3":"0.02060822","4":"0.8866747","_rn_":"Dose"},{"1":"0.348114636","2":"1","3":"2.01118522","4":"0.1649862","_rn_":"Weight"},{"1":"0.040087588","2":"1","3":"0.23160062","4":"0.6333347","_rn_":"Dose:Weight"},{"1":"6.058125383","2":"35","3":"NA","4":"NA","_rn_":"Residuals"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>There is no significant interaction between dose and weight. As such, the
-effect of dose on survival is not signifiantly different between fish of
-different weight (p = 0.63).</p>
-<p>The conventional approach is to remove the interaction effect from the
-model. As such, we are left with the additive linear regression model.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">summary</span>(lm_additive)</span></code></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = log2Surv_time ~ Dose + Weight, data = poison)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.59629 -0.33110 -0.06836  0.32507  0.83315 
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)   0.8294     0.6457   1.285 0.207119    
-## Dose         -0.9590     0.1888  -5.081 1.17e-05 ***
-## Weight        1.0783     0.2792   3.862 0.000451 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.4116 on 36 degrees of freedom
-## Multiple R-squared:  0.5141, Adjusted R-squared:  0.4871 
-## F-statistic: 19.04 on 2 and 36 DF,  p-value: 2.282e-06</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span>(<span class="fu">coef</span>(lm_additive)) <span class="co"># original scale</span></span></code></pre></div>
-<pre><code>## (Intercept)        Dose      Weight 
-##    1.777004    0.514402    2.111484</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span>(<span class="fu">confint</span>(lm_additive))</span></code></pre></div>
-<pre><code>##                 2.5 %    97.5 %
-## (Intercept) 0.7169728 4.4042734
-## Dose        0.3945101 0.6707292
-## Weight      1.4259918 3.1265018</code></pre>
-<div id="conclusion" class="section level3" number="6.6.1">
-<h3><span class="header-section-number">6.6.1</span> Conclusion</h3>
-<p>The conclusion is exactly the same as for the additive model analysis above
-(obviously, as we are dealing with the same model):</p>
-<p>The dose of the poison has an extremely significant effect on the survival time
-of dojofish (p-value &lt;&lt; 0.001). The geometric average of the survival time for
-dojofish that are exposed to a poison dose that is 1mg/L larger is approximately
-halved,
-factor = <span class="math inline">\(2^{\beta_d}=\)</span> 0.51) .</p>
-<p>The effect of dose on survival is not significantly different between fish of
-different weight. (p = 0.63).</p>
 </div>
 </div>
+<p>There is no significant interaction between dose and weight. As such, the effect of dose on survival is not signifiantly different between fish of different weight (p = 0.63).</p>
+<p>The conventional approach is to remove the interaction effect from the model. As such, we are left with the additive linear regression model.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_additive)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log2Surv_time ~ Dose + Weight, data = poison)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.59629 -0.33110 -0.06836  0.32507  0.83315 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   0.8294     0.6457   1.285 0.207119    
+Dose         -0.9590     0.1888  -5.081 1.17e-05 ***
+Weight        1.0783     0.2792   3.862 0.000451 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.4116 on 36 degrees of freedom
+Multiple R-squared:  0.5141,    Adjusted R-squared:  0.4871 
+F-statistic: 19.04 on 2 and 36 DF,  p-value: 2.282e-06</code></pre>
 </div>
-<div id="remark" class="section level1" number="7">
-<h1><span class="header-section-number">7</span> Remark</h1>
-<p>Note, that we have have to test if the interaction is significant before using
-the additive model.</p>
 </div>
-
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRXhlcmNpc2UgOC4yOiBOb24tYWRkaXRpdmUgbGluZWFyIG1vZGVsIG9uIHRoZSBwb2lzb24gZGF0YXNldCIKYXV0aG9yOiAiTGlldmVuIENsZW1lbnQsIEplcm9lbiBHaWxpcyBhbmQgTWlsYW4gTWFsZmFpdCIKZGF0ZTogInN0YXRPbWljcywgR2hlbnQgVW5pdmVyc2l0eSAoaHR0cHM6Ly9zdGF0b21pY3MuZ2l0aHViLmlvKSIKLS0tCgojIFRoZSBwb2lzb24gZGF0YXNldAoKSW4gdGhpcyBleHBlcmltZW50LCA5NiBmaXNoIChkb2pvZmlzaCwgZ29sZGZpc2ggYW5kIHplYnJhZmlzaCkKd2VyZSBwbGFjZWQgc2VwYXJhdGVseSBpbiBhIHRhbmsgd2l0aCB0d28gbGl0ZXJzIG9mIHdhdGVyIGFuZAphIGNlcnRhaW4gZG9zZSAoaW4gbWcpIG9mIHRoZSBwb2lzb24gRUktNDMsMDY0LiBUaGUgcmVzaXN0YW5jZQpvZiB0aGUgZmlzaCBhZ2FpbnN0IHRoZSBwb2lzb24gd2FzIG1lYXN1cmVkIGFzIHRoZSBhbW91bnQgb2YKbWludXRlcyB0aGUgZmlzaCBzdXJ2aXZlZCBhZnRlciBiZWluZyBleHBvc2VkIHRvIHRoZSBwb2lzb24gKGBTdXJ2X3RpbWVgLCBpbgptaW51dGVzKS4gQWRkaXRpb25hbGx5LCB0aGUgd2VpZ2h0IG9mIGVhY2ggZmlzaCB3YXMgbWVhc3VyZWQuCgojIEdvYWwKClN1cHBvc2UgdGhhdCByZXNlYXJjaGVycyBhcmUgLG1haW5seSBpbnRlcmVzdGVkIGluIHN0dWR5aW5nIHRoZSBlZmZlY3Qgb2YKcG9pc29uIGRvc2Ugb24gdGhlIHN1cnZpdmFsIG9mIGZpc2guIFRoZXkga25vdyBob3dldmVyIHRoYXQgdGhlIHdlaWdodCBjYW4KYWxzbyBpbXBhY3QgdGhlIHN1cnZpdmFsIGFuZCBtaWdodCBhbHNvIGNoYW5nZSB0aGUgZWZmZWN0IG9mIHRoZSBwb2lzb24gZG9zZS4KCkluIHRoaXMgdHV0b3JpYWwgc2Vzc2lvbiB3ZSB3aWxsIGZvY3VzIG9uIERvam9maXNoIGFuZCB3ZSB3aWxsIG1vZGVsIHRoZQpzdXJ2aXZhbCB0aW1lIGluIGZ1bmN0aW9uIG9mIHRoZSBkb3NlIGFuZCB0aGUgd2VpZ2h0IG9mIHRoZSBmaXNoLAoqKmFuZCBpbmNsdWRpbmcgYW4gaW50ZXJhY3Rpb24gYmV0d2VlbiBkb3NlIGFuZCB3ZWlnaHQuKioKCgpMb2FkIGxpYnJhcmllcwoKYGBge3IsIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9CiMgaW5zdGFsbC5wYWNrYWdlcygiR0dhbGx5IikKbGlicmFyeShHR2FsbHkpCmxpYnJhcnkoY2FyKQpsaWJyYXJ5KG11bHRjb21wKQoKbGlicmFyeSh0aWR5dmVyc2UpCnRoZW1lX3NldCh0aGVtZV9idygpKQpgYGAKCiMgSW1wb3J0IHRoZSBkYXRhCgpgYGB7ciwgbWVzc2FnZT1GQUxTRX0KcG9pc29uIDwtIHJlYWRfY3N2KCJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vc3RhdE9taWNzL1BTTFNEYXRhL21haW4vcG9pc29uLmNzdiIpCmBgYAoKIyBEYXRhIHRpZHlpbmcKCldlIGNhbiBzZWUgYSBjb3VwbGUgb2YgdGhpbmdzIGluIHRoZSBkYXRhIHRoYXQgY2FuIGJlIGltcHJvdmVkOgoKMS4gQ2FwaXRhbGlzZSB0aGUgZmlzdCBjb2x1bW4gbmFtZQoKMi4gU2V0IHRoZSBTcGVjaWVzIGNvbHVtbiBhcyBhIGZhY3RvcgoKMy4gQ2hhbmdlIHRoZSBzcGVjaWVzIGZhY3RvciBsZXZlbHMgZnJvbSAwLCAxIGFuZCAyIHRvCkRvam9maXNoLCBHb2xkZmlzaCBhbmQgWmVicmFmaXNoLiAqSGludCo6IHVzZSB0aGUgYGZjdF9yZWNvZGVgIGZ1bmN0aW9uLgoKNC4gSW4gcHJldmlvdXMgYW5hbHlzaXMgb24gdGhpcyBkYXRhc2V0IChgU2ltcGxlIGxpbmVhciByZWdyZXNzaW9uIHNlc3Npb25gKSwgd2UKcGVyZm9ybWVkIGEgbG9nLXRyYW5zZm9ybWF0aW9uIG9uIHRoZSByZXNwb25zZSB2YXJpYWJsZSBgU3Vydl90aW1lYCB0byBtZWV0IHRoZQpub3JtYWxpdHkgYW5kIGhvbW9zY2VkYXN0aWNpdHkgYXNzdW1wdGlvbnMgb2YgdGhlIGxpbmVhciBtb2RlbC4gSGVyZSwgd2Ugd2lsbAppbW1lZGlhdGVseSB3b3JrIHdpdGggbG9nLXRyYW5zZm9ybWVkIHN1cnZpdmFsIHRpbWVzOyBzdG9yZSB0aGVzZSBpbiB0aGUgbmV3CnZhcmlhYmxlIGBsb2cyU3Vydl90aW1lYCBhbmQgcmVtb3ZlIHRoZSBub24tdHJhbnNmb3JtZWQgdmFsdWVzLgoKNS4gU3Vic2V0IHRoZSBkYXRhIHRvIG9ubHkgcmV0YWluICoqRG9qb2Zpc2gqKi4KCmBgYHtyfQpwb2lzb24gPC0gcG9pc29uICU+JQogIHJlbmFtZSgiU3BlY2llcyIgPSAic3BlY2llcyIpICU+JQogIG11dGF0ZShTcGVjaWVzID0gYXMuZmFjdG9yKFNwZWNpZXMpKSAlPiUKICBtdXRhdGUoU3BlY2llcyA9IGZjdF9yZWNvZGUoU3BlY2llcywKICAgIERvam9maXNoID0gIjAiLCBHb2xkZmlzaCA9ICIxIiwgWmVicmFmaXNoID0gIjIiCiAgKSkgJT4lCiAgbXV0YXRlKGxvZzJTdXJ2X3RpbWUgPSBsb2cyKFN1cnZfdGltZSkpICU+JQogIHNlbGVjdCgtU3Vydl90aW1lKSAlPiUKICBmaWx0ZXIoU3BlY2llcyA9PSAiRG9qb2Zpc2giKQoKcG9pc29uCmBgYAoKIyBEYXRhIGV4cGxvcmF0aW9uCgpQcmlvciB0byB0aGUgYW5hbHlzaXMsIHdlIHNob3VsZCBleHBsb3JlIG91ciBkYXRhLgpUbyBzdGFydCBvdXIgZGF0YSBleHBsb3JhdGlvbiwgd2Ugd2lsbCBtYWtlIHVzZSBvZiB0aGUgYGdncGFpcnNgIGZ1bmN0aW9uIG9mIHRoZQpgR0dhbGx5YCBSIHBhY2thZ2UuIFRoaXMgZnVuY3Rpb24gd2lsbCBnZW5lcmF0ZSBhIHZpc3VhbGl6YXRpb24gY29udGFpbmluZwptdWx0aXBsZSBwYW5lbHMsIHdoaWNoIGRpc3BsYXkgKDEpIHVuaXZhcmlhdGUgcGxvdHMgb2YgdGhlIGRpZmZlcmVudCB2YXJpYWJsZXMKaW4gb3VyIGRhdGFzZXQsICgyKSBiaXZhcmlhdGUgcGxvdHMgYW5kICgzKSBjb3JyZWxhdGlvbiBjb2VmZmljaWVudHMgYmV0d2Vlbgp0aGUgZGlmZmVyZW50IHZhcmlhYmxlcy4KCmBgYHtyLCBtZXNzYWdlPUZBTFNFLCBmaWcud2lkdGg9MTJ9CiAgZ2dwYWlycyhwb2lzb24pCmBgYAoKQmFzZWQgb24gdGhlc2UgcGxvdHMsIHdlIG9ic2VydmUgdGhhdDoKCi0gVGhlIHN1cnZpdmFsIHRpbWUgc2VlbXMgdG8gYmUgYXNzb2NpYXRlZCB3aXRoIGRvc2UgYW5kIGZpc2ggd2VpZ2h0LgoKRnJvbSB0aGUgdHV0b3JpYWwgb2YgSDYgd2UgaGF2ZSBzZWVuIHRoYXQgdGhlIGZpc2ggd2VpZ2h0cyB3ZXJlIG5vdCBuaWNlbHkKdW5pZm9ybSBhY3Jvc3MgdGhlIGRpZmZlcmVudCBwb2lzb24gZG9zYWdlcyBkdWUgdG8gdGhlIHJhbmRvbWlzYXRpb24uCgoKYGBge3IsIG1lc3NhZ2U9RkFMU0V9CnBvaXNvbiAlPiUKICBmaWx0ZXIoU3BlY2llcyA9PSAiRG9qb2Zpc2giKSAlPiUKICBnZ3Bsb3QoYWVzKHggPSBEb3NlLCB5ID0gV2VpZ2h0KSkgKwogIGdlb21fcG9pbnQoKSArCiAgZ2d0aXRsZSgiQXNzb2NpYXRpb24gYmV0d2VlbiBkb3NlIGFuZCB3ZWlnaHQiKSArCiAgdGhlbWVfYncoKSArCiAgc3RhdF9zdW1tYXJ5KAogICAgZnVuID0gbWVhbiwgZ2VvbSA9ICJwb2ludCIsCiAgICBjb2wgPSAiYmxhY2siLCBzaXplID0gNCwKICAgIHNoYXBlID0gMjQsIGZpbGwgPSAicmVkIgogICkKYGBgCgojIEFuYWx5c2lzIHdpdGggbWFpbiBlZmZlY3QgYW5kIGludGVyYWN0aW9uIGZvciBkb3NlIGFuZCB3ZWlnaHQKCiMjIE1vZGVsIHNwZWNpZmljYXRpb24KCiQkCnlfaT1cYmV0YV8wK1xiZXRhX2QgeF9kICsgXGJldGFfZyB4X2cgK1xiZXRhX3tkOmd9IHhfZCB4X2crIFxlcHNpbG9uX2ksCiQkCgp3aXRoICRcZXBzaWxvbl9pIFx0ZXh0eyBpLmkuZC4gfSBOKDAsXHNpZ21hXjIpJAoKIyMgQXNzdW1wdGlvbnMKClRoZSBtb2RlbCB3aWxsIGFnYWluIGJlIGZpdCB0byBhbGxvdyBmb3IgYXNzZXNzaW5nIHRoZSBtb2RlbCBhc3N1bXB0aW9ucwoKYGBge3J9CiMgbG1fSW50IDwtIGxtKGxvZzJTdXJ2X3RpbWUgfiBEb3NlK1dlaWdodCtEb3NlOldlaWdodCwgZGF0YSA9IHBvaXNvbikgIyBlcXVpdmFsZW50CmxtX0ludCA8LSBsbShsb2cyU3Vydl90aW1lIH4gRG9zZSAqIFdlaWdodCwgZGF0YSA9IHBvaXNvbikgIyAqIC0+IHNob3J0IG5vdGF0aW9uCgpwYXIobWZyb3cgPSBjKDIsIDIpKQpwbG90KGxtX0ludCkKYGBgCgpUaGUgcGxvdHMgbG9vayB2ZXJ5IHNpbWlsYXIgdG8gdGhvc2Ugb2YgdGhlIGFkZGl0aXZlIG1vZGVsIGZyb20gdGhlIHByZXZpb3VzIGV4ZXJjaXNlIHNvIHdlIGtub3cgdGhhdCBhbGwgYXNzdW1wdGlvbnMgYXJlICoqbWV0KiouCgojIyBJbmZlcmVuY2UKCldlIHRoZW4gaW5zcGVjdCB0aGUgcmVzdWx0cy4KCmBgYHtyfQpzdW1tYXJ5KGxtX0ludCkKYGBgCgojIyBJbnRlcnByZXRhdGlvbiBvZiBtb2RlbCBwYXJhbWV0ZXJzCgpXZSBtYXkgaW50ZXJwcmV0IHRoZSBlc3RpbWF0ZSBwYXJhbWV0ZXJzIGFzIGZvbGxvd3M6CgotIFdoZW4gd2UgY29tcGFyZSB0aGUgbG9nMiBzdXJ2aXZhbCBvZiBmaXNoIHdpdGggd2VpZ2h0ICR4X2ckIHRoYXQgYXJlIGV4cG9zZWQgdG8gYSBkb3NlIHRoYXQgZGlmZmVycyB3aXRoIDEgbWcvbCwgdGhlIGV4cGVjdGVkIGxvZzIgc3Vydml2YWwgdGltZSB3aWxsIGJlCiRcYmV0YV9kK1xiZXRhX3tkOmd9KnhfZyQgaGlnaGVyIGZvciB0aGUgZmlzaCB0aGF0IHdlcmUgZXhwb3NlZCB0byB0aGUgaGlnaGVzdCBkb3NlLgoKLSBXaGVuIHdlIGNvbXBhcmUgdGhlIGxvZzIgc3Vydml2YWwgb2YgZmlzaCBleHBvc2VkIHRvIGRvc2UgJHhfZyQsIGJ1dCB0aGF0IGhhdmUgYSB3ZWlnaHQgdGhhdCBkaWZmZXJzIHdpdGggMSBnLCB0aGUgZXhwZWN0ZWQgbG9nMiBzdXJ2aXZhbCB0aW1lCndpbGwgYmUgICRcYmV0YV9kK1xiZXRhX3tkOmd9KnhfZyQgaGlnaGVyIGZvciBmaXNoIHdpdGggdGhlIGhpZ2hlc3Qgd2VpZ2h0LgoKVGhlIHBhcmFtZXRlciAkXGJldGFfe2Q6Z30kIHRodXMgc2hvd3MgdGhhdCB0aGUgZWZmZWN0IG9mIGRvc2Ugb24gdGhlIGxvZzIgc3Vydml2YWwgdGltZSBpcyBkZXBlbmRlbnQgb24gdGhlCndlaWdodCBvZiB0aGUgZmlzaCwgYW5kLCB0aGF0IHRoZSBlZmZlY3QKb2Ygd2VpZ2h0IG9uIHRoZSBsb2cyIHN1cnZpdmFsIHRpbWUgZGVwZW5kZW50cyBvbiB0aGUgZG9zZSB0aGF0IHdhcwphZG1pbmlzdGVyZWQuCgojIyBJbmZlcmVuY2UKClRoZSBlZmZlY3Qgb2YgZG9zZSBpcyBub3cgcGFyYW1ldGVyaXplZCBieSB0d28gbW9kZWwgcGFyYW1ldGVycyAoJFxiZXRhX2QkCmFuZCAkXGJldGFfe2Q6Z30kKS4gV2UgZmlyc3QgZXZhbHVhdGUgYW4gKm9tbmlidXMqIGh5cG90aGVzZXMgdGhhdCB0aGVyZSBpcwpubyBlZmZlY3Qgb2YgZG9zZSwgaS5lLiwgbm8gbWFpbiBlZmZlY3Qgbm9yIGFuIGludGVyYWN0aW9uIGVmZmVjdC4gV2UgY2FuIHRlc3QKdGhpcyB3aXRoIGFuIEYtdGVzdCB0aGF0IGNvbXBhcmVzIGEgKmZ1bGwqIG1vZGVsICgxKSBjb250YWluaW5nIGEgbWFpbiBlZmZlY3QKZm9yIGRvc2UsIGEgbWFpbiBlZmZlY3QgZm9yIHdlaWdodCBhbmQgYW4gaW50ZXJhY3Rpb24gYmV0d2VlbiBkb3NlIGFuZCB3ZWlnaHQKd2l0aCBhIG1vZGVsICgyKSB0aGF0IG9ubHkgY29udGFpbnMgYSBtYWluIGVmZmVjdCBmb3Igd2VpZ2h0IChpLmUuIG5vIGVmZmVjdApmb3IgZG9zZSkuCgpgYGB7cn0KbG1Eb2pvX3dlaWdodCA8LSBsbShsb2cyU3Vydl90aW1lIH4gV2VpZ2h0LCBkYXRhID0gcG9pc29uKQphbm92YShsbURvam9fd2VpZ2h0LCBsbV9JbnQpCmBgYAoKV2Ugb2JzZXJ2ZSBhbiBleHRyZW1lbHkgc2lnbmlmaWNhbnQgKG92ZXJhbGwsIG9yIGdsb2JhbCkgZWZmZWN0IGZvciBkb3NlIG9uCnRoZSBsb2cyIHN1cnZpdmFsIHRpbWUgb2YgZG9qb2Zpc2gKKHAtdmFsdWUgPDwwLjAwMSlgLgoKIyMgQ29udmVudGlvbmFsIGFwcHJvYWNoCgpXZSBhbHJlYWR5IGVzdGFibGlzaGVkIHRoYXQgdGhlcmUgaXMgYSBzaWduaWZpY2FudCBvdmVyYWxsIGVmZmVjdCBvZiBkb3NlLgpOb3csIHdlIHdpbGwgdGVzdCBpZiB0aGVyZSBpcyBhIHNpZ25pZmljYW50IGludGVyYWN0aW9uIGVmZmVjdCBiZXR3ZWVuIGRvc2UKYW5kIHdlaWdodC4gU2luY2Ugd2Ugb25seSBoYXZlIG9uZSBpbnRlcmFjdGlvbiB0ZXJtIGluIHRoaXMgbW9kZWwsIHRoaXMgY2FuCmJlIGFjaGlldmVkIGluIHNldmVyYWwgd2F5czoKCjEuIFRoZSBgc3VtbWFyeWAgZnVuY3Rpb24KMi4gQW4gRi10ZXN0IGNvbXBhcmluZyBtb2RlbHMgd2l0aCBhbmQgd2l0aG91dCB0aGUgaW50ZXJhY3Rpb24gZWZmZWN0CjMuIEFuIEFOT1ZBIHRhYmxlIHdpdGggdHlwZSBJSUkgc3VtIG9mIHNxdWFyZXMKCgpgYGB7cn0Kc3VtbWFyeShsbV9JbnQpICMgMQpsbV9hZGRpdGl2ZSA8LSBsbShsb2cyU3Vydl90aW1lIH4gRG9zZSArIFdlaWdodCwgZGF0YSA9IHBvaXNvbikgIyAyCmFub3ZhKGxtX2FkZGl0aXZlLCBsbV9JbnQpICMgMgpBbm92YShsbV9JbnQsIHR5cGUgPSAiSUlJIikgIyAzCmBgYAoKVGhlcmUgaXMgbm8gc2lnbmlmaWNhbnQgaW50ZXJhY3Rpb24gYmV0d2VlbiBkb3NlIGFuZCB3ZWlnaHQuIEFzIHN1Y2gsIHRoZQplZmZlY3Qgb2YgZG9zZSBvbiBzdXJ2aXZhbCBpcyBub3Qgc2lnbmlmaWFudGx5IGRpZmZlcmVudCBiZXR3ZWVuIGZpc2ggb2YKZGlmZmVyZW50IHdlaWdodCAocCA9IGByIGZvcm1hdChBbm92YShsbV9JbnQsdHlwZT0iSUlJIikkIlByKD5GKSJbNF0sIGRpZ2l0cyA9IDIpYCkuCgpUaGUgY29udmVudGlvbmFsIGFwcHJvYWNoIGlzIHRvIHJlbW92ZSB0aGUgaW50ZXJhY3Rpb24gZWZmZWN0IGZyb20gdGhlCm1vZGVsLiBBcyBzdWNoLCB3ZSBhcmUgbGVmdCB3aXRoIHRoZSBhZGRpdGl2ZSBsaW5lYXIgcmVncmVzc2lvbiBtb2RlbC4KCmBgYHtyfQpzdW1tYXJ5KGxtX2FkZGl0aXZlKQpgYGAKCmBgYHtyfQoyXihjb2VmKGxtX2FkZGl0aXZlKSkgIyBvcmlnaW5hbCBzY2FsZQoyXihjb25maW50KGxtX2FkZGl0aXZlKSkKYGBgCgojIyMgQ29uY2x1c2lvbgoKVGhlIGNvbmNsdXNpb24gaXMgZXhhY3RseSB0aGUgc2FtZSBhcyBmb3IgdGhlIGFkZGl0aXZlIG1vZGVsIGFuYWx5c2lzIGFib3ZlCihvYnZpb3VzbHksIGFzIHdlIGFyZSBkZWFsaW5nIHdpdGggdGhlIHNhbWUgbW9kZWwpOgoKVGhlIGRvc2Ugb2YgdGhlIHBvaXNvbiBoYXMgYW4gZXh0cmVtZWx5IHNpZ25pZmljYW50IGVmZmVjdCBvbiB0aGUgc3Vydml2YWwgdGltZQpvZiBkb2pvZmlzaCAocC12YWx1ZSA8PCAwLjAwMSkuIFRoZSBnZW9tZXRyaWMgYXZlcmFnZSBvZiB0aGUgc3Vydml2YWwgdGltZSBmb3IKZG9qb2Zpc2ggdGhhdCBhcmUgZXhwb3NlZCB0byBhIHBvaXNvbiBkb3NlIHRoYXQgaXMgMW1nL0wgbGFyZ2VyIGlzIGFwcHJveGltYXRlbHkKaGFsdmVkLApmYWN0b3IgPSAkMl57XGJldGFfZH09JCBgciBmb3JtYXQoMl4obG1fYWRkaXRpdmUkY29lZlsiRG9zZSJdKSxkaWdpdHM9MilgKSAuCgoKVGhlIGVmZmVjdCBvZiBkb3NlIG9uIHN1cnZpdmFsIGlzIG5vdCBzaWduaWZpY2FudGx5IGRpZmZlcmVudCBiZXR3ZWVuIGZpc2ggb2YKZGlmZmVyZW50IHdlaWdodC4gKHAgPSBgciBmb3JtYXQoc3VtbWFyeShsbV9JbnQpJGNvZWZmaWNpZW50c1s0LDRdLCBkaWdpdHM9MilgKS4KCgojIFJlbWFyawoKTm90ZSwgdGhhdCB3ZSBoYXZlIGhhdmUgdG8gdGVzdCBpZiB0aGUgaW50ZXJhY3Rpb24gaXMgc2lnbmlmaWNhbnQgYmVmb3JlIHVzaW5nCnRoZSBhZGRpdGl2ZSBtb2RlbC4K</div>
-<div class="footer">
-    <hr>
-    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
-    CC BY-NC-SA 4.0</a> licence.
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span>(<span class="fu">coef</span>(lm_additive)) <span class="co"># original scale</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)        Dose      Weight 
+   1.777004    0.514402    2.111484 </code></pre>
 </div>
-
-
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span>(<span class="fu">confint</span>(lm_additive))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                2.5 %    97.5 %
+(Intercept) 0.7169728 4.4042734
+Dose        0.3945101 0.6707292
+Weight      1.4259918 3.1265018</code></pre>
 </div>
 </div>
+<section id="conclusion" class="level3" data-number="6.6.1">
+<h3 data-number="6.6.1" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">6.6.1</span> Conclusion</h3>
+<p>The conclusion is exactly the same as for the additive model analysis above (obviously, as we are dealing with the same model):</p>
+<p>The dose of the poison has an extremely significant effect on the survival time of dojofish (p-value &lt;&lt; 0.001). The geometric average of the survival time for dojofish that are exposed to a poison dose that is 1mg/L larger is approximately halved, factor = <span class="math inline">\(2^{\beta_d}=\)</span> 0.51) .</p>
+<p>The effect of dose on survival is not significantly different between fish of different weight. (p = 0.63).</p>
+</section>
+</section>
+</section>
+<section id="remark" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Remark</h1>
+<p>Note, that we have have to test if the interaction is significant before using the additive model.</p>
 
-</div>
 
-<script>
+<!-- -->
 
-// add bootstrap table styles to pandoc tables
-function bootstrapStylePandocTables() {
-  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
-}
-$(document).ready(function () {
-  bootstrapStylePandocTables();
-});
+</section>
 
-
-</script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open');
-  });
-});
-</script>
-
-<!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeSourceEmbed("08_2_poison2_sol.Rmd");
-  window.initializeCodeFolding("show" === "show");
-});
-</script>
-
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    options.showAndHide = true;
-    options.smoothScroll = true;
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Exercise 8.2: Non-additive linear model on the poison dataset"</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Lieven Clement, Jeroen Gilis and Milan Malfait"</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "statOmics, Ghent University (https://statomics.github.io)"</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># The poison dataset</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>In this experiment, 96 fish (dojofish, goldfish and zebrafish)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>were placed separately in a tank with two liters of water and</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>a certain dose (in mg) of the poison EI-43,064. The resistance</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>of the fish against the poison was measured as the amount of</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>minutes the fish survived after being exposed to the poison (<span class="in">`Surv_time`</span>, in</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>minutes). Additionally, the weight of each fish was measured.</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Goal</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>Suppose that researchers are ,mainly interested in studying the effect of</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>poison dose on the survival of fish. They know however that the weight can</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>also impact the survival and might also change the effect of the poison dose.</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>In this tutorial session we will focus on Dojofish and we will model the</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>survival time in function of the dose and the weight of the fish,</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>**and including an interaction between dose and weight.**</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>Load libraries</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message=FALSE, warning=FALSE}</span></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("GGally")</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a><span class="fu"># Import the data</span></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message=FALSE}</span></span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>poison <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/statOmics/PSLSData/main/poison.csv"</span>)</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data tidying</span></span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>We can see a couple of things in the data that can be improved:</span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Capitalise the fist column name</span>
+<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Set the Species column as a factor</span>
+<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Change the species factor levels from 0, 1 and 2 to</span>
+<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>Dojofish, Goldfish and Zebrafish. *Hint*: use the <span class="in">`fct_recode`</span> function.</span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>In previous analysis on this dataset (<span class="in">`Simple linear regression session`</span>), we</span>
+<span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>performed a log-transformation on the response variable <span class="in">`Surv_time`</span> to meet the</span>
+<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>normality and homoscedasticity assumptions of the linear model. Here, we will</span>
+<span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a>immediately work with log-transformed survival times; store these in the new</span>
+<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a>variable <span class="in">`log2Surv_time`</span> and remove the non-transformed values.</span>
+<span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>Subset the data to only retain **Dojofish**.</span>
+<span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a>poison <span class="ot">&lt;-</span> poison <span class="sc">|&gt;</span></span>
+<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"Species"</span> <span class="ot">=</span> <span class="st">"species"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Species =</span> <span class="fu">as.factor</span>(Species)) <span class="sc">|&gt;</span></span>
+<span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Species =</span> <span class="fu">fct_recode</span>(Species,</span>
+<span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">Dojofish =</span> <span class="st">"0"</span>, <span class="at">Goldfish =</span> <span class="st">"1"</span>, <span class="at">Zebrafish =</span> <span class="st">"2"</span></span>
+<span id="cb20-72"><a href="#cb20-72" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span></span>
+<span id="cb20-73"><a href="#cb20-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log2Surv_time =</span> <span class="fu">log2</span>(Surv_time)) <span class="sc">|&gt;</span></span>
+<span id="cb20-74"><a href="#cb20-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Surv_time) <span class="sc">|&gt;</span></span>
+<span id="cb20-75"><a href="#cb20-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Species <span class="sc">==</span> <span class="st">"Dojofish"</span>)</span>
+<span id="cb20-76"><a href="#cb20-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-77"><a href="#cb20-77" aria-hidden="true" tabindex="-1"></a>poison</span>
+<span id="cb20-78"><a href="#cb20-78" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-79"><a href="#cb20-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-80"><a href="#cb20-80" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data exploration</span></span>
+<span id="cb20-81"><a href="#cb20-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-82"><a href="#cb20-82" aria-hidden="true" tabindex="-1"></a>Prior to the analysis, we should explore our data.</span>
+<span id="cb20-83"><a href="#cb20-83" aria-hidden="true" tabindex="-1"></a>To start our data exploration, we will make use of the <span class="in">`ggpairs`</span> function of the</span>
+<span id="cb20-84"><a href="#cb20-84" aria-hidden="true" tabindex="-1"></a><span class="in">`GGally`</span> R package. This function will generate a visualization containing</span>
+<span id="cb20-85"><a href="#cb20-85" aria-hidden="true" tabindex="-1"></a>multiple panels, which display (1) univariate plots of the different variables</span>
+<span id="cb20-86"><a href="#cb20-86" aria-hidden="true" tabindex="-1"></a>in our dataset, (2) bivariate plots and (3) correlation coefficients between</span>
+<span id="cb20-87"><a href="#cb20-87" aria-hidden="true" tabindex="-1"></a>the different variables.</span>
+<span id="cb20-88"><a href="#cb20-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-89"><a href="#cb20-89" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message=FALSE, fig.width=12}</span></span>
+<span id="cb20-90"><a href="#cb20-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggpairs</span>(poison)</span>
+<span id="cb20-91"><a href="#cb20-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-92"><a href="#cb20-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-93"><a href="#cb20-93" aria-hidden="true" tabindex="-1"></a>Based on these plots, we observe that:</span>
+<span id="cb20-94"><a href="#cb20-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-95"><a href="#cb20-95" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The survival time seems to be associated with dose and fish weight.</span>
+<span id="cb20-96"><a href="#cb20-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-97"><a href="#cb20-97" aria-hidden="true" tabindex="-1"></a>From the tutorial of H6 we have seen that the fish weights were not nicely</span>
+<span id="cb20-98"><a href="#cb20-98" aria-hidden="true" tabindex="-1"></a>uniform across the different poison dosages due to the randomisation.</span>
+<span id="cb20-99"><a href="#cb20-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-100"><a href="#cb20-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-101"><a href="#cb20-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message=FALSE}</span></span>
+<span id="cb20-102"><a href="#cb20-102" aria-hidden="true" tabindex="-1"></a>poison <span class="sc">|&gt;</span></span>
+<span id="cb20-103"><a href="#cb20-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Species <span class="sc">==</span> <span class="st">"Dojofish"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-104"><a href="#cb20-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Dose, <span class="at">y =</span> Weight)) <span class="sc">+</span></span>
+<span id="cb20-105"><a href="#cb20-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb20-106"><a href="#cb20-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Association between dose and weight"</span>) <span class="sc">+</span></span>
+<span id="cb20-107"><a href="#cb20-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb20-108"><a href="#cb20-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
+<span id="cb20-109"><a href="#cb20-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb20-110"><a href="#cb20-110" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">4</span>,</span>
+<span id="cb20-111"><a href="#cb20-111" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">24</span>, <span class="at">fill =</span> <span class="st">"red"</span></span>
+<span id="cb20-112"><a href="#cb20-112" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-113"><a href="#cb20-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-114"><a href="#cb20-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-115"><a href="#cb20-115" aria-hidden="true" tabindex="-1"></a><span class="fu"># Analysis with main effect and interaction for dose and weight</span></span>
+<span id="cb20-116"><a href="#cb20-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-117"><a href="#cb20-117" aria-hidden="true" tabindex="-1"></a><span class="fu">## Model specification</span></span>
+<span id="cb20-118"><a href="#cb20-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-119"><a href="#cb20-119" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb20-120"><a href="#cb20-120" aria-hidden="true" tabindex="-1"></a>y_i=\beta_0+\beta_d x_d + \beta_g x_g +\beta_{d:g} x_d x_g+ \epsilon_i,</span>
+<span id="cb20-121"><a href="#cb20-121" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb20-122"><a href="#cb20-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-123"><a href="#cb20-123" aria-hidden="true" tabindex="-1"></a>with $\epsilon_i \text{ i.i.d. } N(0,\sigma^2)$</span>
+<span id="cb20-124"><a href="#cb20-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-125"><a href="#cb20-125" aria-hidden="true" tabindex="-1"></a><span class="fu">## Assumptions</span></span>
+<span id="cb20-126"><a href="#cb20-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-127"><a href="#cb20-127" aria-hidden="true" tabindex="-1"></a>The model will again be fit to allow for assessing the model assumptions</span>
+<span id="cb20-128"><a href="#cb20-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-131"><a href="#cb20-131" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-132"><a href="#cb20-132" aria-hidden="true" tabindex="-1"></a><span class="co"># lm_Int &lt;- lm(log2Surv_time ~ Dose+Weight+Dose:Weight, data = poison) # equivalent</span></span>
+<span id="cb20-133"><a href="#cb20-133" aria-hidden="true" tabindex="-1"></a>lm_Int <span class="ot">&lt;-</span> <span class="fu">lm</span>(log2Surv_time <span class="sc">~</span> Dose <span class="sc">*</span> Weight, <span class="at">data =</span> poison) <span class="co"># * -&gt; short notation</span></span>
+<span id="cb20-134"><a href="#cb20-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-135"><a href="#cb20-135" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb20-136"><a href="#cb20-136" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lm_Int)</span>
+<span id="cb20-137"><a href="#cb20-137" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-138"><a href="#cb20-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-139"><a href="#cb20-139" aria-hidden="true" tabindex="-1"></a>The plots look very similar to those of the additive model from the previous exercise so we know that all assumptions are **met**.</span>
+<span id="cb20-140"><a href="#cb20-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-141"><a href="#cb20-141" aria-hidden="true" tabindex="-1"></a><span class="fu">## Inference</span></span>
+<span id="cb20-142"><a href="#cb20-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-143"><a href="#cb20-143" aria-hidden="true" tabindex="-1"></a>We then inspect the results.</span>
+<span id="cb20-144"><a href="#cb20-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-147"><a href="#cb20-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-148"><a href="#cb20-148" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_Int)</span>
+<span id="cb20-149"><a href="#cb20-149" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-150"><a href="#cb20-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-151"><a href="#cb20-151" aria-hidden="true" tabindex="-1"></a><span class="fu">## Interpretation of model parameters</span></span>
+<span id="cb20-152"><a href="#cb20-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-153"><a href="#cb20-153" aria-hidden="true" tabindex="-1"></a>We may interpret the estimate parameters as follows:</span>
+<span id="cb20-154"><a href="#cb20-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-155"><a href="#cb20-155" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>When we compare the log2 survival of fish with weight $x_g$ that are exposed to a dose that differs with 1 mg/l, the expected log2 survival time will be</span>
+<span id="cb20-156"><a href="#cb20-156" aria-hidden="true" tabindex="-1"></a>$\beta_d+\beta_{d:g}*x_g$ higher for the fish that were exposed to the highest dose.</span>
+<span id="cb20-157"><a href="#cb20-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-158"><a href="#cb20-158" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>When we compare the log2 survival of fish exposed to dose $x_g$, but that have a weight that differs with 1 g, the expected log2 survival time</span>
+<span id="cb20-159"><a href="#cb20-159" aria-hidden="true" tabindex="-1"></a>will be  $\beta_d+\beta_{d:g}*x_g$ higher for fish with the highest weight.</span>
+<span id="cb20-160"><a href="#cb20-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-161"><a href="#cb20-161" aria-hidden="true" tabindex="-1"></a>The parameter $\beta_{d:g}$ thus shows that the effect of dose on the log2 survival time is dependent on the</span>
+<span id="cb20-162"><a href="#cb20-162" aria-hidden="true" tabindex="-1"></a>weight of the fish, and, that the effect</span>
+<span id="cb20-163"><a href="#cb20-163" aria-hidden="true" tabindex="-1"></a>of weight on the log2 survival time dependents on the dose that was</span>
+<span id="cb20-164"><a href="#cb20-164" aria-hidden="true" tabindex="-1"></a>administered.</span>
+<span id="cb20-165"><a href="#cb20-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-166"><a href="#cb20-166" aria-hidden="true" tabindex="-1"></a><span class="fu">## Inference</span></span>
+<span id="cb20-167"><a href="#cb20-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-168"><a href="#cb20-168" aria-hidden="true" tabindex="-1"></a>The effect of dose is now parameterized by two model parameters ($\beta_d$</span>
+<span id="cb20-169"><a href="#cb20-169" aria-hidden="true" tabindex="-1"></a>and $\beta_{d:g}$). We first evaluate an *omnibus* hypotheses that there is</span>
+<span id="cb20-170"><a href="#cb20-170" aria-hidden="true" tabindex="-1"></a>no effect of dose, i.e., no main effect nor an interaction effect. We can test</span>
+<span id="cb20-171"><a href="#cb20-171" aria-hidden="true" tabindex="-1"></a>this with an F-test that compares a *full* model (1) containing a main effect</span>
+<span id="cb20-172"><a href="#cb20-172" aria-hidden="true" tabindex="-1"></a>for dose, a main effect for weight and an interaction between dose and weight</span>
+<span id="cb20-173"><a href="#cb20-173" aria-hidden="true" tabindex="-1"></a>with a model (2) that only contains a main effect for weight (i.e. no effect</span>
+<span id="cb20-174"><a href="#cb20-174" aria-hidden="true" tabindex="-1"></a>for dose).</span>
+<span id="cb20-175"><a href="#cb20-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-178"><a href="#cb20-178" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-179"><a href="#cb20-179" aria-hidden="true" tabindex="-1"></a>lmDojo_weight <span class="ot">&lt;-</span> <span class="fu">lm</span>(log2Surv_time <span class="sc">~</span> Weight, <span class="at">data =</span> poison)</span>
+<span id="cb20-180"><a href="#cb20-180" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lmDojo_weight, lm_Int)</span>
+<span id="cb20-181"><a href="#cb20-181" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-182"><a href="#cb20-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-183"><a href="#cb20-183" aria-hidden="true" tabindex="-1"></a>We observe an extremely significant (overall, or global) effect for dose on</span>
+<span id="cb20-184"><a href="#cb20-184" aria-hidden="true" tabindex="-1"></a>the log2 survival time of dojofish</span>
+<span id="cb20-185"><a href="#cb20-185" aria-hidden="true" tabindex="-1"></a>(p-value &lt;&lt;0.001)`.</span>
+<span id="cb20-186"><a href="#cb20-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-187"><a href="#cb20-187" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conventional approach</span></span>
+<span id="cb20-188"><a href="#cb20-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-189"><a href="#cb20-189" aria-hidden="true" tabindex="-1"></a>We already established that there is a significant overall effect of dose.</span>
+<span id="cb20-190"><a href="#cb20-190" aria-hidden="true" tabindex="-1"></a>Now, we will test if there is a significant interaction effect between dose</span>
+<span id="cb20-191"><a href="#cb20-191" aria-hidden="true" tabindex="-1"></a>and weight. Since we only have one interaction term in this model, this can</span>
+<span id="cb20-192"><a href="#cb20-192" aria-hidden="true" tabindex="-1"></a>be achieved in several ways:</span>
+<span id="cb20-193"><a href="#cb20-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-194"><a href="#cb20-194" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The <span class="in">`summary`</span> function</span>
+<span id="cb20-195"><a href="#cb20-195" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>An F-test comparing models with and without the interaction effect</span>
+<span id="cb20-196"><a href="#cb20-196" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>An ANOVA table with type III sum of squares</span>
+<span id="cb20-197"><a href="#cb20-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-198"><a href="#cb20-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-201"><a href="#cb20-201" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-202"><a href="#cb20-202" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_Int) <span class="co"># 1</span></span>
+<span id="cb20-203"><a href="#cb20-203" aria-hidden="true" tabindex="-1"></a>lm_additive <span class="ot">&lt;-</span> <span class="fu">lm</span>(log2Surv_time <span class="sc">~</span> Dose <span class="sc">+</span> Weight, <span class="at">data =</span> poison) <span class="co"># 2</span></span>
+<span id="cb20-204"><a href="#cb20-204" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_additive, lm_Int) <span class="co"># 2</span></span>
+<span id="cb20-205"><a href="#cb20-205" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(lm_Int, <span class="at">type =</span> <span class="st">"III"</span>) <span class="co"># 3</span></span>
+<span id="cb20-206"><a href="#cb20-206" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-207"><a href="#cb20-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-208"><a href="#cb20-208" aria-hidden="true" tabindex="-1"></a>There is no significant interaction between dose and weight. As such, the</span>
+<span id="cb20-209"><a href="#cb20-209" aria-hidden="true" tabindex="-1"></a>effect of dose on survival is not signifiantly different between fish of</span>
+<span id="cb20-210"><a href="#cb20-210" aria-hidden="true" tabindex="-1"></a>different weight (p = <span class="in">`r format(Anova(lm_Int,type="III")$"Pr(&gt;F)"[4], digits = 2)`</span>).</span>
+<span id="cb20-211"><a href="#cb20-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-212"><a href="#cb20-212" aria-hidden="true" tabindex="-1"></a>The conventional approach is to remove the interaction effect from the</span>
+<span id="cb20-213"><a href="#cb20-213" aria-hidden="true" tabindex="-1"></a>model. As such, we are left with the additive linear regression model.</span>
+<span id="cb20-214"><a href="#cb20-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-217"><a href="#cb20-217" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-218"><a href="#cb20-218" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_additive)</span>
+<span id="cb20-219"><a href="#cb20-219" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-220"><a href="#cb20-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-223"><a href="#cb20-223" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-224"><a href="#cb20-224" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span>(<span class="fu">coef</span>(lm_additive)) <span class="co"># original scale</span></span>
+<span id="cb20-225"><a href="#cb20-225" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span>(<span class="fu">confint</span>(lm_additive))</span>
+<span id="cb20-226"><a href="#cb20-226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-227"><a href="#cb20-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-228"><a href="#cb20-228" aria-hidden="true" tabindex="-1"></a><span class="fu">### Conclusion</span></span>
+<span id="cb20-229"><a href="#cb20-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-230"><a href="#cb20-230" aria-hidden="true" tabindex="-1"></a>The conclusion is exactly the same as for the additive model analysis above</span>
+<span id="cb20-231"><a href="#cb20-231" aria-hidden="true" tabindex="-1"></a>(obviously, as we are dealing with the same model):</span>
+<span id="cb20-232"><a href="#cb20-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-233"><a href="#cb20-233" aria-hidden="true" tabindex="-1"></a>The dose of the poison has an extremely significant effect on the survival time</span>
+<span id="cb20-234"><a href="#cb20-234" aria-hidden="true" tabindex="-1"></a>of dojofish (p-value &lt;&lt; 0.001). The geometric average of the survival time for</span>
+<span id="cb20-235"><a href="#cb20-235" aria-hidden="true" tabindex="-1"></a>dojofish that are exposed to a poison dose that is 1mg/L larger is approximately</span>
+<span id="cb20-236"><a href="#cb20-236" aria-hidden="true" tabindex="-1"></a>halved,</span>
+<span id="cb20-237"><a href="#cb20-237" aria-hidden="true" tabindex="-1"></a>factor = $2^{\beta_d}=$ <span class="in">`r format(2^(lm_additive$coef["Dose"]),digits=2)`</span>) .</span>
+<span id="cb20-238"><a href="#cb20-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-239"><a href="#cb20-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-240"><a href="#cb20-240" aria-hidden="true" tabindex="-1"></a>The effect of dose on survival is not significantly different between fish of</span>
+<span id="cb20-241"><a href="#cb20-241" aria-hidden="true" tabindex="-1"></a>different weight. (p = <span class="in">`r format(summary(lm_Int)$coefficients[4,4], digits=2)`</span>).</span>
+<span id="cb20-242"><a href="#cb20-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-243"><a href="#cb20-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-244"><a href="#cb20-244" aria-hidden="true" tabindex="-1"></a><span class="fu"># Remark</span></span>
+<span id="cb20-245"><a href="#cb20-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-246"><a href="#cb20-246" aria-hidden="true" tabindex="-1"></a>Note, that we have have to test if the interaction is significant before using</span>
+<span id="cb20-247"><a href="#cb20-247" aria-hidden="true" tabindex="-1"></a>the additive model.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
 
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
-</body>
-</html>
+
+</body></html>

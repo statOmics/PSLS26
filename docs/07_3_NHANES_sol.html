@@ -1,66 +1,32 @@
 <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<html>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
 
-<head>
-
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-
-
-<title>Tutorial 7.3: ANOVA in the NHANES dataset</title>
-
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
-<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<style>h1 {font-size: 34px;}
-       h1.title {font-size: 38px;}
-       h2 {font-size: 30px;}
-       h3 {font-size: 24px;}
-       h4 {font-size: 18px;}
-       h5 {font-size: 16px;}
-       h6 {font-size: 12px;}
-       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
-       pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
-<script src="site_libs/navigation-1.1/sourceembed.js"></script>
-<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
-
-
-
-<style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
-</style>
-<style type="text/css" data-origin="pandoc">
+<title>Tutorial 7.3: ANOVA in the NHANES dataset – PSLS26 - Practical Statistics for the Life Sciences</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -71,7 +37,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -85,817 +51,1273 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
-  {  background-color: #f8f8f8; }
+  {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ef2929; } /* Alert */
-code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #204a87; } /* Attribute */
-code span.bn { color: #0000cf; } /* BaseN */
-code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4e9a06; } /* Char */
-code span.cn { color: #8f5902; } /* Constant */
-code span.co { color: #8f5902; font-style: italic; } /* Comment */
-code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code span.dt { color: #204a87; } /* DataType */
-code span.dv { color: #0000cf; } /* DecVal */
-code span.er { color: #a40000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #0000cf; } /* Float */
-code span.fu { color: #204a87; font-weight: bold; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code span.ot { color: #8f5902; } /* Other */
-code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
-code span.ss { color: #4e9a06; } /* SpecialString */
-code span.st { color: #4e9a06; } /* String */
-code span.va { color: #000000; } /* Variable */
-code span.vs { color: #4e9a06; } /* VerbatimString */
-code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-
-.sourceCode .row {
-  width: 100%;
-}
-.sourceCode {
-  overflow-x: auto;
-}
-.code-folding-btn {
-  margin-right: -30px;
-}
 </style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    var j = 0;
-    while (j < rules.length) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
-        j++;
-        continue;
-      }
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') {
-        j++;
-        continue;
-      }
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f79c7fb6db380d32be398468f2fb58cf.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-2c9dadc89b91d1343c807e0fac51702d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
-})();
-</script>
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
-
-<style type="text/css">
-#rmd-source-code {
-  display: none;
-}
-</style>
-
-
-<link rel="stylesheet" href="style.css" type="text/css" />
-
-
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-img {
-  max-width:100%;
-}
-.tabbed-pane {
-  padding-top: 12px;
-}
-.html-widget {
-  margin-bottom: 20px;
-}
-button.code-folding-btn:focus {
-  outline: none;
-}
-summary {
-  display: list-item;
-}
-details > summary > p:only-child {
-  display: inline;
-}
-pre code {
-  padding: 0;
-}
-</style>
-
-
-<style type="text/css">
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  border-radius: 0 6px 6px 6px;
-}
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #cccccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-.dropdown-submenu:hover>a:after {
-  border-left-color: #adb5bd;
-}
-.dropdown-submenu.pull-left {
-  float: none;
-}
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  border-radius: 6px 0 6px 6px;
-}
-</style>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-// manage active state of menu based on current page
-$(document).ready(function () {
-  // active menu anchor
-  href = window.location.pathname
-  href = href.substr(href.lastIndexOf('/') + 1)
-  if (href === "")
-    href = "index.html";
-  var menuAnchor = $('a[href="' + href + '"]');
-
-  // mark the anchor link active (and if it's in a dropdown, also mark that active)
-  var dropdown = menuAnchor.closest('li.dropdown');
-  if (window.bootstrap) { // Bootstrap 4+
-    menuAnchor.addClass('active');
-    dropdown.find('> .dropdown-toggle').addClass('active');
-  } else { // Bootstrap 3
-    menuAnchor.parent().addClass('active');
-    dropdown.addClass('active');
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
   }
-
-  // Navbar adjustments
-  var navHeight = $(".navbar").first().height() + 15;
-  var style = document.createElement('style');
-  var pt = "padding-top: " + navHeight + "px; ";
-  var mt = "margin-top: -" + navHeight + "px; ";
-  var css = "";
-  // offset scroll position for anchor links (for fixed navbar)
-  for (var i = 1; i <= 6; i++) {
-    css += ".section h" + i + "{ " + pt + mt + "}\n";
-  }
-  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
-  document.head.appendChild(style);
-});
+}
+window.Quarto = {
+  typesetMath
+};
 </script>
 
-<!-- tabsets -->
-
-<style type="text/css">
-.tabset-dropdown > .nav-tabs {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "\e259";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "\e258";
-  font-family: 'Glyphicons Halflings';
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs > li.active {
-  display: block;
-}
-
-.tabset-dropdown > .nav-tabs > li > a,
-.tabset-dropdown > .nav-tabs > li > a:focus,
-.tabset-dropdown > .nav-tabs > li > a:hover {
-  border: none;
-  display: inline-block;
-  border-radius: 4px;
-  background-color: transparent;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
-  display: block;
-  float: none;
-}
-
-.tabset-dropdown > .nav-tabs > li {
-  display: none;
-}
-</style>
-
-<!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
-
-
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
-
+<link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="floating nav-fixed quarto-light">
 
-
-<div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
-
-
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html"></a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">PSLS26 - Practical Statistics for the Life Sciences</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-easel" role="img">
+</i> 
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
         <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-  </a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-chalkboard-teacher"></span>
-     
-    Topics
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="01-intro.html">1. Introduction</a>
-    </li>
-    <li>
-      <a href="02-concepts.html">2. Concepts</a>
-    </li>
-    <li>
-      <a href="03-experimentalDesign.html">3. Experimental Design I</a>
-    </li>
-    <li>
-      <a href="04-dataExploration.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference.html">5.1 Statistical Inference 1</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference-twosampleT.html">5.2 Statistical Inference 2</a>
-    </li>
-    <li>
-      <a href="06-linearRegression.html">6. Linear Regression</a>
-    </li>
-    <li>
-      <a href="07-Anova.html">7. Analysis of Variance</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression.html">8. Multiple Regression</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression-SpecificDesigns.html">8.2 Multiple Regression: Factorial Designs</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign2.html">8.3. Experimental Design II</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign3.html">8.4. Experimental Design III</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-WilcoxonMannWithney.html">9.1. Nonparametric Statistics 1</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-KruskalWallis.html">9.2. Nonparametric Statistics 2</a>
-    </li>
-    <li>
-      <a href="10-categoricalDataAnalysis.html">10. Categorical Data Analysis</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-laptop"></span>
-     
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="04_exercises.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05_exercises.html">5. Statistical inference</a>
-    </li>
-    <li>
-      <a href="06_exercises.html">6. Simple linear regression</a>
-    </li>
-    <li>
-      <a href="07_exercises.html">7. ANOVA</a>
-    </li>
-    <li>
-      <a href="08_exercises.html">8. Multiple linear regression</a>
-    </li>
-    <li>
-      <a href="09_exercises.html">9. Non-parametric statistics</a>
-    </li>
-  </ul>
-</li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
+    <a class="dropdown-item" href="./01-intro.html">
+ <span class="dropdown-text">1. Introduction</span></a>
+  </li>  
         <li>
-  <a href="http://statomics.github.io/">statOmics</a>
-</li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container -->
-</div><!--/.navbar -->
-
-<div id="header">
-
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-<li role="separator" class="divider"></li>
-<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+    <a class="dropdown-item" href="./02-concepts.html">
+ <span class="dropdown-text">2. Concepts</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-experimentalDesign.html">
+ <span class="dropdown-text">3. Experimental Design I</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-dataExploration.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference.html">
+ <span class="dropdown-text">5.1 Statistical Inference 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference-twosampleT.html">
+ <span class="dropdown-text">5.2 Statistical Inference 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06-linearRegression.html">
+ <span class="dropdown-text">6. Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07-Anova.html">
+ <span class="dropdown-text">7. Analysis of Variance</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression.html">
+ <span class="dropdown-text">8. Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression-SpecificDesigns.html">
+ <span class="dropdown-text">8.2 Multiple Regression: Factorial Designs</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign2.html">
+ <span class="dropdown-text">8.3. Experimental Design II</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign3.html">
+ <span class="dropdown-text">8.4. Experimental Design III</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-WilcoxonMannWithney.html">
+ <span class="dropdown-text">9.1. Nonparametric Statistics 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-KruskalWallis.html">
+ <span class="dropdown-text">9.2. Nonparametric Statistics 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./10-categoricalDataAnalysis.html">
+ <span class="dropdown-text">10. Categorical Data Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-exercises" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-laptop" role="img">
+</i> 
+ <span class="menu-text">Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-exercises">    
+        <li>
+    <a class="dropdown-item" href="./04_exercises.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05_exercises.html">
+ <span class="dropdown-text">5. Statistical inference</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06_exercises.html">
+ <span class="dropdown-text">6. Simple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07_exercises.html">
+ <span class="dropdown-text">7. ANOVA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08_exercises.html">
+ <span class="dropdown-text">8. Multiple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09_exercises.html">
+ <span class="dropdown-text">9. Non-parametric statistics</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="http://statomics.github.io/"> 
+<span class="menu-text">statOmics</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-nhanes-dataset" id="toc-the-nhanes-dataset" class="nav-link active" data-scroll-target="#the-nhanes-dataset"><span class="header-section-number">1</span> The NHANES dataset</a></li>
+  <li><a href="#goal" id="toc-goal" class="nav-link" data-scroll-target="#goal"><span class="header-section-number">2</span> Goal</a></li>
+  <li><a href="#data-import" id="toc-data-import" class="nav-link" data-scroll-target="#data-import"><span class="header-section-number">3</span> Data import</a></li>
+  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration"><span class="header-section-number">4</span> Data Exploration</a></li>
+  <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova"><span class="header-section-number">5</span> ANOVA</a>
+  <ul class="collapse">
+  <li><a href="#formulate-null-and-alternative-hyoptheses" id="toc-formulate-null-and-alternative-hyoptheses" class="nav-link" data-scroll-target="#formulate-null-and-alternative-hyoptheses"><span class="header-section-number">5.1</span> Formulate null and alternative hyoptheses</a></li>
+  <li><a href="#check-the-assumptions-for-anova" id="toc-check-the-assumptions-for-anova" class="nav-link" data-scroll-target="#check-the-assumptions-for-anova"><span class="header-section-number">5.2</span> Check the assumptions for ANOVA</a>
+  <ul class="collapse">
+  <li><a href="#assumption-of-independence" id="toc-assumption-of-independence" class="nav-link" data-scroll-target="#assumption-of-independence"><span class="header-section-number">5.2.1</span> Assumption of independence</a></li>
+  <li><a href="#assumption-of-normality" id="toc-assumption-of-normality" class="nav-link" data-scroll-target="#assumption-of-normality"><span class="header-section-number">5.2.2</span> Assumption of normality</a></li>
+  </ul></li>
+  <li><a href="#anova-model" id="toc-anova-model" class="nav-link" data-scroll-target="#anova-model"><span class="header-section-number">5.3</span> ANOVA model</a></li>
+  <li><a href="#post-hoc-analysis" id="toc-post-hoc-analysis" class="nav-link" data-scroll-target="#post-hoc-analysis"><span class="header-section-number">5.4</span> Post-hoc analysis</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">5.5</span> Conclusion</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Tutorial 7.3: ANOVA in the NHANES dataset</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
 
-<h1 class="title toc-ignore">Tutorial 7.3: ANOVA in the NHANES dataset</h1>
+<div class="quarto-title-meta">
 
-</div>
+    
+  
+    
+  </div>
+  
 
 
-<div id="the-nhanes-dataset" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> The NHANES dataset</h1>
-<p>The National Health and Nutrition Examination Survey (NHANES) contains data
-that has been collected since 1960. For this tutorial, we will make use of
-the data that were collected between 2009 and 2012, for 10.000 U.S. civilians.
-The dataset contains a large number of physical, demographic, nutritional and
-life-style-related parameters.</p>
-</div>
-<div id="goal" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Goal</h1>
-<p>In the NHANES dataset, one of the columns is named <code>HealthGen</code>.
-HealthGen is a self-reported rating of a participant’s health
-in general terms. HealthGen is reported for participants aged 12
-years or older. It is a factor with the following levels:
-Excellent, Vgood, Good, Fair, or Poor.</p>
-<p>We want to test whether or not the mean systolic blood pressure
-value (take column <code>BPSys1</code>) is equal between the five self-reported
-health categories. To this end, we will use an ANOVA analysis
-(if the required assumptions are met).</p>
+</header>
+
+
+<section id="the-nhanes-dataset" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> The NHANES dataset</h1>
+<p>The National Health and Nutrition Examination Survey (NHANES) contains data that has been collected since 1960. For this tutorial, we will make use of the data that were collected between 2009 and 2012, for 10.000 U.S. civilians. The dataset contains a large number of physical, demographic, nutritional and life-style-related parameters.</p>
+</section>
+<section id="goal" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Goal</h1>
+<p>In the NHANES dataset, one of the columns is named <code>HealthGen</code>. HealthGen is a self-reported rating of a participant’s health in general terms. HealthGen is reported for participants aged 12 years or older. It is a factor with the following levels: Excellent, Vgood, Good, Fair, or Poor.</p>
+<p>We want to test whether or not the mean systolic blood pressure value (take column <code>BPSys1</code>) is equal between the five self-reported health categories. To this end, we will use an ANOVA analysis (if the required assumptions are met).</p>
 <p>Load the required libraries</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div id="data-import" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Data import</h1>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>NHANES <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/statOmics/PSLSData/main/NHANES.csv&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">glimpse</span>(NHANES[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span></code></pre></div>
-<pre><code>## Rows: 10,000
-## Columns: 10
-## $ ID            &lt;dbl&gt; 51624, 51624, 51624, 51625, 51630, 51638, 51646, 51647, …
-## $ SurveyYr      &lt;chr&gt; &quot;2009_10&quot;, &quot;2009_10&quot;, &quot;2009_10&quot;, &quot;2009_10&quot;, &quot;2009_10&quot;, &quot;…
-## $ Gender        &lt;chr&gt; &quot;male&quot;, &quot;male&quot;, &quot;male&quot;, &quot;male&quot;, &quot;female&quot;, &quot;male&quot;, &quot;male&quot;…
-## $ Age           &lt;dbl&gt; 34, 34, 34, 4, 49, 9, 8, 45, 45, 45, 66, 58, 54, 10, 58,…
-## $ AgeDecade     &lt;chr&gt; &quot;30-39&quot;, &quot;30-39&quot;, &quot;30-39&quot;, &quot;0-9&quot;, &quot;40-49&quot;, &quot;0-9&quot;, &quot;0-9&quot;,…
-## $ AgeMonths     &lt;dbl&gt; 409, 409, 409, 49, 596, 115, 101, 541, 541, 541, 795, 70…
-## $ Race1         &lt;chr&gt; &quot;White&quot;, &quot;White&quot;, &quot;White&quot;, &quot;Other&quot;, &quot;White&quot;, &quot;White&quot;, &quot;W…
-## $ Race3         &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-## $ Education     &lt;chr&gt; &quot;High School&quot;, &quot;High School&quot;, &quot;High School&quot;, NA, &quot;Some C…
-## $ MaritalStatus &lt;chr&gt; &quot;Married&quot;, &quot;Married&quot;, &quot;Married&quot;, NA, &quot;LivePartner&quot;, NA, …</code></pre>
+</section>
+<section id="data-import" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Data import</h1>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>NHANES <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/statOmics/PSLSData/main/NHANES.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(NHANES[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 10,000
+Columns: 10
+$ ID            &lt;dbl&gt; 51624, 51624, 51624, 51625, 51630, 51638, 51646, 51647, …
+$ SurveyYr      &lt;chr&gt; "2009_10", "2009_10", "2009_10", "2009_10", "2009_10", "…
+$ Gender        &lt;chr&gt; "male", "male", "male", "male", "female", "male", "male"…
+$ Age           &lt;dbl&gt; 34, 34, 34, 4, 49, 9, 8, 45, 45, 45, 66, 58, 54, 10, 58,…
+$ AgeDecade     &lt;chr&gt; "30-39", "30-39", "30-39", "0-9", "40-49", "0-9", "0-9",…
+$ AgeMonths     &lt;dbl&gt; 409, 409, 409, 49, 596, 115, 101, 541, 541, 541, 795, 70…
+$ Race1         &lt;chr&gt; "White", "White", "White", "Other", "White", "White", "W…
+$ Race3         &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ Education     &lt;chr&gt; "High School", "High School", "High School", NA, "Some C…
+$ MaritalStatus &lt;chr&gt; "Married", "Married", "Married", NA, "LivePartner", NA, …</code></pre>
 </div>
-<div id="data-exploration" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Data Exploration</h1>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>NHANES <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> HealthGen, <span class="at">y =</span> BPSys1, <span class="at">fill =</span> HealthGen)) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;RdGy&quot;</span>) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="co"># geom_jitter(width = 0.2,size=0.01) + ## omitted as it makes the plot messy</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Boxplot of the systolic bloodpressure for each health category&quot;</span>) <span class="sc">+</span></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Systolic blood pressure (mmHg)&quot;</span>) <span class="sc">+</span></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="fu">stat_summary</span>(</span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">&quot;point&quot;</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  <span class="at">shape =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>,</span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>)</span></code></pre></div>
-<pre><code>## Warning: Removed 1763 rows containing non-finite outside the scale range
-## (`stat_boxplot()`).</code></pre>
-<pre><code>## Warning: Removed 1763 rows containing non-finite outside the scale range
-## (`stat_summary()`).</code></pre>
-<p><img src="07_3_NHANES_sol_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<p>This plot is not ideal; it would be far more intuitive if
-the health categories were ordered properly (i.e., Poor –&gt; excellent).
-In addition, we observe a sixth “category” of NA values.</p>
+</div>
+</section>
+<section id="data-exploration" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Data Exploration</h1>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>NHANES <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> HealthGen, <span class="at">y =</span> BPSys1, <span class="at">fill =</span> HealthGen)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"RdGy"</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_jitter(width = 0.2,size=0.01) + ## omitted as it makes the plot messy</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Boxplot of the systolic bloodpressure for each health category"</span>) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Systolic blood pressure (mmHg)"</span>) <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">stat_summary</span>(</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">shape =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1763 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1763 rows containing non-finite outside the scale range
+(`stat_summary()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_3_NHANES_sol_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This plot is not ideal; it would be far more intuitive if the health categories were ordered properly (i.e., Poor –&gt; excellent). In addition, we observe a sixth “category” of NA values.</p>
 <p>To get a more informative and intuitive visualization, you can:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Filter out subjects with NA values for <code>HealthGen</code> or <code>BPSys1</code></li>
 <li>Set <code>HealthGen</code> to a factor and relevel it to Poor –&gt; Excellent</li>
 </ol>
-<p><strong>Hint:</strong> The second task can be achieved by using the <code>mutate</code>,
-<code>as.factor</code> and <code>fct_relevel</code> functions.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>NHANES <span class="ot">&lt;-</span> NHANES <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(HealthGen), <span class="sc">!</span><span class="fu">is.na</span>(BPSys1)) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HealthGen =</span> <span class="fu">as.factor</span>(HealthGen)) <span class="sc">%&gt;%</span></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HealthGen =</span> <span class="fu">fct_relevel</span>(HealthGen, <span class="fu">c</span>(<span class="st">&quot;Poor&quot;</span>, <span class="st">&quot;Fair&quot;</span>, <span class="st">&quot;Good&quot;</span>, <span class="st">&quot;Vgood&quot;</span>, <span class="st">&quot;Excellent&quot;</span>)))</span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>NHANES <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> HealthGen, <span class="at">y =</span> BPSys1, <span class="at">fill =</span> HealthGen)) <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;RdGy&quot;</span>) <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Boxplot of the systolic bloodpressure for each health category&quot;</span>) <span class="sc">+</span></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Systolic blood pressure (mmHg)&quot;</span>) <span class="sc">+</span></span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="fu">stat_summary</span>(</span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">&quot;point&quot;</span>,</span>
-<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="at">shape =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>,</span>
-<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="07_3_NHANES_sol_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><strong>Hint:</strong> The second task can be achieved by using the <code>mutate</code>, <code>as.factor</code> and <code>fct_relevel</code> functions.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>NHANES <span class="ot">&lt;-</span> NHANES <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(HealthGen), <span class="sc">!</span><span class="fu">is.na</span>(BPSys1)) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HealthGen =</span> <span class="fu">as.factor</span>(HealthGen)) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HealthGen =</span> <span class="fu">fct_relevel</span>(HealthGen, <span class="fu">c</span>(<span class="st">"Poor"</span>, <span class="st">"Fair"</span>, <span class="st">"Good"</span>, <span class="st">"Vgood"</span>, <span class="st">"Excellent"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div id="anova" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> ANOVA</h1>
-<p>To study if the observed difference between the
-average systolic blood pressure values of the different health groups
-are significant, we may perform an ANOVA.</p>
-<div id="formulate-null-and-alternative-hyoptheses" class="section level2" number="5.1">
-<h2><span class="header-section-number">5.1</span> Formulate null and alternative hyoptheses</h2>
-<p>The null hypothesis of ANOVA states that:
-<span class="math inline">\(H0\)</span>: The mean systolic blood pressure is equal between the different health groups.</p>
-<p>The alternative hypothesis of ANOVA states that:
-<span class="math inline">\(HA\)</span>: The mean systolic blood pressure for at least one health group is different
-from the mean systolic blood pressure in at least one other health group.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>NHANES <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> HealthGen, <span class="at">y =</span> BPSys1, <span class="at">fill =</span> HealthGen)) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"RdGy"</span>) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Boxplot of the systolic bloodpressure for each health category"</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Systolic blood pressure (mmHg)"</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">stat_summary</span>(</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">shape =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_3_NHANES_sol_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<div id="check-the-assumptions-for-anova" class="section level2" number="5.2">
-<h2><span class="header-section-number">5.2</span> Check the assumptions for ANOVA</h2>
-<p>Before we may proceed with the analysis, we must make sure that all
-assumptions for ANOVA are met. ANOVA has three assumptions:</p>
-<ol style="list-style-type: decimal">
+</div>
+</div>
+</section>
+<section id="anova" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> ANOVA</h1>
+<p>To study if the observed difference between the average systolic blood pressure values of the different health groups are significant, we may perform an ANOVA.</p>
+<section id="formulate-null-and-alternative-hyoptheses" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="formulate-null-and-alternative-hyoptheses"><span class="header-section-number">5.1</span> Formulate null and alternative hyoptheses</h2>
+<p>The null hypothesis of ANOVA states that: <span class="math inline">\(H0\)</span>: The mean systolic blood pressure is equal between the different health groups.</p>
+<p>The alternative hypothesis of ANOVA states that: <span class="math inline">\(HA\)</span>: The mean systolic blood pressure for at least one health group is different from the mean systolic blood pressure in at least one other health group.</p>
+</section>
+<section id="check-the-assumptions-for-anova" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="check-the-assumptions-for-anova"><span class="header-section-number">5.2</span> Check the assumptions for ANOVA</h2>
+<p>Before we may proceed with the analysis, we must make sure that all assumptions for ANOVA are met. ANOVA has three assumptions:</p>
+<ol type="1">
 <li>The observations are independent of each other (in all groups)</li>
 <li>The data (BPSys1) must be normally distributed (in all groups)</li>
 <li>The variability within all groups is similar</li>
 </ol>
-<div id="assumption-of-independence" class="section level3" number="5.2.1">
-<h3><span class="header-section-number">5.2.1</span> Assumption of independence</h3>
+<section id="assumption-of-independence" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="assumption-of-independence"><span class="header-section-number">5.2.1</span> Assumption of independence</h3>
 <p>The first assumption is met; there shoud be no specific pattterns of dependence.</p>
-</div>
-<div id="assumption-of-normality" class="section level3" number="5.2.2">
-<h3><span class="header-section-number">5.2.2</span> Assumption of normality</h3>
+</section>
+<section id="assumption-of-normality" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="assumption-of-normality"><span class="header-section-number">5.2.2</span> Assumption of normality</h3>
 <p>For the second assumption, we must check normality in each group.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>NHANES <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> BPSys1)) <span class="sc">+</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>HealthGen)</span></code></pre></div>
-<p><img src="07_3_NHANES_sol_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>The data does not appear to be normally distributed for
-each group. It seems to have a heavy right tail. We can
-perform a log transformation on the data.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>NHANES <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">BPSys1_log =</span> <span class="fu">log</span>(BPSys1)) <span class="sc">%&gt;%</span></span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> BPSys1_log)) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>HealthGen)</span></code></pre></div>
-<p><img src="07_3_NHANES_sol_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>While the log transformation improved the distributions somewhat,
-the data still does not appear to be normally distributed for
-each group. However, we do have a very large number of
-observations per group:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="do">## Count the number of observations per treatment</span></span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>NHANES <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="fu">count</span>(HealthGen)</span></code></pre></div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>NHANES <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> BPSys1)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>HealthGen)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_3_NHANES_sol_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The data does not appear to be normally distributed for each group. It seems to have a heavy right tail. We can perform a log transformation on the data.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>NHANES <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">BPSys1_log =</span> <span class="fu">log</span>(BPSys1)) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> BPSys1_log)) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>HealthGen)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_3_NHANES_sol_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>While the log transformation improved the distributions somewhat, the data still does not appear to be normally distributed for each group. However, we do have a very large number of observations per group:</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Count the number of observations per treatment</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>NHANES <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(HealthGen)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["HealthGen"],"name":[1],"type":["fct"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Poor","2":"184"},{"1":"Fair","2":"934"},{"1":"Good","2":"2803"},{"1":"Vgood","2":"2367"},{"1":"Excellent","2":"848"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>As such, we may rely on the cental limit theorem.
-Remember, the cental limit theorem that when the number
-of observations is sufficiently large (i.e. &gt;100), we
-will assume that the distribution of the sample mean will
-approximate a normal distribution, even if the underlying
-data is not normally distributed.</p>
 </div>
 </div>
-<div id="anova-model" class="section level2" number="5.3">
-<h2><span class="header-section-number">5.3</span> ANOVA model</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(BPSys1) <span class="sc">~</span> HealthGen, NHANES)</span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>fit_anova <span class="ot">&lt;-</span> <span class="fu">anova</span>(fit)</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>fit_anova</span></code></pre></div>
+<p>As such, we may rely on the cental limit theorem. Remember, the cental limit theorem that when the number of observations is sufficiently large (i.e.&nbsp;&gt;100), we will assume that the distribution of the sample mean will approximate a normal distribution, even if the underlying data is not normally distributed.</p>
+</section>
+</section>
+<section id="anova-model" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="anova-model"><span class="header-section-number">5.3</span> ANOVA model</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(BPSys1) <span class="sc">~</span> HealthGen, NHANES)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>fit_anova <span class="ot">&lt;-</span> <span class="fu">anova</span>(fit)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>fit_anova</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["Sum Sq"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Mean Sq"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["F value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"4","2":"1.908401","3":"0.47710019","4":"25.78773","5":"2.993562e-21","_rn_":"HealthGen"},{"1":"7131","2":"131.931042","3":"0.01850106","4":"NA","5":"NA","_rn_":"Residuals"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;Not-rounded p-value:&quot;</span>, fit_anova<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">1</span>]))</span></code></pre></div>
-<pre><code>## [1] &quot;Not-rounded p-value: 2.99356182478527e-21&quot;</code></pre>
-<p>The p-value of the ANOVA analysis is extremely significant
-(p-value = 2.994e-21),
-so we reject the null hypothesis that the mean
-systolic blood pressure is equal for the different health groups.
-We can say that the mean systolic blood pressure is significantly different
-between at least two health groups on the 5% significance level.</p>
-<p>Based on this analysis, we do not yet know between which particular
-bird types there is a significant difference. To study this, we will
-perfrom the Tuckey post-hoc analysis.</p>
 </div>
-<div id="post-hoc-analysis" class="section level2" number="5.4">
-<h2><span class="header-section-number">5.4</span> Post-hoc analysis</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">library</span>(multcomp, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>mcp <span class="ot">&lt;-</span> <span class="fu">glht</span>(fit, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">HealthGen =</span> <span class="st">&quot;Tukey&quot;</span>))</span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="fu">summary</span>(mcp)</span></code></pre></div>
-<pre><code>## 
-##   Simultaneous Tests for General Linear Hypotheses
-## 
-## Multiple Comparisons of Means: Tukey Contrasts
-## 
-## 
-## Fit: lm(formula = log(BPSys1) ~ HealthGen, data = NHANES)
-## 
-## Linear Hypotheses:
-##                         Estimate Std. Error t value Pr(&gt;|t|)    
-## Fair - Poor == 0       -0.015828   0.010971  -1.443  0.57592    
-## Good - Poor == 0       -0.036762   0.010351  -3.551  0.00311 ** 
-## Vgood - Poor == 0      -0.059415   0.010410  -5.708  &lt; 0.001 ***
-## Excellent - Poor == 0  -0.055476   0.011062  -5.015  &lt; 0.001 ***
-## Good - Fair == 0       -0.020934   0.005139  -4.074  &lt; 0.001 ***
-## Vgood - Fair == 0      -0.043587   0.005256  -8.293  &lt; 0.001 ***
-## Excellent - Fair == 0  -0.039648   0.006452  -6.145  &lt; 0.001 ***
-## Vgood - Good == 0      -0.022653   0.003797  -5.966  &lt; 0.001 ***
-## Excellent - Good == 0  -0.018714   0.005331  -3.511  0.00355 ** 
-## Excellent - Vgood == 0  0.003938   0.005444   0.723  0.94608    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## (Adjusted p values reported -- single-step method)</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">confint</span>(mcp)</span></code></pre></div>
-<pre><code>## 
-##   Simultaneous Confidence Intervals
-## 
-## Multiple Comparisons of Means: Tukey Contrasts
-## 
-## 
-## Fit: lm(formula = log(BPSys1) ~ HealthGen, data = NHANES)
-## 
-## Quantile = 2.6835
-## 95% family-wise confidence level
-##  
-## 
-## Linear Hypotheses:
-##                        Estimate  lwr       upr      
-## Fair - Poor == 0       -0.015828 -0.045268  0.013612
-## Good - Poor == 0       -0.036762 -0.064539 -0.008984
-## Vgood - Poor == 0      -0.059415 -0.087349 -0.031480
-## Excellent - Poor == 0  -0.055476 -0.085161 -0.025792
-## Good - Fair == 0       -0.020934 -0.034724 -0.007144
-## Vgood - Fair == 0      -0.043587 -0.057691 -0.029483
-## Excellent - Fair == 0  -0.039648 -0.056962 -0.022335
-## Vgood - Good == 0      -0.022653 -0.032842 -0.012464
-## Excellent - Good == 0  -0.018714 -0.033020 -0.004409
-## Excellent - Vgood == 0  0.003938 -0.010670  0.018546</code></pre>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Not-rounded p-value:"</span>, fit_anova<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">1</span>]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Not-rounded p-value: 2.99356182479473e-21"</code></pre>
 </div>
-<div id="conclusion" class="section level2" number="5.5">
-<h2><span class="header-section-number">5.5</span> Conclusion</h2>
-<p>We have found an extremely significant dependence (p-value = 2.994e-21),
-between the mean systolic blood pressure and the health group
-on the global 5% significance level.</p>
-<p>The mean logarithm of systolic blood pressure in the self-reported health
-category <code>Poor</code> is significantly higher as compared three other groups:</p>
+</div>
+<p>The p-value of the ANOVA analysis is extremely significant (p-value = 2.994e-21), so we reject the null hypothesis that the mean systolic blood pressure is equal for the different health groups. We can say that the mean systolic blood pressure is significantly different between at least two health groups on the 5% significance level.</p>
+<p>Based on this analysis, we do not yet know between which particular bird types there is a significant difference. To study this, we will perfrom the Tuckey post-hoc analysis.</p>
+</section>
+<section id="post-hoc-analysis" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="post-hoc-analysis"><span class="header-section-number">5.4</span> Post-hoc analysis</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>mcp <span class="ot">&lt;-</span> <span class="fu">glht</span>(fit, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">HealthGen =</span> <span class="st">"Tukey"</span>))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mcp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lm(formula = log(BPSys1) ~ HealthGen, data = NHANES)
+
+Linear Hypotheses:
+                        Estimate Std. Error t value Pr(&gt;|t|)    
+Fair - Poor == 0       -0.015828   0.010971  -1.443  0.57592    
+Good - Poor == 0       -0.036762   0.010351  -3.551  0.00299 ** 
+Vgood - Poor == 0      -0.059415   0.010410  -5.708  &lt; 0.001 ***
+Excellent - Poor == 0  -0.055476   0.011062  -5.015  &lt; 0.001 ***
+Good - Fair == 0       -0.020934   0.005139  -4.074  &lt; 0.001 ***
+Vgood - Fair == 0      -0.043587   0.005256  -8.293  &lt; 0.001 ***
+Excellent - Fair == 0  -0.039648   0.006452  -6.145  &lt; 0.001 ***
+Vgood - Good == 0      -0.022653   0.003797  -5.966  &lt; 0.001 ***
+Excellent - Good == 0  -0.018714   0.005331  -3.511  0.00346 ** 
+Excellent - Vgood == 0  0.003938   0.005444   0.723  0.94608    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+(Adjusted p values reported -- single-step method)</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(mcp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Simultaneous Confidence Intervals
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lm(formula = log(BPSys1) ~ HealthGen, data = NHANES)
+
+Quantile = 2.6841
+95% family-wise confidence level
+ 
+
+Linear Hypotheses:
+                       Estimate  lwr       upr      
+Fair - Poor == 0       -0.015828 -0.045274  0.013618
+Good - Poor == 0       -0.036762 -0.064545 -0.008978
+Vgood - Poor == 0      -0.059415 -0.087356 -0.031474
+Excellent - Poor == 0  -0.055476 -0.085167 -0.025785
+Good - Fair == 0       -0.020934 -0.034727 -0.007140
+Vgood - Fair == 0      -0.043587 -0.057694 -0.029479
+Excellent - Fair == 0  -0.039648 -0.056965 -0.022331
+Vgood - Good == 0      -0.022653 -0.032844 -0.012462
+Excellent - Good == 0  -0.018714 -0.033023 -0.004406
+Excellent - Vgood == 0  0.003938 -0.010673  0.018550</code></pre>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">5.5</span> Conclusion</h2>
+<p>We have found an extremely significant dependence (p-value = 2.994e-21), between the mean systolic blood pressure and the health group on the global 5% significance level.</p>
+<p>The mean logarithm of systolic blood pressure in the self-reported health category <code>Poor</code> is significantly higher as compared three other groups:</p>
 <ul>
 <li>the <code>Good</code> group (adjusted p-value = &lt; 0.001, mean difference = -0.036762 mmHg, 95% CI [-0.034725; -0.007142])</li>
 <li>the <code>Vgood</code> group (adjusted p-value = &lt; 0.001, mean difference = -0.059415 mmHg, 95% CI [-0.087352; -0.031477])</li>
 <li>the <code>Excellent</code> group (adjusted p-value = &lt; 0.001, mean difference = -0.059415 mmHg, 95% CI [-0.085164; -0.025789])</li>
 </ul>
-<p>The mean logarithm of systolic blood pressure in the self-reported health
-category <code>Fair</code> is significantly higher as compared three other groups:</p>
+<p>The mean logarithm of systolic blood pressure in the self-reported health category <code>Fair</code> is significantly higher as compared three other groups:</p>
 <ul>
 <li>the <code>Good</code> group (adjusted p-value = 0.00317, mean difference = -0.020934 mmHg, 95% CI [-0.064542; -0.008982])</li>
 <li>the <code>Vgood</code> group (adjusted p-value = &lt; 0.001, mean difference = -0.043587 mmHg, 95% CI [-0.057692; -0.029481])</li>
 <li>the <code>Excellent</code> group (adjusted p-value = &lt; 0.001, mean difference = -0.039648 mmHg, 95% CI [-0.056963; -0.022333])</li>
 </ul>
-<p>The mean logarithm of systolic blood pressure in the self-reported health
-category <code>Good</code> is significantly higher as compared two other groups:</p>
+<p>The mean logarithm of systolic blood pressure in the self-reported health category <code>Good</code> is significantly higher as compared two other groups:</p>
 <ul>
 <li>the <code>Vgood</code> group (adjusted p-value = &lt; 0.001, mean difference = -0.022653 mmHg, 95% CI [-0.032843; -0.012463])</li>
 <li>the <code>Excellent</code> group (adjusted p-value = 0.00362, mean difference = -0.018714 mmHg, 95% CI [-0.033021; -0.004408])</li>
 </ul>
-<p>We do not find enough evidence to claim a difference in systolic
-blood pressure levels between the other groups.</p>
-<p>Note that in order to interpret the outcomes on the original scale,
-we should backtransform the outcomes with the <code>exp()</code> functions
-(interpretation on the geometric mean).</p>
-</div>
-</div>
-
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiVHV0b3JpYWwgNy4zOiBBTk9WQSBpbiB0aGUgTkhBTkVTIGRhdGFzZXQiCgotLS0KCiMgVGhlIE5IQU5FUyBkYXRhc2V0CgpUaGUgTmF0aW9uYWwgSGVhbHRoIGFuZCBOdXRyaXRpb24gRXhhbWluYXRpb24gU3VydmV5IChOSEFORVMpIGNvbnRhaW5zIGRhdGEKdGhhdCBoYXMgYmVlbiBjb2xsZWN0ZWQgc2luY2UgMTk2MC4gRm9yIHRoaXMgdHV0b3JpYWwsIHdlIHdpbGwgbWFrZSB1c2Ugb2YKdGhlIGRhdGEgdGhhdCB3ZXJlIGNvbGxlY3RlZCBiZXR3ZWVuIDIwMDkgYW5kIDIwMTIsIGZvciAxMC4wMDAgVS5TLiBjaXZpbGlhbnMuClRoZSBkYXRhc2V0IGNvbnRhaW5zIGEgbGFyZ2UgbnVtYmVyIG9mIHBoeXNpY2FsLCBkZW1vZ3JhcGhpYywgbnV0cml0aW9uYWwgYW5kCmxpZmUtc3R5bGUtcmVsYXRlZCBwYXJhbWV0ZXJzLgoKIyBHb2FsCgpJbiB0aGUgTkhBTkVTIGRhdGFzZXQsIG9uZSBvZiB0aGUgY29sdW1ucyBpcyBuYW1lZCBgSGVhbHRoR2VuYC4KSGVhbHRoR2VuIGlzIGEgc2VsZi1yZXBvcnRlZCByYXRpbmcgb2YgYSBwYXJ0aWNpcGFudOKAmXMgaGVhbHRoCmluIGdlbmVyYWwgdGVybXMuIEhlYWx0aEdlbiBpcyByZXBvcnRlZCBmb3IgcGFydGljaXBhbnRzIGFnZWQgMTIKeWVhcnMgb3Igb2xkZXIuIEl0IGlzIGEgZmFjdG9yIHdpdGggdGhlIGZvbGxvd2luZyBsZXZlbHM6CkV4Y2VsbGVudCwgVmdvb2QsIEdvb2QsIEZhaXIsIG9yIFBvb3IuCgpXZSB3YW50IHRvIHRlc3Qgd2hldGhlciBvciBub3QgdGhlIG1lYW4gc3lzdG9saWMgYmxvb2QgcHJlc3N1cmUKdmFsdWUgKHRha2UgY29sdW1uIGBCUFN5czFgKSBpcyBlcXVhbCBiZXR3ZWVuIHRoZSBmaXZlIHNlbGYtcmVwb3J0ZWQKaGVhbHRoIGNhdGVnb3JpZXMuIFRvIHRoaXMgZW5kLCB3ZSB3aWxsIHVzZSBhbiBBTk9WQSBhbmFseXNpcwooaWYgdGhlIHJlcXVpcmVkIGFzc3VtcHRpb25zIGFyZSBtZXQpLgoKTG9hZCB0aGUgcmVxdWlyZWQgbGlicmFyaWVzCgpgYGB7ciwgbWVzc2FnZSA9IEZBTFNFfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKYGBgCgojIERhdGEgaW1wb3J0CgpgYGB7ciwgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0KTkhBTkVTIDwtIHJlYWRfY3N2KCJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vc3RhdE9taWNzL1BTTFNEYXRhL21haW4vTkhBTkVTLmNzdiIpCmdsaW1wc2UoTkhBTkVTWzE6MTBdKQpgYGAKCiMgRGF0YSBFeHBsb3JhdGlvbgoKYGBge3J9Ck5IQU5FUyAlPiUKICBnZ3Bsb3QoYWVzKHggPSBIZWFsdGhHZW4sIHkgPSBCUFN5czEsIGZpbGwgPSBIZWFsdGhHZW4pKSArCiAgc2NhbGVfZmlsbF9icmV3ZXIocGFsZXR0ZSA9ICJSZEd5IikgKwogIHRoZW1lX2J3KCkgKwogIGdlb21fYm94cGxvdChvdXRsaWVyLnNoYXBlID0gTkEpICsKICAjIGdlb21faml0dGVyKHdpZHRoID0gMC4yLHNpemU9MC4wMSkgKyAjIyBvbWl0dGVkIGFzIGl0IG1ha2VzIHRoZSBwbG90IG1lc3N5CiAgZ2d0aXRsZSgiQm94cGxvdCBvZiB0aGUgc3lzdG9saWMgYmxvb2RwcmVzc3VyZSBmb3IgZWFjaCBoZWFsdGggY2F0ZWdvcnkiKSArCiAgeWxhYigiU3lzdG9saWMgYmxvb2QgcHJlc3N1cmUgKG1tSGcpIikgKwpzdGF0X3N1bW1hcnkoCiAgZnVuID0gbWVhbiwgZ2VvbSA9ICJwb2ludCIsCiAgc2hhcGUgPSA1LCBzaXplID0gMywgY29sb3IgPSAiYmxhY2siLAopCmBgYAoKVGhpcyBwbG90IGlzIG5vdCBpZGVhbDsgaXQgd291bGQgYmUgZmFyIG1vcmUgaW50dWl0aXZlIGlmCnRoZSBoZWFsdGggY2F0ZWdvcmllcyB3ZXJlIG9yZGVyZWQgcHJvcGVybHkgKGkuZS4sIFBvb3IgLS0+IGV4Y2VsbGVudCkuCkluIGFkZGl0aW9uLCB3ZSBvYnNlcnZlIGEgc2l4dGggImNhdGVnb3J5IiBvZiBOQSB2YWx1ZXMuCgpUbyBnZXQgYSBtb3JlIGluZm9ybWF0aXZlIGFuZCBpbnR1aXRpdmUgdmlzdWFsaXphdGlvbiwgeW91IGNhbjoKCjEuIEZpbHRlciBvdXQgc3ViamVjdHMgd2l0aCBOQSB2YWx1ZXMgZm9yIGBIZWFsdGhHZW5gIG9yIGBCUFN5czFgCjIuIFNldCBgSGVhbHRoR2VuYCB0byBhIGZhY3RvciBhbmQgcmVsZXZlbCBpdCB0byBQb29yIC0tPiBFeGNlbGxlbnQKCioqSGludDoqKiBUaGUgc2Vjb25kIHRhc2sgY2FuIGJlIGFjaGlldmVkIGJ5IHVzaW5nIHRoZSBgbXV0YXRlYCwKYGFzLmZhY3RvcmAgYW5kIGBmY3RfcmVsZXZlbGAgZnVuY3Rpb25zLgoKYGBge3J9Ck5IQU5FUyA8LSBOSEFORVMgJT4lCiAgZmlsdGVyKCFpcy5uYShIZWFsdGhHZW4pLCAhaXMubmEoQlBTeXMxKSkgJT4lCiAgbXV0YXRlKEhlYWx0aEdlbiA9IGFzLmZhY3RvcihIZWFsdGhHZW4pKSAlPiUKICBtdXRhdGUoSGVhbHRoR2VuID0gZmN0X3JlbGV2ZWwoSGVhbHRoR2VuLCBjKCJQb29yIiwgIkZhaXIiLCAiR29vZCIsICJWZ29vZCIsICJFeGNlbGxlbnQiKSkpCmBgYAoKYGBge3J9Ck5IQU5FUyAlPiUKICBnZ3Bsb3QoYWVzKHggPSBIZWFsdGhHZW4sIHkgPSBCUFN5czEsIGZpbGwgPSBIZWFsdGhHZW4pKSArCiAgc2NhbGVfZmlsbF9icmV3ZXIocGFsZXR0ZSA9ICJSZEd5IikgKwogIHRoZW1lX2J3KCkgKwogIGdlb21fYm94cGxvdChvdXRsaWVyLnNoYXBlID0gTkEpICsKICBnZ3RpdGxlKCJCb3hwbG90IG9mIHRoZSBzeXN0b2xpYyBibG9vZHByZXNzdXJlIGZvciBlYWNoIGhlYWx0aCBjYXRlZ29yeSIpICsKICB5bGFiKCJTeXN0b2xpYyBibG9vZCBwcmVzc3VyZSAobW1IZykiKSArCnN0YXRfc3VtbWFyeSgKICBmdW4gPSBtZWFuLCBnZW9tID0gInBvaW50IiwKICBzaGFwZSA9IDUsIHNpemUgPSAzLCBjb2xvciA9ICJibGFjayIsCikKYGBgCgojIEFOT1ZBCgpUbyBzdHVkeSBpZiB0aGUgb2JzZXJ2ZWQgZGlmZmVyZW5jZSBiZXR3ZWVuIHRoZQphdmVyYWdlIHN5c3RvbGljIGJsb29kIHByZXNzdXJlIHZhbHVlcyBvZiB0aGUgZGlmZmVyZW50IGhlYWx0aCBncm91cHMKYXJlIHNpZ25pZmljYW50LCB3ZSBtYXkgcGVyZm9ybSBhbiBBTk9WQS4KCiMjIEZvcm11bGF0ZSBudWxsIGFuZCBhbHRlcm5hdGl2ZSBoeW9wdGhlc2VzCgpUaGUgbnVsbCBoeXBvdGhlc2lzIG9mIEFOT1ZBIHN0YXRlcyB0aGF0OgokSDAkOiBUaGUgbWVhbiBzeXN0b2xpYyBibG9vZCBwcmVzc3VyZSBpcyBlcXVhbCBiZXR3ZWVuIHRoZSBkaWZmZXJlbnQgaGVhbHRoIGdyb3Vwcy4KClRoZSBhbHRlcm5hdGl2ZSBoeXBvdGhlc2lzIG9mIEFOT1ZBIHN0YXRlcyB0aGF0OgokSEEkOiBUaGUgbWVhbiBzeXN0b2xpYyBibG9vZCBwcmVzc3VyZSBmb3IgYXQgbGVhc3Qgb25lIGhlYWx0aCBncm91cCBpcyBkaWZmZXJlbnQKZnJvbSB0aGUgbWVhbiBzeXN0b2xpYyBibG9vZCBwcmVzc3VyZSBpbiBhdCBsZWFzdCBvbmUgb3RoZXIgaGVhbHRoIGdyb3VwLgoKIyMgQ2hlY2sgdGhlIGFzc3VtcHRpb25zIGZvciBBTk9WQQoKQmVmb3JlIHdlIG1heSBwcm9jZWVkIHdpdGggdGhlIGFuYWx5c2lzLCB3ZSBtdXN0IG1ha2Ugc3VyZSB0aGF0IGFsbAphc3N1bXB0aW9ucyBmb3IgQU5PVkEgYXJlIG1ldC4gQU5PVkEgaGFzIHRocmVlIGFzc3VtcHRpb25zOgoKMS4gVGhlIG9ic2VydmF0aW9ucyBhcmUgaW5kZXBlbmRlbnQgb2YgZWFjaCBvdGhlciAoaW4gYWxsIGdyb3VwcykKMi4gVGhlIGRhdGEgKEJQU3lzMSkgbXVzdCBiZSBub3JtYWxseSBkaXN0cmlidXRlZCAoaW4gYWxsIGdyb3VwcykKMy4gVGhlIHZhcmlhYmlsaXR5IHdpdGhpbiBhbGwgZ3JvdXBzIGlzIHNpbWlsYXIKCiMjIyBBc3N1bXB0aW9uIG9mIGluZGVwZW5kZW5jZQoKVGhlIGZpcnN0IGFzc3VtcHRpb24gaXMgbWV0OyB0aGVyZSBzaG91ZCBiZSBubyBzcGVjaWZpYyBwYXR0dGVybnMgb2YgZGVwZW5kZW5jZS4KCiMjIyBBc3N1bXB0aW9uIG9mIG5vcm1hbGl0eQoKRm9yIHRoZSBzZWNvbmQgYXNzdW1wdGlvbiwgd2UgbXVzdCBjaGVjayBub3JtYWxpdHkgaW4gZWFjaCBncm91cC4KCmBgYHtyfQpOSEFORVMgJT4lCiAgZ2dwbG90KGFlcyhzYW1wbGUgPSBCUFN5czEpKSArCiAgZ2VvbV9xcSgpICsKICBnZW9tX3FxX2xpbmUoKSArCiAgZmFjZXRfZ3JpZCh+SGVhbHRoR2VuKQpgYGAKClRoZSBkYXRhIGRvZXMgbm90IGFwcGVhciB0byBiZSBub3JtYWxseSBkaXN0cmlidXRlZCBmb3IKZWFjaCBncm91cC4gSXQgc2VlbXMgdG8gaGF2ZSBhIGhlYXZ5IHJpZ2h0IHRhaWwuIFdlIGNhbgpwZXJmb3JtIGEgbG9nIHRyYW5zZm9ybWF0aW9uIG9uIHRoZSBkYXRhLgoKYGBge3J9Ck5IQU5FUyAlPiUKICBtdXRhdGUoQlBTeXMxX2xvZyA9IGxvZyhCUFN5czEpKSAlPiUKICBnZ3Bsb3QoYWVzKHNhbXBsZSA9IEJQU3lzMV9sb2cpKSArCiAgZ2VvbV9xcSgpICsKICBnZW9tX3FxX2xpbmUoKSArCiAgZmFjZXRfZ3JpZCh+SGVhbHRoR2VuKQpgYGAKCldoaWxlIHRoZSBsb2cgdHJhbnNmb3JtYXRpb24gaW1wcm92ZWQgdGhlIGRpc3RyaWJ1dGlvbnMgc29tZXdoYXQsCnRoZSBkYXRhIHN0aWxsIGRvZXMgbm90IGFwcGVhciB0byBiZSBub3JtYWxseSBkaXN0cmlidXRlZCBmb3IKZWFjaCBncm91cC4gSG93ZXZlciwgd2UgZG8gaGF2ZSBhIHZlcnkgbGFyZ2UgbnVtYmVyIG9mCm9ic2VydmF0aW9ucyBwZXIgZ3JvdXA6CgpgYGB7cn0KIyMgQ291bnQgdGhlIG51bWJlciBvZiBvYnNlcnZhdGlvbnMgcGVyIHRyZWF0bWVudApOSEFORVMgJT4lCiAgY291bnQoSGVhbHRoR2VuKQpgYGAKCkFzIHN1Y2gsIHdlIG1heSByZWx5IG9uIHRoZSBjZW50YWwgbGltaXQgdGhlb3JlbS4KUmVtZW1iZXIsIHRoZSBjZW50YWwgbGltaXQgdGhlb3JlbSB0aGF0IHdoZW4gdGhlIG51bWJlcgpvZiBvYnNlcnZhdGlvbnMgaXMgc3VmZmljaWVudGx5IGxhcmdlIChpLmUuID4xMDApLCB3ZQp3aWxsIGFzc3VtZSB0aGF0IHRoZSBkaXN0cmlidXRpb24gb2YgdGhlIHNhbXBsZSBtZWFuIHdpbGwKYXBwcm94aW1hdGUgYSBub3JtYWwgZGlzdHJpYnV0aW9uLCBldmVuIGlmIHRoZSB1bmRlcmx5aW5nCmRhdGEgaXMgbm90IG5vcm1hbGx5IGRpc3RyaWJ1dGVkLgoKIyMgQU5PVkEgbW9kZWwKCmBgYHtyfQpmaXQgPC0gbG0obG9nKEJQU3lzMSkgfiBIZWFsdGhHZW4sIE5IQU5FUykKZml0X2Fub3ZhIDwtIGFub3ZhKGZpdCkKZml0X2Fub3ZhCnByaW50KHBhc3RlKCJOb3Qtcm91bmRlZCBwLXZhbHVlOiIsIGZpdF9hbm92YSRgUHIoPkYpYFsxXSkpCmBgYAoKVGhlIHAtdmFsdWUgb2YgdGhlIEFOT1ZBIGFuYWx5c2lzIGlzIGV4dHJlbWVseSBzaWduaWZpY2FudAoocC12YWx1ZSA9IGByIGZvcm1hdChmaXRfYW5vdmEkIlByKD5GKSJbMV0sZGlnaXRzPTQpYCksCnNvIHdlIHJlamVjdCB0aGUgbnVsbCBoeXBvdGhlc2lzIHRoYXQgdGhlIG1lYW4Kc3lzdG9saWMgYmxvb2QgcHJlc3N1cmUgaXMgZXF1YWwgZm9yIHRoZSBkaWZmZXJlbnQgaGVhbHRoIGdyb3Vwcy4KV2UgY2FuIHNheSB0aGF0IHRoZSBtZWFuIHN5c3RvbGljIGJsb29kIHByZXNzdXJlIGlzIHNpZ25pZmljYW50bHkgZGlmZmVyZW50CmJldHdlZW4gYXQgbGVhc3QgdHdvIGhlYWx0aCBncm91cHMgb24gdGhlIDUlIHNpZ25pZmljYW5jZSBsZXZlbC4KCkJhc2VkIG9uIHRoaXMgYW5hbHlzaXMsIHdlIGRvIG5vdCB5ZXQga25vdyBiZXR3ZWVuIHdoaWNoIHBhcnRpY3VsYXIKYmlyZCB0eXBlcyB0aGVyZSBpcyBhIHNpZ25pZmljYW50IGRpZmZlcmVuY2UuIFRvIHN0dWR5IHRoaXMsIHdlIHdpbGwKcGVyZnJvbSB0aGUgVHVja2V5IHBvc3QtaG9jIGFuYWx5c2lzLgoKIyMgUG9zdC1ob2MgYW5hbHlzaXMKCmBgYHtyLG1lc3NhZ2U9RkFMU0V9CmxpYnJhcnkobXVsdGNvbXAsIHF1aWV0bHkgPSBUUlVFKQptY3AgPC0gZ2xodChmaXQsIGxpbmZjdCA9IG1jcChIZWFsdGhHZW4gPSAiVHVrZXkiKSkKc3VtbWFyeShtY3ApCmNvbmZpbnQobWNwKQpgYGAKCiMjIENvbmNsdXNpb24KCldlIGhhdmUgZm91bmQgYW4gZXh0cmVtZWx5IHNpZ25pZmljYW50IGRlcGVuZGVuY2UgKHAtdmFsdWUgPSBgciBmb3JtYXQoZml0X2Fub3ZhJCJQcig+RikiWzFdLGRpZ2l0cz00KWApLApiZXR3ZWVuIHRoZSBtZWFuIHN5c3RvbGljIGJsb29kIHByZXNzdXJlIGFuZCB0aGUgaGVhbHRoIGdyb3VwCm9uIHRoZSBnbG9iYWwgNSUgc2lnbmlmaWNhbmNlIGxldmVsLgoKVGhlIG1lYW4gbG9nYXJpdGhtIG9mIHN5c3RvbGljIGJsb29kIHByZXNzdXJlIGluIHRoZSBzZWxmLXJlcG9ydGVkIGhlYWx0aApjYXRlZ29yeSBgUG9vcmAgaXMgc2lnbmlmaWNhbnRseSBoaWdoZXIgYXMgY29tcGFyZWQgdGhyZWUgb3RoZXIgZ3JvdXBzOgoKLSB0aGUgYEdvb2RgIGdyb3VwIChhZGp1c3RlZCBwLXZhbHVlID0gPCAwLjAwMSwgbWVhbiBkaWZmZXJlbmNlID0gLTAuMDM2NzYyIG1tSGcsIDk1JSBDSSBbLTAuMDM0NzI1OyAtMC4wMDcxNDJdKQotIHRoZSBgVmdvb2RgIGdyb3VwIChhZGp1c3RlZCBwLXZhbHVlID0gPCAwLjAwMSwgbWVhbiBkaWZmZXJlbmNlID0gLTAuMDU5NDE1IG1tSGcsIDk1JSBDSSBbLTAuMDg3MzUyOyAtMC4wMzE0NzddKQotIHRoZSBgRXhjZWxsZW50YCBncm91cCAoYWRqdXN0ZWQgcC12YWx1ZSA9IDwgMC4wMDEsIG1lYW4gZGlmZmVyZW5jZSA9IC0wLjA1OTQxNSBtbUhnLCA5NSUgQ0kgWy0wLjA4NTE2NDsgLTAuMDI1Nzg5XSkKClRoZSBtZWFuIGxvZ2FyaXRobSBvZiAgc3lzdG9saWMgYmxvb2QgcHJlc3N1cmUgaW4gdGhlIHNlbGYtcmVwb3J0ZWQgaGVhbHRoCmNhdGVnb3J5IGBGYWlyYCBpcyBzaWduaWZpY2FudGx5IGhpZ2hlciBhcyBjb21wYXJlZCB0aHJlZSBvdGhlciBncm91cHM6CgotIHRoZSBgR29vZGAgZ3JvdXAgKGFkanVzdGVkIHAtdmFsdWUgPSAwLjAwMzE3LCBtZWFuIGRpZmZlcmVuY2UgPSAtMC4wMjA5MzQgIG1tSGcsIDk1JSBDSSBbLTAuMDY0NTQyOyAtMC4wMDg5ODJdKQotIHRoZSBgVmdvb2RgIGdyb3VwIChhZGp1c3RlZCBwLXZhbHVlID0gPCAwLjAwMSwgbWVhbiBkaWZmZXJlbmNlID0gLTAuMDQzNTg3IG1tSGcsIDk1JSBDSSBbLTAuMDU3NjkyOyAtMC4wMjk0ODFdKQotIHRoZSBgRXhjZWxsZW50YCBncm91cCAoYWRqdXN0ZWQgcC12YWx1ZSA9IDwgMC4wMDEsIG1lYW4gZGlmZmVyZW5jZSA9IC0wLjAzOTY0OCBtbUhnLCA5NSUgQ0kgWy0wLjA1Njk2MzsgLTAuMDIyMzMzXSkKClRoZSBtZWFuIGxvZ2FyaXRobSBvZiBzeXN0b2xpYyBibG9vZCBwcmVzc3VyZSBpbiB0aGUgc2VsZi1yZXBvcnRlZCBoZWFsdGgKY2F0ZWdvcnkgYEdvb2RgIGlzIHNpZ25pZmljYW50bHkgaGlnaGVyIGFzIGNvbXBhcmVkIHR3byBvdGhlciBncm91cHM6CgotIHRoZSBgVmdvb2RgIGdyb3VwIChhZGp1c3RlZCBwLXZhbHVlID0gPCAwLjAwMSwgbWVhbiBkaWZmZXJlbmNlID0gLTAuMDIyNjUzIG1tSGcsIDk1JSBDSSBbLTAuMDMyODQzOyAtMC4wMTI0NjNdKQotIHRoZSBgRXhjZWxsZW50YCBncm91cCAoYWRqdXN0ZWQgcC12YWx1ZSA9IDAuMDAzNjIsIG1lYW4gZGlmZmVyZW5jZSA9IC0wLjAxODcxNCBtbUhnLCA5NSUgQ0kgWy0wLjAzMzAyMTsgLTAuMDA0NDA4XSkKCldlIGRvIG5vdCBmaW5kIGVub3VnaCBldmlkZW5jZSB0byBjbGFpbSBhIGRpZmZlcmVuY2UgaW4gc3lzdG9saWMKYmxvb2QgcHJlc3N1cmUgbGV2ZWxzIGJldHdlZW4gdGhlIG90aGVyIGdyb3Vwcy4KCk5vdGUgdGhhdCBpbiBvcmRlciB0byBpbnRlcnByZXQgdGhlIG91dGNvbWVzIG9uIHRoZSBvcmlnaW5hbCBzY2FsZSwKd2Ugc2hvdWxkIGJhY2t0cmFuc2Zvcm0gdGhlIG91dGNvbWVzIHdpdGggdGhlIGBleHAoKWAgZnVuY3Rpb25zCihpbnRlcnByZXRhdGlvbiBvbiB0aGUgZ2VvbWV0cmljIG1lYW4pLgo=</div>
-<div class="footer">
-    <hr>
-    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
-    CC BY-NC-SA 4.0</a> licence.
-</div>
+<p>We do not find enough evidence to claim a difference in systolic blood pressure levels between the other groups.</p>
+<p>Note that in order to interpret the outcomes on the original scale, we should backtransform the outcomes with the <code>exp()</code> functions (interpretation on the geometric mean).</p>
 
 
-</div>
-</div>
+<!-- -->
 
-</div>
+</section>
+</section>
 
-<script>
-
-// add bootstrap table styles to pandoc tables
-function bootstrapStylePandocTables() {
-  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
-}
-$(document).ready(function () {
-  bootstrapStylePandocTables();
-});
-
-
-</script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open');
-  });
-});
-</script>
-
-<!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeSourceEmbed("07_3_NHANES_sol.Rmd");
-  window.initializeCodeFolding("show" === "show");
-});
-</script>
-
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    options.showAndHide = true;
-    options.smoothScroll = true;
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Tutorial 7.3: ANOVA in the NHANES dataset"</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu"># The NHANES dataset</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>The National Health and Nutrition Examination Survey (NHANES) contains data</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>that has been collected since 1960. For this tutorial, we will make use of</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>the data that were collected between 2009 and 2012, for 10.000 U.S. civilians.</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>The dataset contains a large number of physical, demographic, nutritional and</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>life-style-related parameters.</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="fu"># Goal</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>In the NHANES dataset, one of the columns is named <span class="in">`HealthGen`</span>.</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>HealthGen is a self-reported rating of a participant’s health</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>in general terms. HealthGen is reported for participants aged 12</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>years or older. It is a factor with the following levels:</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>Excellent, Vgood, Good, Fair, or Poor.</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>We want to test whether or not the mean systolic blood pressure</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>value (take column <span class="in">`BPSys1`</span>) is equal between the five self-reported</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>health categories. To this end, we will use an ANOVA analysis</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>(if the required assumptions are met).</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>Load the required libraries</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message = FALSE}</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data import</span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message=FALSE, warning=FALSE}</span></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>NHANES <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/statOmics/PSLSData/main/NHANES.csv"</span>)</span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(NHANES[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data Exploration</span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>NHANES <span class="sc">|&gt;</span></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> HealthGen, <span class="at">y =</span> BPSys1, <span class="at">fill =</span> HealthGen)) <span class="sc">+</span></span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"RdGy"</span>) <span class="sc">+</span></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_jitter(width = 0.2,size=0.01) + ## omitted as it makes the plot messy</span></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Boxplot of the systolic bloodpressure for each health category"</span>) <span class="sc">+</span></span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Systolic blood pressure (mmHg)"</span>) <span class="sc">+</span></span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a><span class="fu">stat_summary</span>(</span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">shape =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a>This plot is not ideal; it would be far more intuitive if</span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a>the health categories were ordered properly (i.e., Poor --&gt; excellent).</span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a>In addition, we observe a sixth "category" of NA values.</span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a>To get a more informative and intuitive visualization, you can:</span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Filter out subjects with NA values for <span class="in">`HealthGen`</span> or <span class="in">`BPSys1`</span></span>
+<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Set <span class="in">`HealthGen`</span> to a factor and relevel it to Poor --&gt; Excellent</span>
+<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a>**Hint:** The second task can be achieved by using the <span class="in">`mutate`</span>,</span>
+<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a><span class="in">`as.factor`</span> and <span class="in">`fct_relevel`</span> functions.</span>
+<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a>NHANES <span class="ot">&lt;-</span> NHANES <span class="sc">|&gt;</span></span>
+<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(HealthGen), <span class="sc">!</span><span class="fu">is.na</span>(BPSys1)) <span class="sc">|&gt;</span></span>
+<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HealthGen =</span> <span class="fu">as.factor</span>(HealthGen)) <span class="sc">|&gt;</span></span>
+<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HealthGen =</span> <span class="fu">fct_relevel</span>(HealthGen, <span class="fu">c</span>(<span class="st">"Poor"</span>, <span class="st">"Fair"</span>, <span class="st">"Good"</span>, <span class="st">"Vgood"</span>, <span class="st">"Excellent"</span>)))</span>
+<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a>NHANES <span class="sc">|&gt;</span></span>
+<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> HealthGen, <span class="at">y =</span> BPSys1, <span class="at">fill =</span> HealthGen)) <span class="sc">+</span></span>
+<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"RdGy"</span>) <span class="sc">+</span></span>
+<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Boxplot of the systolic bloodpressure for each health category"</span>) <span class="sc">+</span></span>
+<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Systolic blood pressure (mmHg)"</span>) <span class="sc">+</span></span>
+<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a><span class="fu">stat_summary</span>(</span>
+<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a>  <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb19-92"><a href="#cb19-92" aria-hidden="true" tabindex="-1"></a>  <span class="at">shape =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb19-93"><a href="#cb19-93" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a><span class="fu"># ANOVA</span></span>
+<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a>To study if the observed difference between the</span>
+<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a>average systolic blood pressure values of the different health groups</span>
+<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a>are significant, we may perform an ANOVA.</span>
+<span id="cb19-101"><a href="#cb19-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-102"><a href="#cb19-102" aria-hidden="true" tabindex="-1"></a><span class="fu">## Formulate null and alternative hyoptheses</span></span>
+<span id="cb19-103"><a href="#cb19-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-104"><a href="#cb19-104" aria-hidden="true" tabindex="-1"></a>The null hypothesis of ANOVA states that:</span>
+<span id="cb19-105"><a href="#cb19-105" aria-hidden="true" tabindex="-1"></a>$H0$: The mean systolic blood pressure is equal between the different health groups.</span>
+<span id="cb19-106"><a href="#cb19-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-107"><a href="#cb19-107" aria-hidden="true" tabindex="-1"></a>The alternative hypothesis of ANOVA states that:</span>
+<span id="cb19-108"><a href="#cb19-108" aria-hidden="true" tabindex="-1"></a>$HA$: The mean systolic blood pressure for at least one health group is different</span>
+<span id="cb19-109"><a href="#cb19-109" aria-hidden="true" tabindex="-1"></a>from the mean systolic blood pressure in at least one other health group.</span>
+<span id="cb19-110"><a href="#cb19-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-111"><a href="#cb19-111" aria-hidden="true" tabindex="-1"></a><span class="fu">## Check the assumptions for ANOVA</span></span>
+<span id="cb19-112"><a href="#cb19-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-113"><a href="#cb19-113" aria-hidden="true" tabindex="-1"></a>Before we may proceed with the analysis, we must make sure that all</span>
+<span id="cb19-114"><a href="#cb19-114" aria-hidden="true" tabindex="-1"></a>assumptions for ANOVA are met. ANOVA has three assumptions:</span>
+<span id="cb19-115"><a href="#cb19-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-116"><a href="#cb19-116" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The observations are independent of each other (in all groups)</span>
+<span id="cb19-117"><a href="#cb19-117" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>The data (BPSys1) must be normally distributed (in all groups)</span>
+<span id="cb19-118"><a href="#cb19-118" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>The variability within all groups is similar</span>
+<span id="cb19-119"><a href="#cb19-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-120"><a href="#cb19-120" aria-hidden="true" tabindex="-1"></a><span class="fu">### Assumption of independence</span></span>
+<span id="cb19-121"><a href="#cb19-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-122"><a href="#cb19-122" aria-hidden="true" tabindex="-1"></a>The first assumption is met; there shoud be no specific pattterns of dependence.</span>
+<span id="cb19-123"><a href="#cb19-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-124"><a href="#cb19-124" aria-hidden="true" tabindex="-1"></a><span class="fu">### Assumption of normality</span></span>
+<span id="cb19-125"><a href="#cb19-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-126"><a href="#cb19-126" aria-hidden="true" tabindex="-1"></a>For the second assumption, we must check normality in each group.</span>
+<span id="cb19-127"><a href="#cb19-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-130"><a href="#cb19-130" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-131"><a href="#cb19-131" aria-hidden="true" tabindex="-1"></a>NHANES <span class="sc">|&gt;</span></span>
+<span id="cb19-132"><a href="#cb19-132" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> BPSys1)) <span class="sc">+</span></span>
+<span id="cb19-133"><a href="#cb19-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb19-134"><a href="#cb19-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb19-135"><a href="#cb19-135" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>HealthGen)</span>
+<span id="cb19-136"><a href="#cb19-136" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-137"><a href="#cb19-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-138"><a href="#cb19-138" aria-hidden="true" tabindex="-1"></a>The data does not appear to be normally distributed for</span>
+<span id="cb19-139"><a href="#cb19-139" aria-hidden="true" tabindex="-1"></a>each group. It seems to have a heavy right tail. We can</span>
+<span id="cb19-140"><a href="#cb19-140" aria-hidden="true" tabindex="-1"></a>perform a log transformation on the data.</span>
+<span id="cb19-141"><a href="#cb19-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-144"><a href="#cb19-144" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-145"><a href="#cb19-145" aria-hidden="true" tabindex="-1"></a>NHANES <span class="sc">|&gt;</span></span>
+<span id="cb19-146"><a href="#cb19-146" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">BPSys1_log =</span> <span class="fu">log</span>(BPSys1)) <span class="sc">|&gt;</span></span>
+<span id="cb19-147"><a href="#cb19-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> BPSys1_log)) <span class="sc">+</span></span>
+<span id="cb19-148"><a href="#cb19-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb19-149"><a href="#cb19-149" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb19-150"><a href="#cb19-150" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>HealthGen)</span>
+<span id="cb19-151"><a href="#cb19-151" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-152"><a href="#cb19-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-153"><a href="#cb19-153" aria-hidden="true" tabindex="-1"></a>While the log transformation improved the distributions somewhat,</span>
+<span id="cb19-154"><a href="#cb19-154" aria-hidden="true" tabindex="-1"></a>the data still does not appear to be normally distributed for</span>
+<span id="cb19-155"><a href="#cb19-155" aria-hidden="true" tabindex="-1"></a>each group. However, we do have a very large number of</span>
+<span id="cb19-156"><a href="#cb19-156" aria-hidden="true" tabindex="-1"></a>observations per group:</span>
+<span id="cb19-157"><a href="#cb19-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-160"><a href="#cb19-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-161"><a href="#cb19-161" aria-hidden="true" tabindex="-1"></a><span class="do">## Count the number of observations per treatment</span></span>
+<span id="cb19-162"><a href="#cb19-162" aria-hidden="true" tabindex="-1"></a>NHANES <span class="sc">|&gt;</span></span>
+<span id="cb19-163"><a href="#cb19-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(HealthGen)</span>
+<span id="cb19-164"><a href="#cb19-164" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-165"><a href="#cb19-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-166"><a href="#cb19-166" aria-hidden="true" tabindex="-1"></a>As such, we may rely on the cental limit theorem.</span>
+<span id="cb19-167"><a href="#cb19-167" aria-hidden="true" tabindex="-1"></a>Remember, the cental limit theorem that when the number</span>
+<span id="cb19-168"><a href="#cb19-168" aria-hidden="true" tabindex="-1"></a>of observations is sufficiently large (i.e. &gt;100), we</span>
+<span id="cb19-169"><a href="#cb19-169" aria-hidden="true" tabindex="-1"></a>will assume that the distribution of the sample mean will</span>
+<span id="cb19-170"><a href="#cb19-170" aria-hidden="true" tabindex="-1"></a>approximate a normal distribution, even if the underlying</span>
+<span id="cb19-171"><a href="#cb19-171" aria-hidden="true" tabindex="-1"></a>data is not normally distributed.</span>
+<span id="cb19-172"><a href="#cb19-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-173"><a href="#cb19-173" aria-hidden="true" tabindex="-1"></a><span class="fu">## ANOVA model</span></span>
+<span id="cb19-174"><a href="#cb19-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-177"><a href="#cb19-177" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-178"><a href="#cb19-178" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(BPSys1) <span class="sc">~</span> HealthGen, NHANES)</span>
+<span id="cb19-179"><a href="#cb19-179" aria-hidden="true" tabindex="-1"></a>fit_anova <span class="ot">&lt;-</span> <span class="fu">anova</span>(fit)</span>
+<span id="cb19-180"><a href="#cb19-180" aria-hidden="true" tabindex="-1"></a>fit_anova</span>
+<span id="cb19-181"><a href="#cb19-181" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Not-rounded p-value:"</span>, fit_anova<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">1</span>]))</span>
+<span id="cb19-182"><a href="#cb19-182" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-183"><a href="#cb19-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-184"><a href="#cb19-184" aria-hidden="true" tabindex="-1"></a>The p-value of the ANOVA analysis is extremely significant</span>
+<span id="cb19-185"><a href="#cb19-185" aria-hidden="true" tabindex="-1"></a>(p-value = <span class="in">`r format(fit_anova$"Pr(&gt;F)"[1],digits=4)`</span>),</span>
+<span id="cb19-186"><a href="#cb19-186" aria-hidden="true" tabindex="-1"></a>so we reject the null hypothesis that the mean</span>
+<span id="cb19-187"><a href="#cb19-187" aria-hidden="true" tabindex="-1"></a>systolic blood pressure is equal for the different health groups.</span>
+<span id="cb19-188"><a href="#cb19-188" aria-hidden="true" tabindex="-1"></a>We can say that the mean systolic blood pressure is significantly different</span>
+<span id="cb19-189"><a href="#cb19-189" aria-hidden="true" tabindex="-1"></a>between at least two health groups on the 5% significance level.</span>
+<span id="cb19-190"><a href="#cb19-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-191"><a href="#cb19-191" aria-hidden="true" tabindex="-1"></a>Based on this analysis, we do not yet know between which particular</span>
+<span id="cb19-192"><a href="#cb19-192" aria-hidden="true" tabindex="-1"></a>bird types there is a significant difference. To study this, we will</span>
+<span id="cb19-193"><a href="#cb19-193" aria-hidden="true" tabindex="-1"></a>perfrom the Tuckey post-hoc analysis.</span>
+<span id="cb19-194"><a href="#cb19-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-195"><a href="#cb19-195" aria-hidden="true" tabindex="-1"></a><span class="fu">## Post-hoc analysis</span></span>
+<span id="cb19-196"><a href="#cb19-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-197"><a href="#cb19-197" aria-hidden="true" tabindex="-1"></a><span class="in">```{r,message=FALSE}</span></span>
+<span id="cb19-198"><a href="#cb19-198" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-199"><a href="#cb19-199" aria-hidden="true" tabindex="-1"></a>mcp <span class="ot">&lt;-</span> <span class="fu">glht</span>(fit, <span class="at">linfct =</span> <span class="fu">mcp</span>(<span class="at">HealthGen =</span> <span class="st">"Tukey"</span>))</span>
+<span id="cb19-200"><a href="#cb19-200" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mcp)</span>
+<span id="cb19-201"><a href="#cb19-201" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(mcp)</span>
+<span id="cb19-202"><a href="#cb19-202" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-203"><a href="#cb19-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-204"><a href="#cb19-204" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conclusion</span></span>
+<span id="cb19-205"><a href="#cb19-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-206"><a href="#cb19-206" aria-hidden="true" tabindex="-1"></a>We have found an extremely significant dependence (p-value = <span class="in">`r format(fit_anova$"Pr(&gt;F)"[1],digits=4)`</span>),</span>
+<span id="cb19-207"><a href="#cb19-207" aria-hidden="true" tabindex="-1"></a>between the mean systolic blood pressure and the health group</span>
+<span id="cb19-208"><a href="#cb19-208" aria-hidden="true" tabindex="-1"></a>on the global 5% significance level.</span>
+<span id="cb19-209"><a href="#cb19-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-210"><a href="#cb19-210" aria-hidden="true" tabindex="-1"></a>The mean logarithm of systolic blood pressure in the self-reported health</span>
+<span id="cb19-211"><a href="#cb19-211" aria-hidden="true" tabindex="-1"></a>category <span class="in">`Poor`</span> is significantly higher as compared three other groups:</span>
+<span id="cb19-212"><a href="#cb19-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-213"><a href="#cb19-213" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the <span class="in">`Good`</span> group (adjusted p-value = &lt; 0.001, mean difference = -0.036762 mmHg, 95% CI <span class="co">[</span><span class="ot">-0.034725; -0.007142</span><span class="co">]</span>)</span>
+<span id="cb19-214"><a href="#cb19-214" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the <span class="in">`Vgood`</span> group (adjusted p-value = &lt; 0.001, mean difference = -0.059415 mmHg, 95% CI <span class="co">[</span><span class="ot">-0.087352; -0.031477</span><span class="co">]</span>)</span>
+<span id="cb19-215"><a href="#cb19-215" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the <span class="in">`Excellent`</span> group (adjusted p-value = &lt; 0.001, mean difference = -0.059415 mmHg, 95% CI <span class="co">[</span><span class="ot">-0.085164; -0.025789</span><span class="co">]</span>)</span>
+<span id="cb19-216"><a href="#cb19-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-217"><a href="#cb19-217" aria-hidden="true" tabindex="-1"></a>The mean logarithm of  systolic blood pressure in the self-reported health</span>
+<span id="cb19-218"><a href="#cb19-218" aria-hidden="true" tabindex="-1"></a>category <span class="in">`Fair`</span> is significantly higher as compared three other groups:</span>
+<span id="cb19-219"><a href="#cb19-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-220"><a href="#cb19-220" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the <span class="in">`Good`</span> group (adjusted p-value = 0.00317, mean difference = -0.020934  mmHg, 95% CI <span class="co">[</span><span class="ot">-0.064542; -0.008982</span><span class="co">]</span>)</span>
+<span id="cb19-221"><a href="#cb19-221" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the <span class="in">`Vgood`</span> group (adjusted p-value = &lt; 0.001, mean difference = -0.043587 mmHg, 95% CI <span class="co">[</span><span class="ot">-0.057692; -0.029481</span><span class="co">]</span>)</span>
+<span id="cb19-222"><a href="#cb19-222" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the <span class="in">`Excellent`</span> group (adjusted p-value = &lt; 0.001, mean difference = -0.039648 mmHg, 95% CI <span class="co">[</span><span class="ot">-0.056963; -0.022333</span><span class="co">]</span>)</span>
+<span id="cb19-223"><a href="#cb19-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-224"><a href="#cb19-224" aria-hidden="true" tabindex="-1"></a>The mean logarithm of systolic blood pressure in the self-reported health</span>
+<span id="cb19-225"><a href="#cb19-225" aria-hidden="true" tabindex="-1"></a>category <span class="in">`Good`</span> is significantly higher as compared two other groups:</span>
+<span id="cb19-226"><a href="#cb19-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-227"><a href="#cb19-227" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the <span class="in">`Vgood`</span> group (adjusted p-value = &lt; 0.001, mean difference = -0.022653 mmHg, 95% CI <span class="co">[</span><span class="ot">-0.032843; -0.012463</span><span class="co">]</span>)</span>
+<span id="cb19-228"><a href="#cb19-228" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>the <span class="in">`Excellent`</span> group (adjusted p-value = 0.00362, mean difference = -0.018714 mmHg, 95% CI <span class="co">[</span><span class="ot">-0.033021; -0.004408</span><span class="co">]</span>)</span>
+<span id="cb19-229"><a href="#cb19-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-230"><a href="#cb19-230" aria-hidden="true" tabindex="-1"></a>We do not find enough evidence to claim a difference in systolic</span>
+<span id="cb19-231"><a href="#cb19-231" aria-hidden="true" tabindex="-1"></a>blood pressure levels between the other groups.</span>
+<span id="cb19-232"><a href="#cb19-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-233"><a href="#cb19-233" aria-hidden="true" tabindex="-1"></a>Note that in order to interpret the outcomes on the original scale,</span>
+<span id="cb19-234"><a href="#cb19-234" aria-hidden="true" tabindex="-1"></a>we should backtransform the outcomes with the <span class="in">`exp()`</span> functions</span>
+<span id="cb19-235"><a href="#cb19-235" aria-hidden="true" tabindex="-1"></a>(interpretation on the geometric mean).</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
 
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
-</body>
-</html>
+
+</body></html>

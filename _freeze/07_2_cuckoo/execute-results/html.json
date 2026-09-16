@@ -1,0 +1,21 @@
+{
+  "hash": "be701263ea86f65401474378e6972584",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Exercise 7.2: ANOVA on the cuckoo dataset\"\nauthor: \"Lieven Clement and Jeroen Gilis\"\nsubtitle: \"statOmics, Ghent University (https://statomics.github.io)\"\n---\n\n# Cuckoo dataset\n\nThe common cuckoo does not build its own nest: it prefers\nto lay its eggs in another birds' nest. It is known, since 1892,\nthat the type of cuckoo bird eggs are different between different\nlocations. In a study from 1940, it was shown that cuckoos return\nto the same nesting area each year, and that they always pick\nthe same bird species to be a \"foster parent\" for their eggs.\n\nOver the years, this has lead to the development of geographically\ndetermined subspecies of cuckoos. These subspecies have evolved in\nsuch a way that their eggs look as similar as possible as those\nof their foster parents.\n\nThe cuckoo dataset contains information on 120 Cuckoo eggs,\nobtained from randomly selected \"foster\" nests.\nFor these eggs, researchers have measured the `length` (in mm)\nand established the `type` (species) of foster parent.\nThe type column is coded as follows:\n\n- `type=1`: Meadow pipit\n- `type=2`: Tree pipit\n- `type=3`: Dunnock\n- `type=4`: European robin\n- `type=5`: White wagtail\n- `type=6`: Eurasian wren\n\n# Goal\n\nThe researchers want to test if the type of foster parent\nhas an effect on the average length of the cuckoo eggs.\n\nOptimally, they want to study this for all six species.\nPreviously, we looked at a single pairwise comparison\nbetween the European robin and the Eurasian wren with a\nt-test. Here, we will analyse all types simultaneously\nwith ANOVA.\n\nIn this short exercise, we perform a hypothesis test on the\n\"cuckoo\" dataset.\n\n\n# Load the required libraries\n\n\n::: {.cell}\n\n:::\n\n\n# Import the data\n\n\n::: {.cell}\n\n:::\n\n\n# Data Exploration\n\n\n::: {.cell}\n\n:::\n\n\n\n# Data tidying\n\nSet the type column to factor.\n\n# Data exploration\n\nHow many birds do we have for each type?\n\n\n::: {.cell}\n\n:::\n\n\nVisualize the data\n\n\n::: {.cell}\n\n:::\n\n\n# Exercises and questions\n\n1. What do you observe?\n\n2. How will you model the data?\n\n3. Translate the research question in a null and alternative hypothesis\n\n4. Which test will you use to assess the research hypothesis?\n\n5. Formulate the assumptions of the test and assess the assumptions using\ndiagnostic plots.\n\n6. If all assumptions to perform the test, complete the entire analysis and\nformulate a proper conclusion.\n",
+    "supporting": [
+      "07_2_cuckoo_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

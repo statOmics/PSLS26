@@ -1,0 +1,67 @@
+---
+title: "Organisation curse Practical Statistics for the Life Sciences"
+author: "Lieven Clement"
+subtitle: "statOmics, Ghent University (https://statomics.github.io)"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    highlight-style: tango
+    number-sections: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+# Course Practical Statistics for the Life Sciences
+
+- Course material via [https://statomics.github.io/PSLS25/](https://statomics.github.io/PSLS25/)
+
+
+## Lectures
+
+
+- Goal: Statistical Literacy
+- 1 Lecture block on Wednesday @ 8u30
+- Lecture room 0.2. S8. Campus Sterre. 
+
+
+
+
+## On campus PC tutorials
+
+  - Three lecture blocks on Tuesday Morning / Afternoon
+  - Goal: get insight in statistics by conducting data analysis 
+  - Introduction to statistical software R
+  - Week 2-3: Introduction to R
+      - [https://dodona.be/nl/courses/5450/](https://dodona.be/nl/courses/5450/)
+  - Week 4-12: PSLS exercises 
+      - [https://statomics.github.io/PSLS25/](https://statomics.github.io/PSLS25/)
+
+## Contact 
+
+  - Theory: Lieven Clement (email: lieven.clement@ugent.be)
+  - Exercises: Nele De Meester (email: nele.demeester@ugent.be)
+
+## Non-periodical evaluation
+
+  - Non-periodical evaluation: 5/20
+  - Project work and writing conclusion sections 
+  - Evaluate R skills and interpretation of output
+  - Project work and submitting conclusion sections is mandatory. If you do not participate in projectwork you can get at most 7/20 for the course
+
+## Periodical evaluation
+
+  - Open book exam: 15/20
+      - Assesses insight and logical reasoning 
+      - Analysis of statistical output and results of scientific publications
+      - Emphasis on interpretation rather than on calculation 
+      - Exercises
+ 
+
+## Feedback
+
+  - Upon subscription
+  - Date to be announced

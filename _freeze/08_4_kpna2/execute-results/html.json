@@ -1,0 +1,21 @@
+{
+  "hash": "d1b22285c2ec26241490dcdf5c542475",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"8.4. Multiple Regression: KPNA2 example\"\nauthor: \"Lieven Clement\"\nsubtitle: \"statOmics, Ghent University (https://statomics.github.io)\"\n---\n\n<a rel=\"license\" href=\"https://creativecommons.org/licenses/by-nc-sa/4.0\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png\" /></a>\n\n# Background\n\nBackground: Histologic grade in breast cancer provides clinically important\nprognostic information. Researchers examined whether histologic grade was\nassociated with gene expression profiles of breast cancers and whether such\nprofiles could be used to improve histologic grading. In this tutorial we\nwill assess the association between histologic grade and the expression of\nthe KPNA2 gene that is known to be associated with poor breast cancer prognosis.\nThe patients, however, do not only differ in the histologic grade,\nbut also on their lymph node status. The lymph nodes were not affected (0)\nor surgically removed (1).\n\n# Import data\n\n\n::: {.cell}\n\n:::\n\n\n# Data wrangling\n\nTransform the variable grade and node to a factor.\n\n\n::: {.cell}\n\n:::\n\n\n# Data exploration\n\nHistologic grade and lymph node status can be associated with the KPNA2 gene\nexpression. Moreover, it is also possible that the differential expression\nassociated with histological grade is different in patients that have\nunaffected lymph nodes and patients for which the lymph nodes had to be removed.\n\nMake a relevant plot that contains information on KPNA2 expression and both\nexplanatory variables grade and node.\n\n\n::: {.cell}\n\n:::\n\n\nWhat does the plot suggest?\n\n# Linear regression\n\n1. Specify the model, interpret each model parameter in the model.\n\n2. Formulate the relevant research questions\n\n3. Translate them in a null and alternative hyptheses.\n\n4. Perform the hypothesis tests  and calculate the confidence intervals.\n\n# Formulate your conclusions in terms of the research question\n",
+    "supporting": [
+      "08_4_kpna2_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

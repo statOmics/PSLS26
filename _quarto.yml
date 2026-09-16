@@ -1,0 +1,80 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - "*.qmd"
+  resources:
+    - "figures/**"
+
+execute:
+  freeze: auto
+
+website:
+  title: "PSLS26 - Practical Statistics for the Life Sciences"
+  navbar:
+    left:
+      - text: "Topics"
+        icon: easel
+        menu:
+          - text: "1. Introduction"
+            href: 01-intro.qmd
+          - text: "2. Concepts"
+            href: 02-concepts.qmd
+          - text: "3. Experimental Design I"
+            href: 03-experimentalDesign.qmd
+          - text: "4. Data Exploration"
+            href: 04-dataExploration.qmd
+          - text: "5.1 Statistical Inference 1"
+            href: 05-statisticalInference.qmd
+          - text: "5.2 Statistical Inference 2"
+            href: 05-statisticalInference-twosampleT.qmd
+          - text: "6. Linear Regression"
+            href: 06-linearRegression.qmd
+          - text: "7. Analysis of Variance"
+            href: 07-Anova.qmd
+          - text: "8. Multiple Regression"
+            href: 08-MultipleRegression.qmd
+          - text: "8.2 Multiple Regression: Factorial Designs"
+            href: 08-MultipleRegression-SpecificDesigns.qmd
+          - text: "8.3. Experimental Design II"
+            href: 08-experimentalDesign2.qmd
+          - text: "8.4. Experimental Design III"
+            href: 08-experimentalDesign3.qmd
+          - text: "9.1. Nonparametric Statistics 1"
+            href: 09-NonparametericStatistics-WilcoxonMannWithney.qmd
+          - text: "9.2. Nonparametric Statistics 2"
+            href: 09-NonparametericStatistics-KruskalWallis.qmd
+          - text: "10. Categorical Data Analysis"
+            href: 10-categoricalDataAnalysis.qmd
+
+      - text: "Exercises"
+        icon: laptop
+        menu:
+          - text: "4. Data Exploration"
+            href: 04_exercises.qmd
+          - text: "5. Statistical inference"
+            href: 05_exercises.qmd
+          - text: "6. Simple linear regression"
+            href: 06_exercises.qmd
+          - text: "7. ANOVA"
+            href: 07_exercises.qmd
+          - text: "8. Multiple linear regression"
+            href: 08_exercises.qmd
+          - text: "9. Non-parametric statistics"
+            href: 09_exercises.qmd
+
+    right:
+      - text: "statOmics"
+        href: http://statomics.github.io/
+
+format:
+  html:
+    theme: cosmo
+    highlight-style: tango
+    df-print: paged
+    toc: true
+    toc-location: left
+    number-sections: true
+    code-fold: show
+    code-tools: true
+    css: style.css

@@ -1,67 +1,33 @@
 <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<html>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
 
-<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta name="author" content="Lieven Clement, Jeroen Gilis and Milan Malfait">
 
-
-<meta name="author" content="Lieven Clement, Jeroen Gilis and Milan Malfait" />
-
-
-<title>Exercise 5.1: Hypothesis testing on the diabetes example - solution</title>
-
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
-<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<style>h1 {font-size: 34px;}
-       h1.title {font-size: 38px;}
-       h2 {font-size: 30px;}
-       h3 {font-size: 24px;}
-       h4 {font-size: 18px;}
-       h5 {font-size: 16px;}
-       h6 {font-size: 12px;}
-       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
-       pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
-<script src="site_libs/navigation-1.1/sourceembed.js"></script>
-<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
-
-
-
-<style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
-</style>
-<style type="text/css" data-origin="pandoc">
+<title>Exercise 5.1: Hypothesis testing on the diabetes example - solution – PSLS26 - Practical Statistics for the Life Sciences</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -72,7 +38,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -86,858 +52,1449 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
-  {  background-color: #f8f8f8; }
+  {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ef2929; } /* Alert */
-code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #204a87; } /* Attribute */
-code span.bn { color: #0000cf; } /* BaseN */
-code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4e9a06; } /* Char */
-code span.cn { color: #8f5902; } /* Constant */
-code span.co { color: #8f5902; font-style: italic; } /* Comment */
-code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code span.dt { color: #204a87; } /* DataType */
-code span.dv { color: #0000cf; } /* DecVal */
-code span.er { color: #a40000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #0000cf; } /* Float */
-code span.fu { color: #204a87; font-weight: bold; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code span.ot { color: #8f5902; } /* Other */
-code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
-code span.ss { color: #4e9a06; } /* SpecialString */
-code span.st { color: #4e9a06; } /* String */
-code span.va { color: #000000; } /* Variable */
-code span.vs { color: #4e9a06; } /* VerbatimString */
-code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-
-.sourceCode .row {
-  width: 100%;
-}
-.sourceCode {
-  overflow-x: auto;
-}
-.code-folding-btn {
-  margin-right: -30px;
-}
 </style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    var j = 0;
-    while (j < rules.length) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
-        j++;
-        continue;
-      }
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') {
-        j++;
-        continue;
-      }
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f79c7fb6db380d32be398468f2fb58cf.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-2c9dadc89b91d1343c807e0fac51702d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
-})();
-</script>
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
-
-<style type="text/css">
-#rmd-source-code {
-  display: none;
-}
-</style>
-
-
-<link rel="stylesheet" href="style.css" type="text/css" />
-
-
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-img {
-  max-width:100%;
-}
-.tabbed-pane {
-  padding-top: 12px;
-}
-.html-widget {
-  margin-bottom: 20px;
-}
-button.code-folding-btn:focus {
-  outline: none;
-}
-summary {
-  display: list-item;
-}
-details > summary > p:only-child {
-  display: inline;
-}
-pre code {
-  padding: 0;
-}
-</style>
-
-
-<style type="text/css">
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  border-radius: 0 6px 6px 6px;
-}
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #cccccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-.dropdown-submenu:hover>a:after {
-  border-left-color: #adb5bd;
-}
-.dropdown-submenu.pull-left {
-  float: none;
-}
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  border-radius: 6px 0 6px 6px;
-}
-</style>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-// manage active state of menu based on current page
-$(document).ready(function () {
-  // active menu anchor
-  href = window.location.pathname
-  href = href.substr(href.lastIndexOf('/') + 1)
-  if (href === "")
-    href = "index.html";
-  var menuAnchor = $('a[href="' + href + '"]');
-
-  // mark the anchor link active (and if it's in a dropdown, also mark that active)
-  var dropdown = menuAnchor.closest('li.dropdown');
-  if (window.bootstrap) { // Bootstrap 4+
-    menuAnchor.addClass('active');
-    dropdown.find('> .dropdown-toggle').addClass('active');
-  } else { // Bootstrap 3
-    menuAnchor.parent().addClass('active');
-    dropdown.addClass('active');
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
   }
-
-  // Navbar adjustments
-  var navHeight = $(".navbar").first().height() + 15;
-  var style = document.createElement('style');
-  var pt = "padding-top: " + navHeight + "px; ";
-  var mt = "margin-top: -" + navHeight + "px; ";
-  var css = "";
-  // offset scroll position for anchor links (for fixed navbar)
-  for (var i = 1; i <= 6; i++) {
-    css += ".section h" + i + "{ " + pt + mt + "}\n";
-  }
-  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
-  document.head.appendChild(style);
-});
+}
+window.Quarto = {
+  typesetMath
+};
 </script>
 
-<!-- tabsets -->
-
-<style type="text/css">
-.tabset-dropdown > .nav-tabs {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "\e259";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "\e258";
-  font-family: 'Glyphicons Halflings';
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs > li.active {
-  display: block;
-}
-
-.tabset-dropdown > .nav-tabs > li > a,
-.tabset-dropdown > .nav-tabs > li > a:focus,
-.tabset-dropdown > .nav-tabs > li > a:hover {
-  border: none;
-  display: inline-block;
-  border-radius: 4px;
-  background-color: transparent;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
-  display: block;
-  float: none;
-}
-
-.tabset-dropdown > .nav-tabs > li {
-  display: none;
-}
-</style>
-
-<!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
-
-
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
-
+<link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="floating nav-fixed quarto-light">
 
-
-<div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
-
-
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html"></a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">PSLS26 - Practical Statistics for the Life Sciences</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-easel" role="img">
+</i> 
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
         <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-  </a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-chalkboard-teacher"></span>
-     
-    Topics
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="01-intro.html">1. Introduction</a>
-    </li>
-    <li>
-      <a href="02-concepts.html">2. Concepts</a>
-    </li>
-    <li>
-      <a href="03-experimentalDesign.html">3. Experimental Design I</a>
-    </li>
-    <li>
-      <a href="04-dataExploration.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference.html">5.1 Statistical Inference 1</a>
-    </li>
-    <li>
-      <a href="05-statisticalInference-twosampleT.html">5.2 Statistical Inference 2</a>
-    </li>
-    <li>
-      <a href="06-linearRegression.html">6. Linear Regression</a>
-    </li>
-    <li>
-      <a href="07-Anova.html">7. Analysis of Variance</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression.html">8. Multiple Regression</a>
-    </li>
-    <li>
-      <a href="08-MultipleRegression-SpecificDesigns.html">8.2 Multiple Regression: Factorial Designs</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign2.html">8.3. Experimental Design II</a>
-    </li>
-    <li>
-      <a href="08-experimentalDesign3.html">8.4. Experimental Design III</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-WilcoxonMannWithney.html">9.1. Nonparametric Statistics 1</a>
-    </li>
-    <li>
-      <a href="09-NonparametericStatistics-KruskalWallis.html">9.2. Nonparametric Statistics 2</a>
-    </li>
-    <li>
-      <a href="10-categoricalDataAnalysis.html">10. Categorical Data Analysis</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="fa fa-laptop"></span>
-     
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="04_exercises.html">4. Data Exploration</a>
-    </li>
-    <li>
-      <a href="05_exercises.html">5. Statistical inference</a>
-    </li>
-    <li>
-      <a href="06_exercises.html">6. Simple linear regression</a>
-    </li>
-    <li>
-      <a href="07_exercises.html">7. ANOVA</a>
-    </li>
-    <li>
-      <a href="08_exercises.html">8. Multiple linear regression</a>
-    </li>
-    <li>
-      <a href="09_exercises.html">9. Non-parametric statistics</a>
-    </li>
-  </ul>
-</li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
+    <a class="dropdown-item" href="./01-intro.html">
+ <span class="dropdown-text">1. Introduction</span></a>
+  </li>  
         <li>
-  <a href="http://statomics.github.io/">statOmics</a>
-</li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container -->
-</div><!--/.navbar -->
-
-<div id="header">
-
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-<li role="separator" class="divider"></li>
-<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+    <a class="dropdown-item" href="./02-concepts.html">
+ <span class="dropdown-text">2. Concepts</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./03-experimentalDesign.html">
+ <span class="dropdown-text">3. Experimental Design I</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./04-dataExploration.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference.html">
+ <span class="dropdown-text">5.1 Statistical Inference 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05-statisticalInference-twosampleT.html">
+ <span class="dropdown-text">5.2 Statistical Inference 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06-linearRegression.html">
+ <span class="dropdown-text">6. Linear Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07-Anova.html">
+ <span class="dropdown-text">7. Analysis of Variance</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression.html">
+ <span class="dropdown-text">8. Multiple Regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-MultipleRegression-SpecificDesigns.html">
+ <span class="dropdown-text">8.2 Multiple Regression: Factorial Designs</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign2.html">
+ <span class="dropdown-text">8.3. Experimental Design II</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08-experimentalDesign3.html">
+ <span class="dropdown-text">8.4. Experimental Design III</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-WilcoxonMannWithney.html">
+ <span class="dropdown-text">9.1. Nonparametric Statistics 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09-NonparametericStatistics-KruskalWallis.html">
+ <span class="dropdown-text">9.2. Nonparametric Statistics 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./10-categoricalDataAnalysis.html">
+ <span class="dropdown-text">10. Categorical Data Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-exercises" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-laptop" role="img">
+</i> 
+ <span class="menu-text">Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-exercises">    
+        <li>
+    <a class="dropdown-item" href="./04_exercises.html">
+ <span class="dropdown-text">4. Data Exploration</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./05_exercises.html">
+ <span class="dropdown-text">5. Statistical inference</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./06_exercises.html">
+ <span class="dropdown-text">6. Simple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./07_exercises.html">
+ <span class="dropdown-text">7. ANOVA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./08_exercises.html">
+ <span class="dropdown-text">8. Multiple linear regression</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./09_exercises.html">
+ <span class="dropdown-text">9. Non-parametric statistics</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="http://statomics.github.io/"> 
+<span class="menu-text">statOmics</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#aims" id="toc-aims" class="nav-link active" data-scroll-target="#aims"><span class="header-section-number">1</span> Aims</a></li>
+  <li><a href="#the-diabetes-dataset" id="toc-the-diabetes-dataset" class="nav-link" data-scroll-target="#the-diabetes-dataset"><span class="header-section-number">2</span> The diabetes dataset</a>
+  <ul class="collapse">
+  <li><a href="#research-questions" id="toc-research-questions" class="nav-link" data-scroll-target="#research-questions"><span class="header-section-number">2.1</span> Research questions</a></li>
+  <li><a href="#import-the-data" id="toc-import-the-data" class="nav-link" data-scroll-target="#import-the-data"><span class="header-section-number">2.2</span> Import the data</a></li>
+  </ul></li>
+  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration"><span class="header-section-number">3</span> Data exploration</a></li>
+  <li><a href="#question-1" id="toc-question-1" class="nav-link" data-scroll-target="#question-1"><span class="header-section-number">4</span> Question 1</a>
+  <ul class="collapse">
+  <li><a href="#check-the-assumptions" id="toc-check-the-assumptions" class="nav-link" data-scroll-target="#check-the-assumptions"><span class="header-section-number">4.1</span> Check the assumptions</a></li>
+  <li><a href="#hypothesis-test" id="toc-hypothesis-test" class="nav-link" data-scroll-target="#hypothesis-test"><span class="header-section-number">4.2</span> Hypothesis test</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">4.3</span> Conclusion</a></li>
+  </ul></li>
+  <li><a href="#alternative-solution-one-sample-t-test-on-the-difference" id="toc-alternative-solution-one-sample-t-test-on-the-difference" class="nav-link" data-scroll-target="#alternative-solution-one-sample-t-test-on-the-difference"><span class="header-section-number">5</span> Alternative solution: One-sample t-test on the difference</a></li>
+  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2"><span class="header-section-number">6</span> Question 2</a>
+  <ul class="collapse">
+  <li><a href="#assess-the-assumptions" id="toc-assess-the-assumptions" class="nav-link" data-scroll-target="#assess-the-assumptions"><span class="header-section-number">6.1</span> Assess the assumptions</a></li>
+  <li><a href="#hypothesis-test-1" id="toc-hypothesis-test-1" class="nav-link" data-scroll-target="#hypothesis-test-1"><span class="header-section-number">6.2</span> Hypothesis test</a></li>
+  <li><a href="#conclusion-1" id="toc-conclusion-1" class="nav-link" data-scroll-target="#conclusion-1"><span class="header-section-number">6.3</span> Conclusion</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Exercise 5.1: Hypothesis testing on the diabetes example - solution</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<p class="subtitle lead">statOmics, Ghent University (https://statomics.github.io)</p>
 </div>
 
 
 
-<h1 class="title toc-ignore">Exercise 5.1: Hypothesis testing on the diabetes example - solution</h1>
-<h4 class="author">Lieven Clement, Jeroen Gilis and Milan Malfait</h4>
-<h4 class="date">statOmics, Ghent University (<a href="https://statomics.github.io" class="uri">https://statomics.github.io</a>)</h4>
+<div class="quarto-title-meta">
 
-</div>
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lieven Clement, Jeroen Gilis and Milan Malfait </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
 
 
-<div id="aims" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Aims</h1>
+</header>
+
+
+<section id="aims" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Aims</h1>
 <p>In this exercise, you will revisit the basics of statistical hypothesis testing.</p>
 <p>You will acquire the skills</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>to assess the assumptions of a one-sample and a paired t-test in data exploration.</li>
 <li>to conduct a paired t-test in R and to interpret the results.</li>
 <li>to conduct a one-sample t-test in R and to interpret the results.</li>
 </ol>
-</div>
-<div id="the-diabetes-dataset" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> The diabetes dataset</h1>
-<p>The <code>diabetes</code> dataset holds information on a small experiment with
-8 patients that are subjected to a glucose tolerance test.</p>
-<p>Patients had to fast for eight hours before the test.
-When the patients entered the hospital their baseline glucose level was measured (mmol/l).</p>
-<p>Patients then had to drink 250 ml of a syrupy glucose solution containing 100
-grams of sugar. Two hours later, their blood glucose level was measured again.</p>
+</section>
+<section id="the-diabetes-dataset" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> The diabetes dataset</h1>
+<p>The <code>diabetes</code> dataset holds information on a small experiment with 8 patients that are subjected to a glucose tolerance test.</p>
+<p>Patients had to fast for eight hours before the test. When the patients entered the hospital their baseline glucose level was measured (mmol/l).</p>
+<p>Patients then had to drink 250 ml of a syrupy glucose solution containing 100 grams of sugar. Two hours later, their blood glucose level was measured again.</p>
 <p>The data consist of three variables:</p>
 <ul>
 <li><code>before</code>: glucose concentration upon 8 hours of fasting (mmol/l)</li>
 <li><code>after</code>: glucose concentration 2 hours after drinking glucose solution (mmol/l).</li>
 <li><code>patient</code>: identifier for the patient</li>
 </ul>
-<div id="research-questions" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Research questions</h2>
+<section id="research-questions" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="research-questions"><span class="header-section-number">2.1</span> Research questions</h2>
 <p>The goal is to answer two research questions;</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><p>Is the average glucose level after the sugar intake different from the average glucose level before sugar intake?</p></li>
 <li><p>Is the average glucose level of the patients two hours after the sugar intake higher than 7.8 mmol/L?</p></li>
 </ol>
-</div>
-<div id="import-the-data" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Import the data</h2>
+</section>
+<section id="import-the-data" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="import-the-data"><span class="header-section-number">2.2</span> Import the data</h2>
 <p>First, load the required R libraries:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>diabetes <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">&quot;https://raw.githubusercontent.com/statOmics/PSLSData/main/diabetes.txt&quot;</span>, <span class="at">delim =</span> <span class="st">&quot; &quot;</span>)</span></code></pre></div>
-<pre><code>## Rows: 8 Columns: 3
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot; &quot;
-## chr (1): patient
-## dbl (2): before, after
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>diabetes <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"https://raw.githubusercontent.com/statOmics/PSLSData/main/diabetes.txt"</span>, <span class="at">delim =</span> <span class="st">" "</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 8 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: " "
+chr (1): patient
+dbl (2): before, after
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 </div>
-<div id="data-exploration" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Data exploration</h1>
-<p>We will start with a data exploration.
-Have a first look at the raw data. How is the data structured?
-Is this data <em>tidy</em>?</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">glimpse</span>(diabetes)</span></code></pre></div>
-<pre><code>## Rows: 8
-## Columns: 3
-## $ before  &lt;dbl&gt; 4.67, 4.97, 5.11, 5.17, 5.33, 6.22, 6.50, 7.00
-## $ after   &lt;dbl&gt; 5.44, 5.78, 8.49, 6.71, 10.67, 5.67, 10.11, 9.89
-## $ patient &lt;chr&gt; &quot;pat1&quot;, &quot;pat2&quot;, &quot;pat3&quot;, &quot;pat4&quot;, &quot;pat5&quot;, &quot;pat6&quot;, &quot;pat7&quot;, &quot;pat8&quot;</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">head</span>(diabetes)</span></code></pre></div>
+</section>
+</section>
+<section id="data-exploration" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Data exploration</h1>
+<p>We will start with a data exploration. Have a first look at the raw data. How is the data structured? Is this data <em>tidy</em>?</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(diabetes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 8
+Columns: 3
+$ before  &lt;dbl&gt; 4.67, 4.97, 5.11, 5.17, 5.33, 6.22, 6.50, 7.00
+$ after   &lt;dbl&gt; 5.44, 5.78, 8.49, 6.71, 10.67, 5.67, 10.11, 9.89
+$ patient &lt;chr&gt; "pat1", "pat2", "pat3", "pat4", "pat5", "pat6", "pat7", "pat8"</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(diabetes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["before"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["after"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["patient"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"4.67","2":"5.44","3":"pat1"},{"1":"4.97","2":"5.78","3":"pat2"},{"1":"5.11","2":"8.49","3":"pat3"},{"1":"5.17","2":"6.71","3":"pat4"},{"1":"5.33","2":"10.67","3":"pat5"},{"1":"6.22","2":"5.67","3":"pat6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+</div>
+</div>
 <p>We have 8 patients, for which glucose concentrations were measured, before and after sugar intake.</p>
-<p>Note, that the dataset is not in the tidy format. The glucose concentration
-variable is spread around 2 columns: <code>before</code> and <code>after</code>, while the “time”
-variable is encoded in the column names instead of in a dedicated column. Data
-in this form is also called <em>wide</em> data. Instead, we want to transform the data
-to a <em>long</em> format.</p>
-<p>To tidy the data, we can use the <code>gather()</code> function to
-<a href="https://r4ds.had.co.nz/tidy-data.html#pivoting">pivot</a> the data. In this case,
-we want to “gather” the <code>time</code> (encoded in the column names <code>before</code> and
-<code>after</code>) and <code>concentration</code> variables (which is encoded in the actual values).
-The <code>patient</code> column should stay the same. We can specify this with the
-following syntax.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>diabetes_tidy <span class="ot">&lt;-</span> diabetes <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">gather</span>(<span class="at">key =</span> <span class="st">&quot;time&quot;</span>, <span class="at">value =</span> <span class="st">&quot;concentration&quot;</span>, <span class="sc">-</span>patient)</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="do">## Take a look at the new data</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="fu">glimpse</span>(diabetes_tidy)</span></code></pre></div>
-<pre><code>## Rows: 16
-## Columns: 3
-## $ patient       &lt;chr&gt; &quot;pat1&quot;, &quot;pat2&quot;, &quot;pat3&quot;, &quot;pat4&quot;, &quot;pat5&quot;, &quot;pat6&quot;, &quot;pat7&quot;, …
-## $ time          &lt;chr&gt; &quot;before&quot;, &quot;before&quot;, &quot;before&quot;, &quot;before&quot;, &quot;before&quot;, &quot;befor…
-## $ concentration &lt;dbl&gt; 4.67, 4.97, 5.11, 5.17, 5.33, 6.22, 6.50, 7.00, 5.44, 5.…</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>diabetes_tidy</span></code></pre></div>
+<p>Note, that the dataset is not in the tidy format. The glucose concentration variable is spread around 2 columns: <code>before</code> and <code>after</code>, while the “time” variable is encoded in the column names instead of in a dedicated column. Data in this form is also called <em>wide</em> data. Instead, we want to transform the data to a <em>long</em> format.</p>
+<p>To tidy the data, we can use the <code>gather()</code> function to <a href="https://r4ds.had.co.nz/tidy-data.html#pivoting">pivot</a> the data. In this case, we want to “gather” the <code>time</code> (encoded in the column names <code>before</code> and <code>after</code>) and <code>concentration</code> variables (which is encoded in the actual values). The <code>patient</code> column should stay the same. We can specify this with the following syntax.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>diabetes_tidy <span class="ot">&lt;-</span> diabetes <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(<span class="at">key =</span> <span class="st">"time"</span>, <span class="at">value =</span> <span class="st">"concentration"</span>, <span class="sc">-</span>patient)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Take a look at the new data</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(diabetes_tidy)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 16
+Columns: 3
+$ patient       &lt;chr&gt; "pat1", "pat2", "pat3", "pat4", "pat5", "pat6", "pat7", …
+$ time          &lt;chr&gt; "before", "before", "before", "before", "before", "befor…
+$ concentration &lt;dbl&gt; 4.67, 4.97, 5.11, 5.17, 5.33, 6.22, 6.50, 7.00, 5.44, 5.…</code></pre>
+</div>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>diabetes_tidy</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["patient"],"name":[1],"type":["chr"],"align":["left"]},{"label":["time"],"name":[2],"type":["chr"],"align":["left"]},{"label":["concentration"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"pat1","2":"before","3":"4.67"},{"1":"pat2","2":"before","3":"4.97"},{"1":"pat3","2":"before","3":"5.11"},{"1":"pat4","2":"before","3":"5.17"},{"1":"pat5","2":"before","3":"5.33"},{"1":"pat6","2":"before","3":"6.22"},{"1":"pat7","2":"before","3":"6.50"},{"1":"pat8","2":"before","3":"7.00"},{"1":"pat1","2":"after","3":"5.44"},{"1":"pat2","2":"after","3":"5.78"},{"1":"pat3","2":"after","3":"8.49"},{"1":"pat4","2":"after","3":"6.71"},{"1":"pat5","2":"after","3":"10.67"},{"1":"pat6","2":"after","3":"5.67"},{"1":"pat7","2":"after","3":"10.11"},{"1":"pat8","2":"after","3":"9.89"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>To improve the visualizations below, we can also sligthly recode the <code>time</code> variable, so that the “before” level is the first one. We can do this by converting <code>time</code> to a factor.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>diabetes_tidy <span class="ot">&lt;-</span> diabetes_tidy <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>    <span class="at">time =</span> <span class="fu">as.factor</span>(time),</span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>    <span class="at">time =</span> <span class="fu">relevel</span>(time, <span class="at">ref =</span> <span class="st">&quot;before&quot;</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  )</span></code></pre></div>
-<p>We could visualize the data using boxplots. Note, however, that we lose the
-paired characteristic of the data with this visualization. Nevertheless, it is
-still a useful visualization to assess any differences in mean and variance
-between the two time points.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>boxplot <span class="ot">&lt;-</span> diabetes_tidy <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> concentration, <span class="at">fill =</span> time)) <span class="sc">+</span></span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>    <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">&quot;point&quot;</span>,</span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">3</span>,</span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;black&quot;</span></span>
-<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Concentration (mmol/l)&quot;</span>)</span>
-<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a></span>
-<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>boxplot</span></code></pre></div>
-<p><img src="05_1_diabetes_sol_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>We observe that the variability of the glucose levels are higher after than
-before the sugar intake. The difference plot also shows that glucose levels in
-the blood are higher for most of the patients two hours after the sugar intake.
-Only for one patient the glucose concentration two hours after treatment is
-lower.</p>
-<p>To visualize the paired nature of the data, we can use a <strong>line plot</strong>,
-connecting the <code>before</code> and <code>after</code> points for each patient.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>diabetes_tidy <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, concentration)) <span class="sc">+</span></span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> patient))</span></code></pre></div>
-<p><img src="05_1_diabetes_sol_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
-<div id="question-1" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Question 1</h1>
+</div>
+<p>To improve the visualizations below, we can also sligthly recode the <code>time</code> variable, so that the “before” level is the first one. We can do this by converting <code>time</code> to a factor.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>diabetes_tidy <span class="ot">&lt;-</span> diabetes_tidy <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">time =</span> <span class="fu">as.factor</span>(time),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">time =</span> <span class="fu">relevel</span>(time, <span class="at">ref =</span> <span class="st">"before"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>We could visualize the data using boxplots. Note, however, that we lose the paired characteristic of the data with this visualization. Nevertheless, it is still a useful visualization to assess any differences in mean and variance between the two time points.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>boxplot <span class="ot">&lt;-</span> diabetes_tidy <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> concentration, <span class="at">fill =</span> time)) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">3</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Concentration (mmol/l)"</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>boxplot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1_diabetes_sol_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We observe that the variability of the glucose levels are higher after than before the sugar intake. The difference plot also shows that glucose levels in the blood are higher for most of the patients two hours after the sugar intake. Only for one patient the glucose concentration two hours after treatment is lower.</p>
+<p>To visualize the paired nature of the data, we can use a <strong>line plot</strong>, connecting the <code>before</code> and <code>after</code> points for each patient.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>diabetes_tidy <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, concentration)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> patient))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1_diabetes_sol_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="question-1" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Question 1</h1>
 <p>Is the glucose level after 8 hours of fasting on average different from the glucose level two hours after intake of 100g of glucose?</p>
-<p>As the data are paired, we can expect that the measurements before and after the glucose intake are correlated.
-We can illustrate this with a scatterplot.</p>
+<p>As the data are paired, we can expect that the measurements before and after the glucose intake are correlated. We can illustrate this with a scatterplot.</p>
 <p>Note that in this case, the non-tidy data is actually a more suitable format to visualize.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>diabetes <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> before, <span class="at">y =</span> after)) <span class="sc">+</span></span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;before (mmol/l)&quot;</span>) <span class="sc">+</span></span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;after (mmol/l)&quot;</span>)</span></code></pre></div>
-<p><img src="05_1_diabetes_sol_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">cor</span>(diabetes<span class="sc">$</span>before, diabetes<span class="sc">$</span>after, <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] 0.5952381</code></pre>
-<div id="check-the-assumptions" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Check the assumptions</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>diabetes <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> before, <span class="at">y =</span> after)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"before (mmol/l)"</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"after (mmol/l)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1_diabetes_sol_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(diabetes<span class="sc">$</span>before, diabetes<span class="sc">$</span>after, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5952381</code></pre>
+</div>
+</div>
+<section id="check-the-assumptions" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="check-the-assumptions"><span class="header-section-number">4.1</span> Check the assumptions</h2>
 <p>The paired t-test has 2 assumptions:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><p>The differences in glucose levels are independent of each other.</p></li>
 <li><p>The differences in glucose levels are normally distributed.</p></li>
 </ol>
-<p>The first assumption is met given the experimental design.
-Upon differencing the measurements before and after the glucose intake, we obtained one difference for each patient. As the patients were sampled at random from the population we can expect them to be independent.</p>
+<p>The first assumption is met given the experimental design. Upon differencing the measurements before and after the glucose intake, we obtained one difference for each patient. As the patients were sampled at random from the population we can expect them to be independent.</p>
 <p>Secondly, we assess if the differences are normally distributed.</p>
-<p>We can calculate the differences for each patient using a <code>group_by()</code> +
-<code>summarize()</code> combination on the tidy data.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>diabetes_diff <span class="ot">&lt;-</span> diabetes_tidy <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  <span class="fu">group_by</span>(patient) <span class="sc">%&gt;%</span></span>
-<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">difference =</span> <span class="fu">diff</span>(concentration))</span>
-<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>diabetes_diff</span></code></pre></div>
+<p>We can calculate the differences for each patient using a <code>group_by()</code> + <code>summarize()</code> combination on the tidy data.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>diabetes_diff <span class="ot">&lt;-</span> diabetes_tidy <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(patient) <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">difference =</span> <span class="fu">diff</span>(concentration))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>diabetes_diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
 <div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
+  <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["patient"],"name":[1],"type":["chr"],"align":["left"]},{"label":["difference"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"pat1","2":"0.77"},{"1":"pat2","2":"0.81"},{"1":"pat3","2":"3.38"},{"1":"pat4","2":"1.54"},{"1":"pat5","2":"5.34"},{"1":"pat6","2":"-0.55"},{"1":"pat7","2":"3.61"},{"1":"pat8","2":"2.89"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>diabetes_diff <span class="sc">%&gt;%</span></span>
-<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> difference)) <span class="sc">+</span></span>
-<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
-<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>()</span></code></pre></div>
-<p><img src="05_1_diabetes_sol_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<p>Based on the QQ-plot, we may assume that our data are normally distributed.
-As our assumptions are met we may continue with performing the paired t-test.</p>
 </div>
-<div id="hypothesis-test" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> Hypothesis test</h2>
+</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>diabetes_diff <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> difference)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1_diabetes_sol_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Based on the QQ-plot, we may assume that our data are normally distributed. As our assumptions are met we may continue with performing the paired t-test.</p>
+</section>
+<section id="hypothesis-test" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="hypothesis-test"><span class="header-section-number">4.2</span> Hypothesis test</h2>
 <p>We will perform a <strong>paired t-test</strong>.</p>
 <ul>
-<li>The null hypothesis of the test is that the glucose levels before and two hours after
-glucose intake are on average equal.</li>
+<li>The null hypothesis of the test is that the glucose levels before and two hours after glucose intake are on average equal.</li>
 <li>Which will be tested against the alternative hypothesis that the glucose levels before and two hours after the glucose intake are on average different.</li>
 </ul>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>paired_t <span class="ot">&lt;-</span> <span class="fu">t.test</span>(diabetes<span class="sc">$</span>after,diabetes<span class="sc">$</span>before, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>paired_t</span></code></pre></div>
-<pre><code>## 
-##  Paired t-test
-## 
-## data:  diabetes$after and diabetes$before
-## t = 3.2834, df = 7, p-value = 0.01342
-## alternative hypothesis: true mean difference is not equal to 0
-## 95 percent confidence interval:
-##  0.6222645 3.8252355
-## sample estimates:
-## mean difference 
-##         2.22375</code></pre>
-</div>
-<div id="conclusion" class="section level2" number="4.3">
-<h2><span class="header-section-number">4.3</span> Conclusion</h2>
-<p>There is on average an significant blood increase in the blood pressure upon
-administering 100g of sugar to patients (p = 0.01).
-The glucose levels two hours after administering 100g of glucose are on average 2.2 mmol/l higher than upon 8 hours of fastening
-(95% CI [0.6, 3.8]mmol/l).</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>paired_t <span class="ot">&lt;-</span> <span class="fu">t.test</span>(diabetes<span class="sc">$</span>after,diabetes<span class="sc">$</span>before, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>paired_t</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Paired t-test
+
+data:  diabetes$after and diabetes$before
+t = 3.2834, df = 7, p-value = 0.01342
+alternative hypothesis: true mean difference is not equal to 0
+95 percent confidence interval:
+ 0.6222645 3.8252355
+sample estimates:
+mean difference 
+        2.22375 </code></pre>
 </div>
 </div>
-<div id="alternative-solution-one-sample-t-test-on-the-difference" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Alternative solution: One-sample t-test on the difference</h1>
-<p>Since the data is paired, we can also simply calculate the differences in
-glucose level before and after sugar intake for each patient. We can then
-perform a one-sample t-test on these differences, testing whether they are
-significantly different from zero. This is equivalent to the paired t-test we
-performed above.</p>
+</section>
+<section id="conclusion" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">4.3</span> Conclusion</h2>
+<p>There is on average an significant blood increase in the blood pressure upon administering 100g of sugar to patients (p = 0.01). The glucose levels two hours after administering 100g of glucose are on average 2.2 mmol/l higher than upon 8 hours of fastening (95% CI [0.6, 3.8]mmol/l).</p>
+</section>
+</section>
+<section id="alternative-solution-one-sample-t-test-on-the-difference" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Alternative solution: One-sample t-test on the difference</h1>
+<p>Since the data is paired, we can also simply calculate the differences in glucose level before and after sugar intake for each patient. We can then perform a one-sample t-test on these differences, testing whether they are significantly different from zero. This is equivalent to the paired t-test we performed above.</p>
 <p>We can verify this with the analysis below</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">t.test</span>(difference <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> diabetes_diff, <span class="at">mu =</span> <span class="dv">0</span>)</span></code></pre></div>
-<pre><code>## 
-##  One Sample t-test
-## 
-## data:  difference
-## t = 3.2834, df = 7, p-value = 0.01342
-## alternative hypothesis: true mean is not equal to 0
-## 95 percent confidence interval:
-##  0.6222645 3.8252355
-## sample estimates:
-## mean of x 
-##   2.22375</code></pre>
-<p>Indeed, the output is equivalent to that of the paired t-test.</p>
-<hr />
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(difference <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> diabetes_diff, <span class="at">mu =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  difference
+t = 3.2834, df = 7, p-value = 0.01342
+alternative hypothesis: true mean is not equal to 0
+95 percent confidence interval:
+ 0.6222645 3.8252355
+sample estimates:
+mean of x 
+  2.22375 </code></pre>
 </div>
-<div id="question-2" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Question 2</h1>
-<p>Is the average glucose level two hours after sugar intake
-higher than the threshold of 7.8 mmol/l for pre-diabetes?</p>
-<p>We can test this hypothesis using a <strong>one-sample t-test</strong>.
-Indeed we are interested to compare the average glucose level to a known threshold for pre-diabetes.</p>
-<div id="assess-the-assumptions" class="section level2" number="6.1">
-<h2><span class="header-section-number">6.1</span> Assess the assumptions</h2>
-<p>Before we can perform a one sample t-test, we must check that the required
-assumptions are met!</p>
-<ol style="list-style-type: decimal">
+</div>
+<p>Indeed, the output is equivalent to that of the paired t-test.</p>
+<hr>
+</section>
+<section id="question-2" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Question 2</h1>
+<p>Is the average glucose level two hours after sugar intake higher than the threshold of 7.8 mmol/l for pre-diabetes?</p>
+<p>We can test this hypothesis using a <strong>one-sample t-test</strong>. Indeed we are interested to compare the average glucose level to a known threshold for pre-diabetes.</p>
+<section id="assess-the-assumptions" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="assess-the-assumptions"><span class="header-section-number">6.1</span> Assess the assumptions</h2>
+<p>Before we can perform a one sample t-test, we must check that the required assumptions are met!</p>
+<ol type="1">
 <li>The observations are independent</li>
 <li>The glucose levels two hours after the treatment are normally distributed</li>
 </ol>
-<p>The first assumption requires us to think about how the data were collected.
-Are there dependences in the data?
-The 8 glucose levels upon sugar intake are collected on 8 random patients so we can assume that the glucose levels 2 hours after sugar intake are independent.</p>
+<p>The first assumption requires us to think about how the data were collected. Are there dependences in the data? The 8 glucose levels upon sugar intake are collected on 8 random patients so we can assume that the glucose levels 2 hours after sugar intake are independent.</p>
 <p>We can assess the second assumption with a quantile-quantile plot. First we need to filter the data, so we only retain the values for the <code>time == "after"</code> level</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>diabetes_after <span class="ot">&lt;-</span> diabetes_tidy <span class="sc">%&gt;%</span></span>
-<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>  <span class="fu">filter</span>(time <span class="sc">==</span> <span class="st">&quot;after&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>diabetes_after <span class="sc">%&gt;%</span></span>
-<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> concentration)) <span class="sc">+</span></span>
-<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
-<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>()</span></code></pre></div>
-<p><img src="05_1_diabetes_sol_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-<p>The data seem to be nicely scattered around the quantile-quantile
-line (black line).
-We also do not observe large deviations in the plot.</p>
-<p>So we will assume that our data is normally
-distributed.
-Note, that there are not many observations to assess normality.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>diabetes_after <span class="ot">&lt;-</span> diabetes_tidy <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(time <span class="sc">==</span> <span class="st">"after"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div id="hypothesis-test-1" class="section level2" number="6.2">
-<h2><span class="header-section-number">6.2</span> Hypothesis test</h2>
-<p>Here, we will test if mean glucose level 2 hours after sugar intake is significantly
-higher than the threshold for pre-diabetes of 7.8 mmol/l. More specifically, we will test the null hypothesis;</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>diabetes_after <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> concentration)) <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1_diabetes_sol_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The data seem to be nicely scattered around the quantile-quantile line (black line). We also do not observe large deviations in the plot.</p>
+<p>So we will assume that our data is normally distributed. Note, that there are not many observations to assess normality.</p>
+</section>
+<section id="hypothesis-test-1" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="hypothesis-test-1"><span class="header-section-number">6.2</span> Hypothesis test</h2>
+<p>Here, we will test if mean glucose level 2 hours after sugar intake is significantly higher than the threshold for pre-diabetes of 7.8 mmol/l. More specifically, we will test the null hypothesis;</p>
 <p><span class="math inline">\(H_0:\)</span> the mean glucose level two hours after 100g of sugar intake is equal to 7.8 mmol/l</p>
 <p>versus the alternative hypothesis;</p>
 <p><span class="math inline">\(H_1:\)</span> the mean glucose level two hours after 100g of sugar intake is greater than 7.8 mmol/l</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>t_test_after <span class="ot">&lt;-</span> <span class="fu">t.test</span>(concentration <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>  <span class="at">data =</span> diabetes_after,</span>
-<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>  <span class="at">mu =</span> <span class="fl">7.8</span>,</span>
-<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>  <span class="at">alternative =</span> <span class="st">&quot;greater&quot;</span>,</span>
-<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>  <span class="at">conf.level =</span> <span class="fl">0.95</span></span>
-<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a>)</span>
-<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>t_test_after</span></code></pre></div>
-<pre><code>## 
-##  One Sample t-test
-## 
-## data:  concentration
-## t = 0.057943, df = 7, p-value = 0.4777
-## alternative hypothesis: true mean is greater than 7.8
-## 95 percent confidence interval:
-##  6.373627      Inf
-## sample estimates:
-## mean of x 
-##     7.845</code></pre>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>t_test_after <span class="ot">&lt;-</span> <span class="fu">t.test</span>(concentration <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> diabetes_after,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> <span class="fl">7.8</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">alternative =</span> <span class="st">"greater"</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.level =</span> <span class="fl">0.95</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>t_test_after</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  concentration
+t = 0.057943, df = 7, p-value = 0.4777
+alternative hypothesis: true mean is greater than 7.8
+95 percent confidence interval:
+ 6.373627      Inf
+sample estimates:
+mean of x 
+    7.845 </code></pre>
 </div>
-<div id="conclusion-1" class="section level2" number="6.3">
-<h2><span class="header-section-number">6.3</span> Conclusion</h2>
-<p>When writing a conclusion on your research hypothesis,
-it is very important to be precise, concise, and complete.</p>
-<p>An example of such a conclusion for our research question
-is given below:</p>
-<p>We can conclude that the mean glucose level of patients two hours after 100g of glucose intake is not significantly higher than the threshold for pre-diabetes of 7.8 mmol/l (p = 0.48).
-The mean glucose level two hours after the intake of 100g of sugar equals 7.8 mmol/l (95% CI [6.4, ]).</p>
-<p>As we have seen in the theory class, the 95% confidence
-interval can be interpreted as;</p>
+</div>
+</section>
+<section id="conclusion-1" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="conclusion-1"><span class="header-section-number">6.3</span> Conclusion</h2>
+<p>When writing a conclusion on your research hypothesis, it is very important to be precise, concise, and complete.</p>
+<p>An example of such a conclusion for our research question is given below:</p>
+<p>We can conclude that the mean glucose level of patients two hours after 100g of glucose intake is not significantly higher than the threshold for pre-diabetes of 7.8 mmol/l (p = 0.48). The mean glucose level two hours after the intake of 100g of sugar equals 7.8 mmol/l (95% CI [6.4, ]).</p>
+<p>As we have seen in the theory class, the 95% confidence interval can be interpreted as;</p>
 <p>With 95% confidence we can conclude that the true average of glucose level of the patients in the population is above 6.37.</p>
 <p>Note, that we only report a one sided confidence interval because we only test against the alternative hypothesis that the glucose level two hours after sugar intake is on average larger than the threshold for pre-diabetes of 7.8 mmol/l.</p>
-</div>
-</div>
-
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRXhlcmNpc2UgNS4xOiBIeXBvdGhlc2lzIHRlc3Rpbmcgb24gdGhlIGRpYWJldGVzIGV4YW1wbGUgLSBzb2x1dGlvbiIKYXV0aG9yOiAiTGlldmVuIENsZW1lbnQsIEplcm9lbiBHaWxpcyBhbmQgTWlsYW4gTWFsZmFpdCIKZGF0ZTogInN0YXRPbWljcywgR2hlbnQgVW5pdmVyc2l0eSAoaHR0cHM6Ly9zdGF0b21pY3MuZ2l0aHViLmlvKSIKLS0tCgojIEFpbXMKCkluIHRoaXMgZXhlcmNpc2UsIHlvdSB3aWxsIHJldmlzaXQgdGhlIGJhc2ljcyBvZiBzdGF0aXN0aWNhbCBoeXBvdGhlc2lzIHRlc3RpbmcuCgpZb3Ugd2lsbCBhY3F1aXJlIHRoZSBza2lsbHMKCjEuIHRvIGFzc2VzcyB0aGUgYXNzdW1wdGlvbnMgb2YgYSBvbmUtc2FtcGxlIGFuZCBhIHBhaXJlZCB0LXRlc3QgaW4gIGRhdGEgZXhwbG9yYXRpb24uCjIuIHRvIGNvbmR1Y3QgYSBwYWlyZWQgdC10ZXN0IGluIFIgYW5kIHRvIGludGVycHJldCB0aGUgcmVzdWx0cy4KMy4gdG8gY29uZHVjdCBhIG9uZS1zYW1wbGUgdC10ZXN0IGluIFIgYW5kIHRvIGludGVycHJldCB0aGUgcmVzdWx0cy4KCiMgVGhlIGRpYWJldGVzIGRhdGFzZXQKClRoZSBgZGlhYmV0ZXNgICBkYXRhc2V0IGhvbGRzIGluZm9ybWF0aW9uIG9uIGEgc21hbGwgZXhwZXJpbWVudCB3aXRoCjggcGF0aWVudHMgdGhhdCBhcmUgc3ViamVjdGVkIHRvIGEgZ2x1Y29zZSB0b2xlcmFuY2UgdGVzdC4KClBhdGllbnRzIGhhZCB0byBmYXN0IGZvciBlaWdodCBob3VycyBiZWZvcmUgdGhlIHRlc3QuCldoZW4gdGhlIHBhdGllbnRzIGVudGVyZWQgdGhlIGhvc3BpdGFsIHRoZWlyIGJhc2VsaW5lIGdsdWNvc2UgbGV2ZWwgd2FzIG1lYXN1cmVkIChtbW9sL2wpLgoKUGF0aWVudHMgdGhlbiAgaGFkIHRvIGRyaW5rIDI1MCBtbCBvZiBhIHN5cnVweSBnbHVjb3NlIHNvbHV0aW9uIGNvbnRhaW5pbmcgMTAwCmdyYW1zIG9mIHN1Z2FyLiAgVHdvIGhvdXJzIGxhdGVyLCB0aGVpciBibG9vZCBnbHVjb3NlIGxldmVsIHdhcyBtZWFzdXJlZCBhZ2Fpbi4KClRoZSBkYXRhIGNvbnNpc3Qgb2YgdGhyZWUgdmFyaWFibGVzOgoKLSBgYmVmb3JlYDogZ2x1Y29zZSBjb25jZW50cmF0aW9uIHVwb24gOCBob3VycyBvZiBmYXN0aW5nIChtbW9sL2wpCi0gYGFmdGVyYDogZ2x1Y29zZSBjb25jZW50cmF0aW9uIDIgaG91cnMgYWZ0ZXIgZHJpbmtpbmcgZ2x1Y29zZSBzb2x1dGlvbiAobW1vbC9sKS4KLSBgcGF0aWVudGA6IGlkZW50aWZpZXIgZm9yIHRoZSBwYXRpZW50CgojIyBSZXNlYXJjaCBxdWVzdGlvbnMKClRoZSBnb2FsIGlzIHRvIGFuc3dlciB0d28gcmVzZWFyY2ggcXVlc3Rpb25zOwoKMS4gSXMgdGhlIGF2ZXJhZ2UgZ2x1Y29zZSBsZXZlbCBhZnRlciB0aGUgc3VnYXIgaW50YWtlIGRpZmZlcmVudCBmcm9tIHRoZSBhdmVyYWdlIGdsdWNvc2UgbGV2ZWwgYmVmb3JlIHN1Z2FyIGludGFrZT8KCjIuIElzIHRoZSBhdmVyYWdlIGdsdWNvc2UgbGV2ZWwgb2YgdGhlIHBhdGllbnRzIHR3byBob3VycyBhZnRlciB0aGUgc3VnYXIgaW50YWtlIGhpZ2hlciB0aGFuIDcuOCBtbW9sL0w/CgojIyBJbXBvcnQgdGhlIGRhdGEKCkZpcnN0LCBsb2FkIHRoZSByZXF1aXJlZCBSIGxpYnJhcmllczoKCmBgYHtyLCBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKYGBgCgpgYGB7cn0KZGlhYmV0ZXMgPC0gcmVhZF9kZWxpbSgiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3N0YXRPbWljcy9QU0xTRGF0YS9tYWluL2RpYWJldGVzLnR4dCIsIGRlbGltID0gIiAiKQpgYGAKCiMgRGF0YSBleHBsb3JhdGlvbgoKV2Ugd2lsbCBzdGFydCB3aXRoIGEgZGF0YSBleHBsb3JhdGlvbi4KSGF2ZSBhIGZpcnN0IGxvb2sgYXQgdGhlIHJhdyBkYXRhLiBIb3cgaXMgdGhlIGRhdGEgc3RydWN0dXJlZD8KSXMgdGhpcyBkYXRhICp0aWR5Kj8KCmBgYHtyfQpnbGltcHNlKGRpYWJldGVzKQpoZWFkKGRpYWJldGVzKQpgYGAKCldlIGhhdmUgOCBwYXRpZW50cywgZm9yIHdoaWNoIGdsdWNvc2UgY29uY2VudHJhdGlvbnMgd2VyZSBtZWFzdXJlZCwgYmVmb3JlIGFuZCBhZnRlciBzdWdhciBpbnRha2UuCgpOb3RlLCB0aGF0IHRoZSBkYXRhc2V0IGlzIG5vdCBpbiB0aGUgdGlkeSBmb3JtYXQuIFRoZSBnbHVjb3NlIGNvbmNlbnRyYXRpb24KdmFyaWFibGUgaXMgc3ByZWFkIGFyb3VuZCAyIGNvbHVtbnM6IGBiZWZvcmVgIGFuZCBgYWZ0ZXJgLCB3aGlsZSB0aGUgInRpbWUiCnZhcmlhYmxlIGlzIGVuY29kZWQgaW4gdGhlIGNvbHVtbiBuYW1lcyBpbnN0ZWFkIG9mIGluIGEgZGVkaWNhdGVkIGNvbHVtbi4gRGF0YQppbiB0aGlzIGZvcm0gaXMgYWxzbyBjYWxsZWQgKndpZGUqIGRhdGEuIEluc3RlYWQsIHdlIHdhbnQgdG8gdHJhbnNmb3JtIHRoZSBkYXRhCnRvIGEgKmxvbmcqIGZvcm1hdC4KClRvIHRpZHkgdGhlIGRhdGEsIHdlIGNhbiB1c2UgdGhlIGBnYXRoZXIoKWAgZnVuY3Rpb24gdG8KW3Bpdm90XShodHRwczovL3I0ZHMuaGFkLmNvLm56L3RpZHktZGF0YS5odG1sI3Bpdm90aW5nKSB0aGUgZGF0YS4gSW4gdGhpcyBjYXNlLAp3ZSB3YW50IHRvICJnYXRoZXIiIHRoZSBgdGltZWAgKGVuY29kZWQgaW4gdGhlIGNvbHVtbiBuYW1lcyBgYmVmb3JlYCBhbmQKYGFmdGVyYCkgYW5kIGBjb25jZW50cmF0aW9uYCB2YXJpYWJsZXMgKHdoaWNoIGlzIGVuY29kZWQgaW4gdGhlIGFjdHVhbCB2YWx1ZXMpLgpUaGUgYHBhdGllbnRgIGNvbHVtbiBzaG91bGQgc3RheSB0aGUgc2FtZS4gV2UgY2FuIHNwZWNpZnkgdGhpcyB3aXRoIHRoZQpmb2xsb3dpbmcgc3ludGF4LgoKYGBge3J9CmRpYWJldGVzX3RpZHkgPC0gZGlhYmV0ZXMgJT4lCiAgZ2F0aGVyKGtleSA9ICJ0aW1lIiwgdmFsdWUgPSAiY29uY2VudHJhdGlvbiIsIC1wYXRpZW50KQoKIyMgVGFrZSBhIGxvb2sgYXQgdGhlIG5ldyBkYXRhCmdsaW1wc2UoZGlhYmV0ZXNfdGlkeSkKZGlhYmV0ZXNfdGlkeQpgYGAKClRvIGltcHJvdmUgdGhlIHZpc3VhbGl6YXRpb25zIGJlbG93LCB3ZSBjYW4gYWxzbyBzbGlndGhseSByZWNvZGUgdGhlIGB0aW1lYCB2YXJpYWJsZSwgc28gdGhhdCB0aGUgImJlZm9yZSIgbGV2ZWwgaXMgdGhlIGZpcnN0IG9uZS4gV2UgY2FuIGRvIHRoaXMgYnkgY29udmVydGluZyBgdGltZWAgdG8gYSBmYWN0b3IuCgpgYGB7cn0KZGlhYmV0ZXNfdGlkeSA8LSBkaWFiZXRlc190aWR5ICU+JQogIG11dGF0ZSgKICAgIHRpbWUgPSBhcy5mYWN0b3IodGltZSksCiAgICB0aW1lID0gcmVsZXZlbCh0aW1lLCByZWYgPSAiYmVmb3JlIikKICApCmBgYAoKV2UgY291bGQgdmlzdWFsaXplIHRoZSBkYXRhIHVzaW5nIGJveHBsb3RzLiBOb3RlLCBob3dldmVyLCB0aGF0IHdlIGxvc2UgdGhlCnBhaXJlZCBjaGFyYWN0ZXJpc3RpYyBvZiB0aGUgZGF0YSB3aXRoIHRoaXMgdmlzdWFsaXphdGlvbi4gTmV2ZXJ0aGVsZXNzLCBpdCBpcwpzdGlsbCBhIHVzZWZ1bCB2aXN1YWxpemF0aW9uIHRvIGFzc2VzcyBhbnkgZGlmZmVyZW5jZXMgaW4gbWVhbiBhbmQgdmFyaWFuY2UKYmV0d2VlbiB0aGUgdHdvIHRpbWUgcG9pbnRzLgoKYGBge3J9CmJveHBsb3QgPC0gZGlhYmV0ZXNfdGlkeSAlPiUKICBnZ3Bsb3QoYWVzKHggPSB0aW1lLCB5ID0gY29uY2VudHJhdGlvbiwgZmlsbCA9IHRpbWUpKSArCiAgdGhlbWVfYncoKSArCiAgZ2VvbV9ib3hwbG90KG91dGxpZXIuc2hhcGUgPSBOQSkgKwogIGdlb21faml0dGVyKHdpZHRoID0gMC4yKSArCiAgc3RhdF9zdW1tYXJ5KAogICAgZnVuID0gbWVhbiwgZ2VvbSA9ICJwb2ludCIsCiAgICBzaGFwZSA9IDUsIHNpemUgPSAzLAogICAgY29sb3IgPSAiYmxhY2siCiAgKSArCiAgeWxhYigiQ29uY2VudHJhdGlvbiAobW1vbC9sKSIpCgpib3hwbG90CmBgYAoKV2Ugb2JzZXJ2ZSB0aGF0IHRoZSB2YXJpYWJpbGl0eSBvZiB0aGUgZ2x1Y29zZSBsZXZlbHMgYXJlIGhpZ2hlciBhZnRlciB0aGFuCmJlZm9yZSB0aGUgc3VnYXIgaW50YWtlLiAgVGhlIGRpZmZlcmVuY2UgcGxvdCBhbHNvIHNob3dzIHRoYXQgZ2x1Y29zZSBsZXZlbHMgaW4KdGhlIGJsb29kIGFyZSBoaWdoZXIgZm9yIG1vc3Qgb2YgdGhlIHBhdGllbnRzIHR3byBob3VycyBhZnRlciB0aGUgc3VnYXIgaW50YWtlLgpPbmx5IGZvciBvbmUgcGF0aWVudCB0aGUgZ2x1Y29zZSBjb25jZW50cmF0aW9uIHR3byBob3VycyBhZnRlciB0cmVhdG1lbnQgaXMKbG93ZXIuCgpUbyB2aXN1YWxpemUgdGhlIHBhaXJlZCBuYXR1cmUgb2YgdGhlIGRhdGEsIHdlIGNhbiB1c2UgYSAqKmxpbmUgcGxvdCoqLApjb25uZWN0aW5nIHRoZSBgYmVmb3JlYCBhbmQgYGFmdGVyYCBwb2ludHMgZm9yIGVhY2ggcGF0aWVudC4KCmBgYHtyfQpkaWFiZXRlc190aWR5ICU+JQogIGdncGxvdChhZXModGltZSwgY29uY2VudHJhdGlvbikpICsKICBnZW9tX3BvaW50KCkgKwogIGdlb21fbGluZShhZXMoZ3JvdXAgPSBwYXRpZW50KSkKYGBgCgoKIyBRdWVzdGlvbiAxCgpJcyB0aGUgZ2x1Y29zZSBsZXZlbCBhZnRlciA4IGhvdXJzIG9mIGZhc3Rpbmcgb24gYXZlcmFnZSBkaWZmZXJlbnQgZnJvbSB0aGUgZ2x1Y29zZSBsZXZlbCB0d28gaG91cnMgYWZ0ZXIgaW50YWtlIG9mIDEwMGcgb2YgZ2x1Y29zZT8KCkFzIHRoZSBkYXRhIGFyZSBwYWlyZWQsIHdlIGNhbiBleHBlY3QgdGhhdCB0aGUgbWVhc3VyZW1lbnRzIGJlZm9yZSBhbmQgYWZ0ZXIgdGhlIGdsdWNvc2UgaW50YWtlIGFyZSBjb3JyZWxhdGVkLgpXZSBjYW4gaWxsdXN0cmF0ZSB0aGlzIHdpdGggYSBzY2F0dGVycGxvdC4KCk5vdGUgdGhhdCBpbiB0aGlzIGNhc2UsIHRoZSBub24tdGlkeSBkYXRhIGlzIGFjdHVhbGx5IGEgbW9yZSBzdWl0YWJsZSBmb3JtYXQgdG8gdmlzdWFsaXplLgoKYGBge3J9CmRpYWJldGVzICU+JQogIGdncGxvdChhZXMoeCA9IGJlZm9yZSwgeSA9IGFmdGVyKSkgKwogIGdlb21fcG9pbnQoKSArCiAgeWxhYigiYmVmb3JlIChtbW9sL2wpIikgKwogIHhsYWIoImFmdGVyIChtbW9sL2wpIikKYGBgCgpgYGB7cn0KY29yKGRpYWJldGVzJGJlZm9yZSwgZGlhYmV0ZXMkYWZ0ZXIsIG1ldGhvZCA9ICJzcGVhcm1hbiIpCmBgYAoKCiMjIENoZWNrIHRoZSBhc3N1bXB0aW9ucwoKVGhlIHBhaXJlZCB0LXRlc3QgaGFzIDIgYXNzdW1wdGlvbnM6CgoxLiBUaGUgZGlmZmVyZW5jZXMgaW4gZ2x1Y29zZSBsZXZlbHMgYXJlIGluZGVwZW5kZW50IG9mIGVhY2ggb3RoZXIuCgoyLiBUaGUgZGlmZmVyZW5jZXMgaW4gZ2x1Y29zZSBsZXZlbHMgYXJlIG5vcm1hbGx5IGRpc3RyaWJ1dGVkLgoKVGhlIGZpcnN0IGFzc3VtcHRpb24gaXMgbWV0IGdpdmVuIHRoZSBleHBlcmltZW50YWwgZGVzaWduLgpVcG9uIGRpZmZlcmVuY2luZyB0aGUgbWVhc3VyZW1lbnRzIGJlZm9yZSBhbmQgYWZ0ZXIgdGhlIGdsdWNvc2UgaW50YWtlLCB3ZSBvYnRhaW5lZCBvbmUgZGlmZmVyZW5jZSBmb3IgZWFjaCBwYXRpZW50LiBBcyB0aGUgcGF0aWVudHMgd2VyZSBzYW1wbGVkIGF0IHJhbmRvbSBmcm9tIHRoZSBwb3B1bGF0aW9uIHdlIGNhbiBleHBlY3QgdGhlbSB0byBiZSBpbmRlcGVuZGVudC4KClNlY29uZGx5LCB3ZSBhc3Nlc3MgaWYgdGhlIGRpZmZlcmVuY2VzIGFyZSBub3JtYWxseSBkaXN0cmlidXRlZC4KCldlIGNhbiBjYWxjdWxhdGUgdGhlIGRpZmZlcmVuY2VzIGZvciBlYWNoIHBhdGllbnQgdXNpbmcgYSBgZ3JvdXBfYnkoKWAgKwpgc3VtbWFyaXplKClgIGNvbWJpbmF0aW9uIG9uIHRoZSB0aWR5IGRhdGEuCgpgYGB7cn0KZGlhYmV0ZXNfZGlmZiA8LSBkaWFiZXRlc190aWR5ICU+JQogIGdyb3VwX2J5KHBhdGllbnQpICU+JQogIHN1bW1hcml6ZShkaWZmZXJlbmNlID0gZGlmZihjb25jZW50cmF0aW9uKSkKZGlhYmV0ZXNfZGlmZgpgYGAKCmBgYHtyfQpkaWFiZXRlc19kaWZmICU+JQogIGdncGxvdChhZXMoc2FtcGxlID0gZGlmZmVyZW5jZSkpICsKICBnZW9tX3FxKCkgKwogIGdlb21fcXFfbGluZSgpCmBgYAoKQmFzZWQgb24gdGhlIFFRLXBsb3QsIHdlIG1heSBhc3N1bWUgdGhhdCBvdXIgZGF0YSBhcmUgbm9ybWFsbHkgZGlzdHJpYnV0ZWQuCkFzIG91ciBhc3N1bXB0aW9ucyBhcmUgbWV0IHdlIG1heSBjb250aW51ZSB3aXRoIHBlcmZvcm1pbmcgdGhlIHBhaXJlZCB0LXRlc3QuCgojIyBIeXBvdGhlc2lzIHRlc3QKCldlIHdpbGwgcGVyZm9ybSBhICoqcGFpcmVkIHQtdGVzdCoqLgoKLSBUaGUgbnVsbCBoeXBvdGhlc2lzIG9mIHRoZSB0ZXN0IGlzIHRoYXQgdGhlIGdsdWNvc2UgbGV2ZWxzIGJlZm9yZSBhbmQgdHdvIGhvdXJzIGFmdGVyCmdsdWNvc2UgaW50YWtlIGFyZSBvbiBhdmVyYWdlIGVxdWFsLgotIFdoaWNoIHdpbGwgYmUgdGVzdGVkIGFnYWluc3QgdGhlIGFsdGVybmF0aXZlIGh5cG90aGVzaXMgdGhhdCB0aGUgZ2x1Y29zZSBsZXZlbHMgYmVmb3JlIGFuZCB0d28gaG91cnMgYWZ0ZXIgdGhlIGdsdWNvc2UgaW50YWtlIGFyZSBvbiBhdmVyYWdlIGRpZmZlcmVudC4KCmBgYHtyfQpwYWlyZWRfdCA8LSB0LnRlc3QoZGlhYmV0ZXMkYWZ0ZXIsZGlhYmV0ZXMkYmVmb3JlLCBwYWlyZWQgPSBUUlVFKQpwYWlyZWRfdApgYGAKCgojIyBDb25jbHVzaW9uCgpUaGVyZSBpcyBvbiBhdmVyYWdlIGFuIHNpZ25pZmljYW50IGJsb29kIGluY3JlYXNlIGluIHRoZSBibG9vZCBwcmVzc3VyZSB1cG9uCmFkbWluaXN0ZXJpbmcgMTAwZyBvZiBzdWdhciB0byBwYXRpZW50cyAocCA9IGByIHJvdW5kKHBhaXJlZF90JHAudmFsdWUsIDIpYCkuClRoZSBnbHVjb3NlIGxldmVscyB0d28gaG91cnMgYWZ0ZXIgYWRtaW5pc3RlcmluZyAxMDBnIG9mIGdsdWNvc2UgYXJlIG9uIGF2ZXJhZ2UgYHIgcm91bmQocGFpcmVkX3QkZXN0aW1hdGUsMSlgIG1tb2wvbCBoaWdoZXIgdGhhbiB1cG9uIDggaG91cnMgb2YgZmFzdGVuaW5nCig5NSUgQ0kgW2ByIHJvdW5kKHBhaXJlZF90JGNvbmYuaW50LDEpYF1tbW9sL2wpLgoKIyBBbHRlcm5hdGl2ZSBzb2x1dGlvbjogT25lLXNhbXBsZSB0LXRlc3Qgb24gdGhlIGRpZmZlcmVuY2UKClNpbmNlIHRoZSBkYXRhIGlzIHBhaXJlZCwgd2UgY2FuIGFsc28gc2ltcGx5IGNhbGN1bGF0ZSB0aGUgZGlmZmVyZW5jZXMgaW4KZ2x1Y29zZSBsZXZlbCBiZWZvcmUgYW5kIGFmdGVyIHN1Z2FyIGludGFrZSBmb3IgZWFjaCBwYXRpZW50LiBXZSBjYW4gdGhlbgpwZXJmb3JtIGEgb25lLXNhbXBsZSB0LXRlc3Qgb24gdGhlc2UgZGlmZmVyZW5jZXMsIHRlc3Rpbmcgd2hldGhlciB0aGV5IGFyZQpzaWduaWZpY2FudGx5IGRpZmZlcmVudCBmcm9tIHplcm8uIFRoaXMgaXMgZXF1aXZhbGVudCB0byB0aGUgcGFpcmVkIHQtdGVzdCB3ZQpwZXJmb3JtZWQgYWJvdmUuCgpXZSBjYW4gdmVyaWZ5IHRoaXMgd2l0aCB0aGUgYW5hbHlzaXMgYmVsb3cKCmBgYHtyfQp0LnRlc3QoZGlmZmVyZW5jZSB+IDEsIGRhdGEgPSBkaWFiZXRlc19kaWZmLCBtdSA9IDApCmBgYAoKSW5kZWVkLCB0aGUgb3V0cHV0IGlzIGVxdWl2YWxlbnQgdG8gdGhhdCBvZiB0aGUgcGFpcmVkIHQtdGVzdC4KCioqKgoKIyBRdWVzdGlvbiAyCgpJcyB0aGUgYXZlcmFnZSBnbHVjb3NlIGxldmVsIHR3byBob3VycyBhZnRlciBzdWdhciBpbnRha2UKaGlnaGVyIHRoYW4gdGhlIHRocmVzaG9sZCBvZiA3LjggbW1vbC9sIGZvciBwcmUtZGlhYmV0ZXM/CgpXZSBjYW4gdGVzdCB0aGlzIGh5cG90aGVzaXMgdXNpbmcgYSAqKm9uZS1zYW1wbGUgdC10ZXN0KiouCkluZGVlZCB3ZSBhcmUgaW50ZXJlc3RlZCB0byBjb21wYXJlIHRoZSBhdmVyYWdlIGdsdWNvc2UgbGV2ZWwgdG8gYSBrbm93biB0aHJlc2hvbGQgZm9yIHByZS1kaWFiZXRlcy4KCiMjIEFzc2VzcyB0aGUgYXNzdW1wdGlvbnMKCkJlZm9yZSB3ZSBjYW4gcGVyZm9ybSBhIG9uZSBzYW1wbGUgdC10ZXN0LCB3ZSBtdXN0IGNoZWNrIHRoYXQgdGhlIHJlcXVpcmVkCmFzc3VtcHRpb25zIGFyZSBtZXQhCgoxLiBUaGUgb2JzZXJ2YXRpb25zIGFyZSBpbmRlcGVuZGVudAoyLiBUaGUgZ2x1Y29zZSBsZXZlbHMgdHdvIGhvdXJzIGFmdGVyIHRoZSB0cmVhdG1lbnQgYXJlIG5vcm1hbGx5IGRpc3RyaWJ1dGVkCgpUaGUgZmlyc3QgYXNzdW1wdGlvbiByZXF1aXJlcyB1cyB0byB0aGluayBhYm91dCBob3cgdGhlIGRhdGEgd2VyZSBjb2xsZWN0ZWQuCkFyZSB0aGVyZSBkZXBlbmRlbmNlcyBpbiB0aGUgZGF0YT8KVGhlIDggZ2x1Y29zZSBsZXZlbHMgdXBvbiBzdWdhciBpbnRha2UgYXJlIGNvbGxlY3RlZCBvbiA4IHJhbmRvbSBwYXRpZW50cyBzbyB3ZSBjYW4gYXNzdW1lIHRoYXQgdGhlIGdsdWNvc2UgbGV2ZWxzIDIgaG91cnMgYWZ0ZXIgc3VnYXIgaW50YWtlIGFyZSBpbmRlcGVuZGVudC4KCldlIGNhbiBhc3Nlc3MgdGhlIHNlY29uZCBhc3N1bXB0aW9uIHdpdGggYSBxdWFudGlsZS1xdWFudGlsZSBwbG90LiBGaXJzdCB3ZSBuZWVkIHRvIGZpbHRlciB0aGUgZGF0YSwgc28gd2Ugb25seSByZXRhaW4gdGhlIHZhbHVlcyBmb3IgdGhlIGB0aW1lID09ICJhZnRlciJgIGxldmVsCgpgYGB7cn0KZGlhYmV0ZXNfYWZ0ZXIgPC0gZGlhYmV0ZXNfdGlkeSAlPiUKICBmaWx0ZXIodGltZSA9PSAiYWZ0ZXIiKQpgYGAKCmBgYHtyfQpkaWFiZXRlc19hZnRlciAlPiUKICBnZ3Bsb3QoYWVzKHNhbXBsZSA9IGNvbmNlbnRyYXRpb24pKSArCiAgZ2VvbV9xcSgpICsKICBnZW9tX3FxX2xpbmUoKQpgYGAKClRoZSBkYXRhIHNlZW0gdG8gYmUgbmljZWx5IHNjYXR0ZXJlZCBhcm91bmQgdGhlIHF1YW50aWxlLXF1YW50aWxlCmxpbmUgKGJsYWNrIGxpbmUpLgpXZSBhbHNvIGRvIG5vdCBvYnNlcnZlIGxhcmdlIGRldmlhdGlvbnMgaW4gdGhlIHBsb3QuCgpTbyB3ZSB3aWxsIGFzc3VtZSB0aGF0IG91ciBkYXRhIGlzIG5vcm1hbGx5CmRpc3RyaWJ1dGVkLgpOb3RlLCB0aGF0IHRoZXJlIGFyZSBub3QgbWFueSBvYnNlcnZhdGlvbnMgdG8gYXNzZXNzIG5vcm1hbGl0eS4KCiMjIEh5cG90aGVzaXMgdGVzdAoKSGVyZSwgd2Ugd2lsbCB0ZXN0IGlmIG1lYW4gZ2x1Y29zZSBsZXZlbCAyIGhvdXJzIGFmdGVyIHN1Z2FyIGludGFrZSBpcyBzaWduaWZpY2FudGx5CmhpZ2hlciB0aGFuIHRoZSB0aHJlc2hvbGQgZm9yIHByZS1kaWFiZXRlcyBvZiA3LjggbW1vbC9sLiBNb3JlIHNwZWNpZmljYWxseSwgd2Ugd2lsbCB0ZXN0IHRoZSBudWxsIGh5cG90aGVzaXM7CgokSF8wOiQgdGhlIG1lYW4gZ2x1Y29zZSBsZXZlbCB0d28gaG91cnMgYWZ0ZXIgMTAwZyBvZiBzdWdhciBpbnRha2UgaXMgZXF1YWwgdG8gNy44IG1tb2wvbAoKdmVyc3VzIHRoZSBhbHRlcm5hdGl2ZSBoeXBvdGhlc2lzOwoKJEhfMTokIHRoZSBtZWFuIGdsdWNvc2UgbGV2ZWwgdHdvIGhvdXJzIGFmdGVyIDEwMGcgb2Ygc3VnYXIgaW50YWtlIGlzIGdyZWF0ZXIgdGhhbiA3LjggbW1vbC9sCgpgYGB7cn0KdF90ZXN0X2FmdGVyIDwtIHQudGVzdChjb25jZW50cmF0aW9uIH4gMSwKICBkYXRhID0gZGlhYmV0ZXNfYWZ0ZXIsCiAgbXUgPSA3LjgsCiAgYWx0ZXJuYXRpdmUgPSAiZ3JlYXRlciIsCiAgY29uZi5sZXZlbCA9IDAuOTUKKQp0X3Rlc3RfYWZ0ZXIKYGBgCgojIyBDb25jbHVzaW9uCgpXaGVuIHdyaXRpbmcgYSBjb25jbHVzaW9uIG9uIHlvdXIgcmVzZWFyY2ggaHlwb3RoZXNpcywKaXQgaXMgdmVyeSBpbXBvcnRhbnQgdG8gYmUgcHJlY2lzZSwgY29uY2lzZSwgYW5kIGNvbXBsZXRlLgoKQW4gZXhhbXBsZSBvZiBzdWNoIGEgY29uY2x1c2lvbiBmb3Igb3VyIHJlc2VhcmNoIHF1ZXN0aW9uCmlzIGdpdmVuIGJlbG93OgoKV2UgY2FuIGNvbmNsdWRlIHRoYXQgdGhlIG1lYW4gZ2x1Y29zZSBsZXZlbCBvZiBwYXRpZW50cyB0d28gaG91cnMgYWZ0ZXIgMTAwZyBvZiBnbHVjb3NlIGludGFrZSBpcyBub3Qgc2lnbmlmaWNhbnRseSBoaWdoZXIgdGhhbiB0aGUgdGhyZXNob2xkICBmb3IgcHJlLWRpYWJldGVzIG9mIDcuOCBtbW9sL2wgKHAgPSBgciByb3VuZCh0X3Rlc3RfYWZ0ZXIkcC52YWx1ZSwyKWApLgpUaGUgbWVhbiBnbHVjb3NlIGxldmVsIHR3byBob3VycyBhZnRlciB0aGUgaW50YWtlIG9mIDEwMGcgb2Ygc3VnYXIgZXF1YWxzIGByIHJvdW5kKHRfdGVzdF9hZnRlciRlc3RpbWF0ZSwxKWAgbW1vbC9sICg5NSUgQ0kgW2ByIHJvdW5kKHRfdGVzdF9hZnRlciRjb25mLmludCwxKWBdKS4KCkFzIHdlIGhhdmUgc2VlbiBpbiB0aGUgdGhlb3J5IGNsYXNzLCB0aGUgOTUlIGNvbmZpZGVuY2UKaW50ZXJ2YWwgY2FuIGJlIGludGVycHJldGVkIGFzOwoKV2l0aCA5NSUgY29uZmlkZW5jZSB3ZSBjYW4gY29uY2x1ZGUgdGhhdCB0aGUgdHJ1ZSBhdmVyYWdlIG9mIGdsdWNvc2UgbGV2ZWwgb2YgdGhlIHBhdGllbnRzIGluIHRoZSBwb3B1bGF0aW9uIGlzIGFib3ZlIGByIHJvdW5kKHRfdGVzdF9hZnRlciRjb25mLmludFsxXSwyKWAuCgpOb3RlLCB0aGF0IHdlIG9ubHkgcmVwb3J0IGEgb25lIHNpZGVkIGNvbmZpZGVuY2UgaW50ZXJ2YWwgYmVjYXVzZSB3ZSBvbmx5IHRlc3QgYWdhaW5zdCB0aGUgYWx0ZXJuYXRpdmUgaHlwb3RoZXNpcyB0aGF0IHRoZSBnbHVjb3NlIGxldmVsIHR3byBob3VycyBhZnRlciBzdWdhciBpbnRha2UgaXMgb24gYXZlcmFnZSBsYXJnZXIgdGhhbiB0aGUgdGhyZXNob2xkIGZvciBwcmUtZGlhYmV0ZXMgb2YgNy44IG1tb2wvbC4K</div>
-<div class="footer">
-    <hr>
-    This work is licensed under the <a href= "https://creativecommons.org/licenses/by-nc-sa/4.0">
-    CC BY-NC-SA 4.0</a> licence.
-</div>
 
 
-</div>
-</div>
+<!-- -->
 
-</div>
+</section>
+</section>
 
-<script>
-
-// add bootstrap table styles to pandoc tables
-function bootstrapStylePandocTables() {
-  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
-}
-$(document).ready(function () {
-  bootstrapStylePandocTables();
-});
-
-
-</script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open');
-  });
-});
-</script>
-
-<!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeSourceEmbed("05_1_diabetes_sol.Rmd");
-  window.initializeCodeFolding("show" === "show");
-});
-</script>
-
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    options.showAndHide = true;
-    options.smoothScroll = true;
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Exercise 5.1: Hypothesis testing on the diabetes example - solution"</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Lieven Clement, Jeroen Gilis and Milan Malfait"</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "statOmics, Ghent University (https://statomics.github.io)"</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># Aims</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>In this exercise, you will revisit the basics of statistical hypothesis testing.</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>You will acquire the skills</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>to assess the assumptions of a one-sample and a paired t-test in  data exploration.</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>to conduct a paired t-test in R and to interpret the results.</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>to conduct a one-sample t-test in R and to interpret the results.</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="fu"># The diabetes dataset</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>The <span class="in">`diabetes`</span>  dataset holds information on a small experiment with</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>8 patients that are subjected to a glucose tolerance test.</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>Patients had to fast for eight hours before the test.</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>When the patients entered the hospital their baseline glucose level was measured (mmol/l).</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>Patients then  had to drink 250 ml of a syrupy glucose solution containing 100</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>grams of sugar.  Two hours later, their blood glucose level was measured again.</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>The data consist of three variables:</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`before`</span>: glucose concentration upon 8 hours of fasting (mmol/l)</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`after`</span>: glucose concentration 2 hours after drinking glucose solution (mmol/l).</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`patient`</span>: identifier for the patient</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a><span class="fu">## Research questions</span></span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>The goal is to answer two research questions;</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Is the average glucose level after the sugar intake different from the average glucose level before sugar intake?</span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Is the average glucose level of the patients two hours after the sugar intake higher than 7.8 mmol/L?</span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a><span class="fu">## Import the data</span></span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>First, load the required R libraries:</span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message=FALSE, warning=FALSE}</span></span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a>diabetes <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"https://raw.githubusercontent.com/statOmics/PSLSData/main/diabetes.txt"</span>, <span class="at">delim =</span> <span class="st">" "</span>)</span>
+<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data exploration</span></span>
+<span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a>We will start with a data exploration.</span>
+<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a>Have a first look at the raw data. How is the data structured?</span>
+<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a>Is this data *tidy*?</span>
+<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-64"><a href="#cb26-64" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-65"><a href="#cb26-65" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(diabetes)</span>
+<span id="cb26-66"><a href="#cb26-66" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(diabetes)</span>
+<span id="cb26-67"><a href="#cb26-67" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a>We have 8 patients, for which glucose concentrations were measured, before and after sugar intake.</span>
+<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a>Note, that the dataset is not in the tidy format. The glucose concentration</span>
+<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a>variable is spread around 2 columns: <span class="in">`before`</span> and <span class="in">`after`</span>, while the "time"</span>
+<span id="cb26-73"><a href="#cb26-73" aria-hidden="true" tabindex="-1"></a>variable is encoded in the column names instead of in a dedicated column. Data</span>
+<span id="cb26-74"><a href="#cb26-74" aria-hidden="true" tabindex="-1"></a>in this form is also called *wide* data. Instead, we want to transform the data</span>
+<span id="cb26-75"><a href="#cb26-75" aria-hidden="true" tabindex="-1"></a>to a *long* format.</span>
+<span id="cb26-76"><a href="#cb26-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-77"><a href="#cb26-77" aria-hidden="true" tabindex="-1"></a>To tidy the data, we can use the <span class="in">`gather()`</span> function to</span>
+<span id="cb26-78"><a href="#cb26-78" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">pivot</span><span class="co">](https://r4ds.had.co.nz/tidy-data.html#pivoting)</span> the data. In this case,</span>
+<span id="cb26-79"><a href="#cb26-79" aria-hidden="true" tabindex="-1"></a>we want to "gather" the <span class="in">`time`</span> (encoded in the column names <span class="in">`before`</span> and</span>
+<span id="cb26-80"><a href="#cb26-80" aria-hidden="true" tabindex="-1"></a><span class="in">`after`</span>) and <span class="in">`concentration`</span> variables (which is encoded in the actual values).</span>
+<span id="cb26-81"><a href="#cb26-81" aria-hidden="true" tabindex="-1"></a>The <span class="in">`patient`</span> column should stay the same. We can specify this with the</span>
+<span id="cb26-82"><a href="#cb26-82" aria-hidden="true" tabindex="-1"></a>following syntax.</span>
+<span id="cb26-83"><a href="#cb26-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-86"><a href="#cb26-86" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-87"><a href="#cb26-87" aria-hidden="true" tabindex="-1"></a>diabetes_tidy <span class="ot">&lt;-</span> diabetes <span class="sc">|&gt;</span></span>
+<span id="cb26-88"><a href="#cb26-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(<span class="at">key =</span> <span class="st">"time"</span>, <span class="at">value =</span> <span class="st">"concentration"</span>, <span class="sc">-</span>patient)</span>
+<span id="cb26-89"><a href="#cb26-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-90"><a href="#cb26-90" aria-hidden="true" tabindex="-1"></a><span class="do">## Take a look at the new data</span></span>
+<span id="cb26-91"><a href="#cb26-91" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(diabetes_tidy)</span>
+<span id="cb26-92"><a href="#cb26-92" aria-hidden="true" tabindex="-1"></a>diabetes_tidy</span>
+<span id="cb26-93"><a href="#cb26-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-94"><a href="#cb26-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-95"><a href="#cb26-95" aria-hidden="true" tabindex="-1"></a>To improve the visualizations below, we can also sligthly recode the <span class="in">`time`</span> variable, so that the "before" level is the first one. We can do this by converting <span class="in">`time`</span> to a factor.</span>
+<span id="cb26-96"><a href="#cb26-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-99"><a href="#cb26-99" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-100"><a href="#cb26-100" aria-hidden="true" tabindex="-1"></a>diabetes_tidy <span class="ot">&lt;-</span> diabetes_tidy <span class="sc">|&gt;</span></span>
+<span id="cb26-101"><a href="#cb26-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb26-102"><a href="#cb26-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">time =</span> <span class="fu">as.factor</span>(time),</span>
+<span id="cb26-103"><a href="#cb26-103" aria-hidden="true" tabindex="-1"></a>    <span class="at">time =</span> <span class="fu">relevel</span>(time, <span class="at">ref =</span> <span class="st">"before"</span>)</span>
+<span id="cb26-104"><a href="#cb26-104" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-105"><a href="#cb26-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-106"><a href="#cb26-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-107"><a href="#cb26-107" aria-hidden="true" tabindex="-1"></a>We could visualize the data using boxplots. Note, however, that we lose the</span>
+<span id="cb26-108"><a href="#cb26-108" aria-hidden="true" tabindex="-1"></a>paired characteristic of the data with this visualization. Nevertheless, it is</span>
+<span id="cb26-109"><a href="#cb26-109" aria-hidden="true" tabindex="-1"></a>still a useful visualization to assess any differences in mean and variance</span>
+<span id="cb26-110"><a href="#cb26-110" aria-hidden="true" tabindex="-1"></a>between the two time points.</span>
+<span id="cb26-111"><a href="#cb26-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-114"><a href="#cb26-114" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-115"><a href="#cb26-115" aria-hidden="true" tabindex="-1"></a>boxplot <span class="ot">&lt;-</span> diabetes_tidy <span class="sc">|&gt;</span></span>
+<span id="cb26-116"><a href="#cb26-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> concentration, <span class="at">fill =</span> time)) <span class="sc">+</span></span>
+<span id="cb26-117"><a href="#cb26-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb26-118"><a href="#cb26-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb26-119"><a href="#cb26-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb26-120"><a href="#cb26-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
+<span id="cb26-121"><a href="#cb26-121" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>,</span>
+<span id="cb26-122"><a href="#cb26-122" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">5</span>, <span class="at">size =</span> <span class="dv">3</span>,</span>
+<span id="cb26-123"><a href="#cb26-123" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span></span>
+<span id="cb26-124"><a href="#cb26-124" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-125"><a href="#cb26-125" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Concentration (mmol/l)"</span>)</span>
+<span id="cb26-126"><a href="#cb26-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-127"><a href="#cb26-127" aria-hidden="true" tabindex="-1"></a>boxplot</span>
+<span id="cb26-128"><a href="#cb26-128" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-129"><a href="#cb26-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-130"><a href="#cb26-130" aria-hidden="true" tabindex="-1"></a>We observe that the variability of the glucose levels are higher after than</span>
+<span id="cb26-131"><a href="#cb26-131" aria-hidden="true" tabindex="-1"></a>before the sugar intake.  The difference plot also shows that glucose levels in</span>
+<span id="cb26-132"><a href="#cb26-132" aria-hidden="true" tabindex="-1"></a>the blood are higher for most of the patients two hours after the sugar intake.</span>
+<span id="cb26-133"><a href="#cb26-133" aria-hidden="true" tabindex="-1"></a>Only for one patient the glucose concentration two hours after treatment is</span>
+<span id="cb26-134"><a href="#cb26-134" aria-hidden="true" tabindex="-1"></a>lower.</span>
+<span id="cb26-135"><a href="#cb26-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-136"><a href="#cb26-136" aria-hidden="true" tabindex="-1"></a>To visualize the paired nature of the data, we can use a **line plot**,</span>
+<span id="cb26-137"><a href="#cb26-137" aria-hidden="true" tabindex="-1"></a>connecting the <span class="in">`before`</span> and <span class="in">`after`</span> points for each patient.</span>
+<span id="cb26-138"><a href="#cb26-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-141"><a href="#cb26-141" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-142"><a href="#cb26-142" aria-hidden="true" tabindex="-1"></a>diabetes_tidy <span class="sc">|&gt;</span></span>
+<span id="cb26-143"><a href="#cb26-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, concentration)) <span class="sc">+</span></span>
+<span id="cb26-144"><a href="#cb26-144" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb26-145"><a href="#cb26-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> patient))</span>
+<span id="cb26-146"><a href="#cb26-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-147"><a href="#cb26-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-148"><a href="#cb26-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-149"><a href="#cb26-149" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 1</span></span>
+<span id="cb26-150"><a href="#cb26-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-151"><a href="#cb26-151" aria-hidden="true" tabindex="-1"></a>Is the glucose level after 8 hours of fasting on average different from the glucose level two hours after intake of 100g of glucose?</span>
+<span id="cb26-152"><a href="#cb26-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-153"><a href="#cb26-153" aria-hidden="true" tabindex="-1"></a>As the data are paired, we can expect that the measurements before and after the glucose intake are correlated.</span>
+<span id="cb26-154"><a href="#cb26-154" aria-hidden="true" tabindex="-1"></a>We can illustrate this with a scatterplot.</span>
+<span id="cb26-155"><a href="#cb26-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-156"><a href="#cb26-156" aria-hidden="true" tabindex="-1"></a>Note that in this case, the non-tidy data is actually a more suitable format to visualize.</span>
+<span id="cb26-157"><a href="#cb26-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-160"><a href="#cb26-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-161"><a href="#cb26-161" aria-hidden="true" tabindex="-1"></a>diabetes <span class="sc">|&gt;</span></span>
+<span id="cb26-162"><a href="#cb26-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> before, <span class="at">y =</span> after)) <span class="sc">+</span></span>
+<span id="cb26-163"><a href="#cb26-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb26-164"><a href="#cb26-164" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"before (mmol/l)"</span>) <span class="sc">+</span></span>
+<span id="cb26-165"><a href="#cb26-165" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"after (mmol/l)"</span>)</span>
+<span id="cb26-166"><a href="#cb26-166" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-167"><a href="#cb26-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-170"><a href="#cb26-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-171"><a href="#cb26-171" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(diabetes<span class="sc">$</span>before, diabetes<span class="sc">$</span>after, <span class="at">method =</span> <span class="st">"spearman"</span>)</span>
+<span id="cb26-172"><a href="#cb26-172" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-173"><a href="#cb26-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-174"><a href="#cb26-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-175"><a href="#cb26-175" aria-hidden="true" tabindex="-1"></a><span class="fu">## Check the assumptions</span></span>
+<span id="cb26-176"><a href="#cb26-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-177"><a href="#cb26-177" aria-hidden="true" tabindex="-1"></a>The paired t-test has 2 assumptions:</span>
+<span id="cb26-178"><a href="#cb26-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-179"><a href="#cb26-179" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The differences in glucose levels are independent of each other.</span>
+<span id="cb26-180"><a href="#cb26-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-181"><a href="#cb26-181" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>The differences in glucose levels are normally distributed.</span>
+<span id="cb26-182"><a href="#cb26-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-183"><a href="#cb26-183" aria-hidden="true" tabindex="-1"></a>The first assumption is met given the experimental design.</span>
+<span id="cb26-184"><a href="#cb26-184" aria-hidden="true" tabindex="-1"></a>Upon differencing the measurements before and after the glucose intake, we obtained one difference for each patient. As the patients were sampled at random from the population we can expect them to be independent.</span>
+<span id="cb26-185"><a href="#cb26-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-186"><a href="#cb26-186" aria-hidden="true" tabindex="-1"></a>Secondly, we assess if the differences are normally distributed.</span>
+<span id="cb26-187"><a href="#cb26-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-188"><a href="#cb26-188" aria-hidden="true" tabindex="-1"></a>We can calculate the differences for each patient using a <span class="in">`group_by()`</span> +</span>
+<span id="cb26-189"><a href="#cb26-189" aria-hidden="true" tabindex="-1"></a><span class="in">`summarize()`</span> combination on the tidy data.</span>
+<span id="cb26-190"><a href="#cb26-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-193"><a href="#cb26-193" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-194"><a href="#cb26-194" aria-hidden="true" tabindex="-1"></a>diabetes_diff <span class="ot">&lt;-</span> diabetes_tidy <span class="sc">|&gt;</span></span>
+<span id="cb26-195"><a href="#cb26-195" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(patient) <span class="sc">|&gt;</span></span>
+<span id="cb26-196"><a href="#cb26-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">difference =</span> <span class="fu">diff</span>(concentration))</span>
+<span id="cb26-197"><a href="#cb26-197" aria-hidden="true" tabindex="-1"></a>diabetes_diff</span>
+<span id="cb26-198"><a href="#cb26-198" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-199"><a href="#cb26-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-202"><a href="#cb26-202" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-203"><a href="#cb26-203" aria-hidden="true" tabindex="-1"></a>diabetes_diff <span class="sc">|&gt;</span></span>
+<span id="cb26-204"><a href="#cb26-204" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> difference)) <span class="sc">+</span></span>
+<span id="cb26-205"><a href="#cb26-205" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb26-206"><a href="#cb26-206" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>()</span>
+<span id="cb26-207"><a href="#cb26-207" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-208"><a href="#cb26-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-209"><a href="#cb26-209" aria-hidden="true" tabindex="-1"></a>Based on the QQ-plot, we may assume that our data are normally distributed.</span>
+<span id="cb26-210"><a href="#cb26-210" aria-hidden="true" tabindex="-1"></a>As our assumptions are met we may continue with performing the paired t-test.</span>
+<span id="cb26-211"><a href="#cb26-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-212"><a href="#cb26-212" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hypothesis test</span></span>
+<span id="cb26-213"><a href="#cb26-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-214"><a href="#cb26-214" aria-hidden="true" tabindex="-1"></a>We will perform a **paired t-test**.</span>
+<span id="cb26-215"><a href="#cb26-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-216"><a href="#cb26-216" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The null hypothesis of the test is that the glucose levels before and two hours after</span>
+<span id="cb26-217"><a href="#cb26-217" aria-hidden="true" tabindex="-1"></a>glucose intake are on average equal.</span>
+<span id="cb26-218"><a href="#cb26-218" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Which will be tested against the alternative hypothesis that the glucose levels before and two hours after the glucose intake are on average different.</span>
+<span id="cb26-219"><a href="#cb26-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-222"><a href="#cb26-222" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-223"><a href="#cb26-223" aria-hidden="true" tabindex="-1"></a>paired_t <span class="ot">&lt;-</span> <span class="fu">t.test</span>(diabetes<span class="sc">$</span>after,diabetes<span class="sc">$</span>before, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-224"><a href="#cb26-224" aria-hidden="true" tabindex="-1"></a>paired_t</span>
+<span id="cb26-225"><a href="#cb26-225" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-226"><a href="#cb26-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-227"><a href="#cb26-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-228"><a href="#cb26-228" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conclusion</span></span>
+<span id="cb26-229"><a href="#cb26-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-230"><a href="#cb26-230" aria-hidden="true" tabindex="-1"></a>There is on average an significant blood increase in the blood pressure upon</span>
+<span id="cb26-231"><a href="#cb26-231" aria-hidden="true" tabindex="-1"></a>administering 100g of sugar to patients (p = <span class="in">`r round(paired_t$p.value, 2)`</span>).</span>
+<span id="cb26-232"><a href="#cb26-232" aria-hidden="true" tabindex="-1"></a>The glucose levels two hours after administering 100g of glucose are on average <span class="in">`r round(paired_t$estimate,1)`</span> mmol/l higher than upon 8 hours of fastening</span>
+<span id="cb26-233"><a href="#cb26-233" aria-hidden="true" tabindex="-1"></a>(95% CI <span class="co">[</span><span class="ot">`r round(paired_t$conf.int,1)`</span><span class="co">]</span>mmol/l).</span>
+<span id="cb26-234"><a href="#cb26-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-235"><a href="#cb26-235" aria-hidden="true" tabindex="-1"></a><span class="fu"># Alternative solution: One-sample t-test on the difference</span></span>
+<span id="cb26-236"><a href="#cb26-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-237"><a href="#cb26-237" aria-hidden="true" tabindex="-1"></a>Since the data is paired, we can also simply calculate the differences in</span>
+<span id="cb26-238"><a href="#cb26-238" aria-hidden="true" tabindex="-1"></a>glucose level before and after sugar intake for each patient. We can then</span>
+<span id="cb26-239"><a href="#cb26-239" aria-hidden="true" tabindex="-1"></a>perform a one-sample t-test on these differences, testing whether they are</span>
+<span id="cb26-240"><a href="#cb26-240" aria-hidden="true" tabindex="-1"></a>significantly different from zero. This is equivalent to the paired t-test we</span>
+<span id="cb26-241"><a href="#cb26-241" aria-hidden="true" tabindex="-1"></a>performed above.</span>
+<span id="cb26-242"><a href="#cb26-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-243"><a href="#cb26-243" aria-hidden="true" tabindex="-1"></a>We can verify this with the analysis below</span>
+<span id="cb26-244"><a href="#cb26-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-247"><a href="#cb26-247" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-248"><a href="#cb26-248" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(difference <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> diabetes_diff, <span class="at">mu =</span> <span class="dv">0</span>)</span>
+<span id="cb26-249"><a href="#cb26-249" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-250"><a href="#cb26-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-251"><a href="#cb26-251" aria-hidden="true" tabindex="-1"></a>Indeed, the output is equivalent to that of the paired t-test.</span>
+<span id="cb26-252"><a href="#cb26-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-253"><a href="#cb26-253" aria-hidden="true" tabindex="-1"></a>***</span>
+<span id="cb26-254"><a href="#cb26-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-255"><a href="#cb26-255" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 2</span></span>
+<span id="cb26-256"><a href="#cb26-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-257"><a href="#cb26-257" aria-hidden="true" tabindex="-1"></a>Is the average glucose level two hours after sugar intake</span>
+<span id="cb26-258"><a href="#cb26-258" aria-hidden="true" tabindex="-1"></a>higher than the threshold of 7.8 mmol/l for pre-diabetes?</span>
+<span id="cb26-259"><a href="#cb26-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-260"><a href="#cb26-260" aria-hidden="true" tabindex="-1"></a>We can test this hypothesis using a **one-sample t-test**.</span>
+<span id="cb26-261"><a href="#cb26-261" aria-hidden="true" tabindex="-1"></a>Indeed we are interested to compare the average glucose level to a known threshold for pre-diabetes.</span>
+<span id="cb26-262"><a href="#cb26-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-263"><a href="#cb26-263" aria-hidden="true" tabindex="-1"></a><span class="fu">## Assess the assumptions</span></span>
+<span id="cb26-264"><a href="#cb26-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-265"><a href="#cb26-265" aria-hidden="true" tabindex="-1"></a>Before we can perform a one sample t-test, we must check that the required</span>
+<span id="cb26-266"><a href="#cb26-266" aria-hidden="true" tabindex="-1"></a>assumptions are met!</span>
+<span id="cb26-267"><a href="#cb26-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-268"><a href="#cb26-268" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The observations are independent</span>
+<span id="cb26-269"><a href="#cb26-269" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>The glucose levels two hours after the treatment are normally distributed</span>
+<span id="cb26-270"><a href="#cb26-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-271"><a href="#cb26-271" aria-hidden="true" tabindex="-1"></a>The first assumption requires us to think about how the data were collected.</span>
+<span id="cb26-272"><a href="#cb26-272" aria-hidden="true" tabindex="-1"></a>Are there dependences in the data?</span>
+<span id="cb26-273"><a href="#cb26-273" aria-hidden="true" tabindex="-1"></a>The 8 glucose levels upon sugar intake are collected on 8 random patients so we can assume that the glucose levels 2 hours after sugar intake are independent.</span>
+<span id="cb26-274"><a href="#cb26-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-275"><a href="#cb26-275" aria-hidden="true" tabindex="-1"></a>We can assess the second assumption with a quantile-quantile plot. First we need to filter the data, so we only retain the values for the <span class="in">`time == "after"`</span> level</span>
+<span id="cb26-276"><a href="#cb26-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-279"><a href="#cb26-279" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-280"><a href="#cb26-280" aria-hidden="true" tabindex="-1"></a>diabetes_after <span class="ot">&lt;-</span> diabetes_tidy <span class="sc">|&gt;</span></span>
+<span id="cb26-281"><a href="#cb26-281" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(time <span class="sc">==</span> <span class="st">"after"</span>)</span>
+<span id="cb26-282"><a href="#cb26-282" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-283"><a href="#cb26-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-286"><a href="#cb26-286" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-287"><a href="#cb26-287" aria-hidden="true" tabindex="-1"></a>diabetes_after <span class="sc">|&gt;</span></span>
+<span id="cb26-288"><a href="#cb26-288" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">sample =</span> concentration)) <span class="sc">+</span></span>
+<span id="cb26-289"><a href="#cb26-289" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb26-290"><a href="#cb26-290" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>()</span>
+<span id="cb26-291"><a href="#cb26-291" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-292"><a href="#cb26-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-293"><a href="#cb26-293" aria-hidden="true" tabindex="-1"></a>The data seem to be nicely scattered around the quantile-quantile</span>
+<span id="cb26-294"><a href="#cb26-294" aria-hidden="true" tabindex="-1"></a>line (black line).</span>
+<span id="cb26-295"><a href="#cb26-295" aria-hidden="true" tabindex="-1"></a>We also do not observe large deviations in the plot.</span>
+<span id="cb26-296"><a href="#cb26-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-297"><a href="#cb26-297" aria-hidden="true" tabindex="-1"></a>So we will assume that our data is normally</span>
+<span id="cb26-298"><a href="#cb26-298" aria-hidden="true" tabindex="-1"></a>distributed.</span>
+<span id="cb26-299"><a href="#cb26-299" aria-hidden="true" tabindex="-1"></a>Note, that there are not many observations to assess normality.</span>
+<span id="cb26-300"><a href="#cb26-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-301"><a href="#cb26-301" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hypothesis test</span></span>
+<span id="cb26-302"><a href="#cb26-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-303"><a href="#cb26-303" aria-hidden="true" tabindex="-1"></a>Here, we will test if mean glucose level 2 hours after sugar intake is significantly</span>
+<span id="cb26-304"><a href="#cb26-304" aria-hidden="true" tabindex="-1"></a>higher than the threshold for pre-diabetes of 7.8 mmol/l. More specifically, we will test the null hypothesis;</span>
+<span id="cb26-305"><a href="#cb26-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-306"><a href="#cb26-306" aria-hidden="true" tabindex="-1"></a>$H_0:$ the mean glucose level two hours after 100g of sugar intake is equal to 7.8 mmol/l</span>
+<span id="cb26-307"><a href="#cb26-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-308"><a href="#cb26-308" aria-hidden="true" tabindex="-1"></a>versus the alternative hypothesis;</span>
+<span id="cb26-309"><a href="#cb26-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-310"><a href="#cb26-310" aria-hidden="true" tabindex="-1"></a>$H_1:$ the mean glucose level two hours after 100g of sugar intake is greater than 7.8 mmol/l</span>
+<span id="cb26-311"><a href="#cb26-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-314"><a href="#cb26-314" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb26-315"><a href="#cb26-315" aria-hidden="true" tabindex="-1"></a>t_test_after <span class="ot">&lt;-</span> <span class="fu">t.test</span>(concentration <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb26-316"><a href="#cb26-316" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> diabetes_after,</span>
+<span id="cb26-317"><a href="#cb26-317" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> <span class="fl">7.8</span>,</span>
+<span id="cb26-318"><a href="#cb26-318" aria-hidden="true" tabindex="-1"></a>  <span class="at">alternative =</span> <span class="st">"greater"</span>,</span>
+<span id="cb26-319"><a href="#cb26-319" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.level =</span> <span class="fl">0.95</span></span>
+<span id="cb26-320"><a href="#cb26-320" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-321"><a href="#cb26-321" aria-hidden="true" tabindex="-1"></a>t_test_after</span>
+<span id="cb26-322"><a href="#cb26-322" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb26-323"><a href="#cb26-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-324"><a href="#cb26-324" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conclusion</span></span>
+<span id="cb26-325"><a href="#cb26-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-326"><a href="#cb26-326" aria-hidden="true" tabindex="-1"></a>When writing a conclusion on your research hypothesis,</span>
+<span id="cb26-327"><a href="#cb26-327" aria-hidden="true" tabindex="-1"></a>it is very important to be precise, concise, and complete.</span>
+<span id="cb26-328"><a href="#cb26-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-329"><a href="#cb26-329" aria-hidden="true" tabindex="-1"></a>An example of such a conclusion for our research question</span>
+<span id="cb26-330"><a href="#cb26-330" aria-hidden="true" tabindex="-1"></a>is given below:</span>
+<span id="cb26-331"><a href="#cb26-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-332"><a href="#cb26-332" aria-hidden="true" tabindex="-1"></a>We can conclude that the mean glucose level of patients two hours after 100g of glucose intake is not significantly higher than the threshold  for pre-diabetes of 7.8 mmol/l (p = <span class="in">`r round(t_test_after$p.value,2)`</span>).</span>
+<span id="cb26-333"><a href="#cb26-333" aria-hidden="true" tabindex="-1"></a>The mean glucose level two hours after the intake of 100g of sugar equals <span class="in">`r round(t_test_after$estimate,1)`</span> mmol/l (95% CI <span class="co">[</span><span class="ot">`r round(t_test_after$conf.int,1)`</span><span class="co">]</span>).</span>
+<span id="cb26-334"><a href="#cb26-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-335"><a href="#cb26-335" aria-hidden="true" tabindex="-1"></a>As we have seen in the theory class, the 95% confidence</span>
+<span id="cb26-336"><a href="#cb26-336" aria-hidden="true" tabindex="-1"></a>interval can be interpreted as;</span>
+<span id="cb26-337"><a href="#cb26-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-338"><a href="#cb26-338" aria-hidden="true" tabindex="-1"></a>With 95% confidence we can conclude that the true average of glucose level of the patients in the population is above <span class="in">`r round(t_test_after$conf.int[1],2)`</span>.</span>
+<span id="cb26-339"><a href="#cb26-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-340"><a href="#cb26-340" aria-hidden="true" tabindex="-1"></a>Note, that we only report a one sided confidence interval because we only test against the alternative hypothesis that the glucose level two hours after sugar intake is on average larger than the threshold for pre-diabetes of 7.8 mmol/l.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
 
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 
-</body>
-</html>
+
+</body></html>
