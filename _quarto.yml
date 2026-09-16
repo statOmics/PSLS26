@@ -69,7 +69,9 @@ website:
 
 format:
   html:
-    theme: cosmo
+    theme:
+      - cosmo
+      - custom.scss
     highlight-style: tango
     df-print: paged
     toc: true
