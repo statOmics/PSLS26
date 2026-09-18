@@ -2,7 +2,7 @@
 
 
 Course site for Practical Statistics for the Life Sciences,
-taught at the [Gulbenkian Training Programme in Bioinformatics (GTPB)](http://gtpb.igc.gulbenkian.pt/bicourses/index.html).
+taught at the Ghent University. 
 
 https://statOmics.github.io/PSLS26/
 
