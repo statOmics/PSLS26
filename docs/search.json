@@ -1582,25 +1582,67 @@
     "text": "5.3 Salk Study\n\n5.3.1 Design\nA new study was conducted: Randomized double blind study\n\nChildren are assigned at random to the control or case treatment arm after consent was given by the parents.\nControl: vaccination with placebo\nTreatment: vaccination with vaccine\ndouble blinding:\n\nparents did not know if their child was vaccinated or received the placebo\ncare-giver/researchers did not know if the child was vaccinated or received placebo\n\n\n\n\n\n5.3.2 Data\n\n\nCode\nsalk &lt;- data.frame(group = c(\"cases\", \"control\", \"noConcent\"), treatment = c(\"vaccine\", \"placebo\", \"none\"), total = c(\n  200745,\n  201229, 338778\n), polio = c(57, 142, 157))\nsalk$noPolio &lt;- salk$total - salk$polio\nsalk$incidencePM &lt;- round(salk$polio / salk$total * 1e6, 0)\nknitr::kable(salk)\n\n\n\n\n\ngroup\ntreatment\ntotal\npolio\nnoPolio\nincidencePM\n\n\n\n\ncases\nvaccine\n200745\n57\n200688\n284\n\n\ncontrol\nplacebo\n201229\n142\n201087\n706\n\n\nnoConcent\nnone\n338778\n157\n338621\n463\n\n\n\n\n\n\nWe observe a much larger effect now that the cases and the controls are comparable, incidence of 284 and 706 per million, respectively.\nThe polio incidence for children with no consent remains similar, and 463 per million in the NFIP and Salk study, respectively."
   },
   {
-    "objectID": "03-experimentalDesign.html#simple-randomization",
-    "href": "03-experimentalDesign.html#simple-randomization",
+    "objectID": "03-experimentalDesign.html#important-concepts",
+    "href": "03-experimentalDesign.html#important-concepts",
     "title": "3. Some concepts on experimental design",
-    "section": "2.1 Simple Randomization",
-    "text": "2.1 Simple Randomization\n\nCan lead to differences in the number of experimental units in each treatment arm\nin 5% of the cases we might observe an imbalance of\n\nof at least 60:40 in a study with 100 subjects, and\nof at least 531:469 in a study with 1000 subjects.\n\nThis imbalance is not problematic, but causes a loss in precision."
+    "section": "2.1 Important concepts",
+    "text": "2.1 Important concepts\nIn an experiment a researcher applies a treatment to experimental units and observes the effect of the treatment on the experimental units by measuring one or more response variables.\n\nExperimental unit: a unit (subject, plant, pot, lab animal) that is randomly assigned to a treatment.\nResponse variable: characteristic of interest of the experimental unit that is measured and analysed to assess the effect of the treatment.\nObservational unit: unit on which the response variable is measured. There is often a 1-to-1 relation between the experimental and the observational unit, but not always, e.g. pseudo-replication (technical repeats).\nExplanatory (independent) variable: variable that can potentially explain part of the variability in the response."
   },
   {
-    "objectID": "03-experimentalDesign.html#balanced-randomization",
-    "href": "03-experimentalDesign.html#balanced-randomization",
+    "objectID": "03-experimentalDesign.html#need-for-a-good-control",
+    "href": "03-experimentalDesign.html#need-for-a-good-control",
     "title": "3. Some concepts on experimental design",
-    "section": "2.2 Balanced Randomization",
-    "text": "2.2 Balanced Randomization\n\nEqual numbers of each treatment are assigned to a block of 2 or 4 patients.\n\n\nAB, (2) BA\n\n\nAABB, (2) ABAB, (3) ABBA, (4) BABA, (5) BAAB, (6) BBAA\n\n\nBalanced Randomization ensures \\(\\pm\\) the same number of people in the control and the treatment arm of the experiment.\nDoes not make that we have an equal number of males with and without the treatment, etc.\nIn small studies, it is possible that the groups are unbalanced in other characteristics (e.g. gender, race, age …)\nThis is not problematic because it occurs at random, but, again it causes a loss in precision."
+    "section": "2.2 Need for a good control",
+    "text": "2.2 Need for a good control\n\nSalk study: suppose that we vaccinate everybody?\n\n\\(\\rightarrow\\) Need for a control group\n\nTo assess the effect of an intervention, we need to compare the response between a test and a control group.\nTest and control groups have to be comparable!\nThis is often not possible in a pretest/post-test design: e.g. effect before and after administering a drug without the use of a placebo group.\nParallel study: simultaneous comparison of test and control!\n\n\n\nControlled NFIP study:\n\n\n\nCode\nnfip &lt;- tibble(\n  group = c(\"cases\", \"controls\", \"noConsent\"),\n  grade = c(\"g2\", \"g1g3\", \"g2\"),\n  vaccin = c(\"yes\", \"no\", \"no\"),\n  total = c(221998, 725173, 123605),\n  polio = c(54, 391, 56)\n) |&gt;\n  mutate(\n    noPolio = total - polio,\n    incidencePM = round(polio / total * 1e6, 0)\n  )\nknitr::kable(nfip)\n\n\n\n\n\ngroup\ngrade\nvaccin\ntotal\npolio\nnoPolio\nincidencePM\n\n\n\n\ncases\ng2\nyes\n221998\n54\n221944\n243\n\n\ncontrols\ng1g3\nno\n725173\n391\n724782\n539\n\n\nnoConsent\ng2\nno\n123605\n56\n123549\n453\n\n\n\n\n\n\\(\\rightarrow\\) Confounding\n\n\n\n\n\n\n\n\n\n\nWe observe a lower polio (P) incidence for children whose parents did not give consent than in the control group.\nSocio-economic status (S) affects both the vaccination (V) and the polio incidence (P).\nGroups may only differ in treatment!\n\n\\(\\rightarrow\\) Randomized double-blinded studies: neither the participant nor the researcher know who received the control and who received the treatment."
   },
   {
-    "objectID": "03-experimentalDesign.html#stratified-randomization",
-    "href": "03-experimentalDesign.html#stratified-randomization",
+    "objectID": "03-experimentalDesign.html#randomized-experiments",
+    "href": "03-experimentalDesign.html#randomized-experiments",
     "title": "3. Some concepts on experimental design",
-    "section": "2.3 Stratified randomization",
-    "text": "2.3 Stratified randomization\n\nThe imbalance according to for instance gender can be avoided using stratified Randomization: balanced randomization per stratum\n\n\n\n\nStratified Randomization"
+    "section": "2.3 Randomized experiments",
+    "text": "2.3 Randomized experiments\n\nAvoid confounding by creating comparable groups.\nRandomization: random assignment to the treatment groups (no systematic allocation).\n\n\\(\\rightarrow\\) systematic differences between the groups can only be caused by the intervention.\n\n2.3.1 Results Salk studies?\n\nControlled NFIP study:\n\n\n\nCode\nknitr::kable(nfip)\n\n\n\n\n\ngroup\ngrade\nvaccin\ntotal\npolio\nnoPolio\nincidencePM\n\n\n\n\ncases\ng2\nyes\n221998\n54\n221944\n243\n\n\ncontrols\ng1g3\nno\n725173\n391\n724782\n539\n\n\nnoConsent\ng2\nno\n123605\n56\n123549\n453\n\n\n\n\n\n\nRandomized double-blinded Salk study:\n\n\n\nCode\nsalk &lt;- tibble(\n  group = c(\"cases\", \"control\", \"noConsent\"),\n  treatment = c(\"vaccine\", \"placebo\", \"none\"),\n  total = c(200745, 201229, 338778),\n  polio = c(57, 142, 157)\n) |&gt;\n  mutate(\n    noPolio = total - polio,\n    incidencePM = round(polio / total * 1e6, 0)\n  )\nknitr::kable(salk)\n\n\n\n\n\ngroup\ntreatment\ntotal\npolio\nnoPolio\nincidencePM\n\n\n\n\ncases\nvaccine\n200745\n57\n200688\n284\n\n\ncontrol\nplacebo\n201229\n142\n201087\n706\n\n\nnoConsent\nnone\n338778\n157\n338621\n463\n\n\n\n\n\n\n\n\n2.3.2 Simple Randomization\n\nCan lead to differences in the number of experimental units in each treatment arm\nin 5% of the cases we might observe an imbalance\n\nof at least 60:40 in a study with 100 subjects, and\nof at least 531:469 in a study with 1000 subjects.\n\nThis imbalance is not problematic, but causes a loss in precision of the estimators (e.g. means).\n\n\n\n\n2.3.3 Balanced Randomization\n\nEqual numbers of each treatment are assigned to a block of 2, 4 or more subjects.\n\n\nAB, (2) BA\n\n\nAABB, (2) ABAB, (3) ABBA, (4) BABA, (5) BAAB, (6) BBAA\n\n…\n\nBalanced Randomization ensures \\(\\pm\\) the same number of subjects in each treatment arm of the experiment (e.g. control and treatment group).\nIt does not ensure that we have an equal number of males and females in each group, etc.\nIn small studies, the groups can be unbalanced in other characteristics (e.g. gender, race, age …)\nThis is not problematic because it occurs at random, but, again it causes a loss in precision.\n\n\n\n\n2.3.4 Stratified randomization\n\nThe imbalance according to for instance gender can be avoided using stratified randomization: balanced randomization per stratum\n\n\n\n\nStratified Randomization\n\n\n\n\n\n2.3.5 Correction for confounding (‘adjustment for’)\n\nSuppose that the intervention groups we want to compare are nevertheless not inherently comparable.\nThen ‘correction’ via the study design is no longer possible.\nCorrections then have to be done in the statistical analysis (see e.g. chapter 8 on multiple regression)."
+  },
+  {
+    "objectID": "03-experimentalDesign.html#gene-expression-example",
+    "href": "03-experimentalDesign.html#gene-expression-example",
+    "title": "3. Some concepts on experimental design",
+    "section": "5.1 Gene expression example",
+    "text": "5.1 Gene expression example\n\ndm: diabetic medium, nd: non diabetic medium, co: control\n4 bio-reps, 2 techreps/biorep\n\n\n\n\ndm: diabetic medium, nd: non diabetic medium, co: control\n4 bio-reps, 2 techreps/biorep, 2 plates A & B\nTreatment and plate almost entirely confounded"
+  },
+  {
+    "objectID": "03-experimentalDesign.html#nature-methods-points-of-significance---blocking",
+    "href": "03-experimentalDesign.html#nature-methods-points-of-significance---blocking",
+    "title": "3. Some concepts on experimental design",
+    "section": "5.2 Nature methods: Points of significance - Blocking",
+    "text": "5.2 Nature methods: Points of significance - Blocking\nhttps://www.nature.com/articles/nmeth.3005.pdf"
+  },
+  {
+    "objectID": "03-experimentalDesign.html#randomized-complete-block-designs",
+    "href": "03-experimentalDesign.html#randomized-complete-block-designs",
+    "title": "3. Some concepts on experimental design",
+    "section": "5.3 Randomized complete block designs",
+    "text": "5.3 Randomized complete block designs\n\nExperimental designs where the subjects/experimental units are first divided into blocks.\nSubsequently, each level of the intervention is applied within each block and assigned by randomization.\nThis can e.g. be done by stratified randomization: stratification according to the blocks.\nUseful when the outcome varies strongly between subjects/experimental units so that the intervention effect is hard to pick up.\nIf the data are much less variable within a block, randomizing the intervention within each block allows to assess the intervention effect within block with much less noise.\nAlso often used to deal with technical variability.\n\nE.g. larger experiments: multiple cell cultures are needed, not everything can be done in the lab at the same time, multiple sequencing runs are needed to measure gene expression.\nFluctuations in lab conditions, between cell cultures or from sequencing run to sequencing run induce additional technical noise.\nBlocks (e.g. time points, runs, cell cultures) and randomize treatments within each block.\nAgain, intervention effects can then be estimated with much less noise.\n\nSee also 8.3. Experimental Design II."
+  },
+  {
+    "objectID": "03-experimentalDesign.html#vitamin-e-and-the-risk-on-coronary-heart-disease",
+    "href": "03-experimentalDesign.html#vitamin-e-and-the-risk-on-coronary-heart-disease",
+    "title": "3. Some concepts on experimental design",
+    "section": "6.1 Vitamin E and the risk on coronary heart disease",
+    "text": "6.1 Vitamin E and the risk on coronary heart disease\nProspective observational study on the effect of vitamin E:\n“After controlling for age and several coronary risk factors, we observed a lower risk of coronary disease among men with higher intakes of vitamin E (P for trend = 0.003). For men consuming more than 60 IU per day of vitamin E, the multivariate relative risk was 0.64 (95% confidence interval, 0.49 to 0.83) as compared with those consuming less than 7.5 IU per day.”\n\nThe data suggest a beneficial effect of vitamin E.\nOn that basis, a large-scale administration of vitamin E was recommended.\nBut, are vitamin E users comparable to non-users?"
+  },
+  {
+    "objectID": "03-experimentalDesign.html#comparison-with-experimental-studies-on-the-effect-of-vitamin-e",
+    "href": "03-experimentalDesign.html#comparison-with-experimental-studies-on-the-effect-of-vitamin-e",
+    "title": "3. Some concepts on experimental design",
+    "section": "6.2 Comparison with experimental studies on the effect of vitamin E",
+    "text": "6.2 Comparison with experimental studies on the effect of vitamin E\nFrom experimental double-blinded randomized vitamin E/placebo studies we learned:\n\nnutrition intervention studies in Linxian (China): relative risk (RR) 0.90 (95% confidence interval (CI), 0.76-1.07);\nAlpha-Tocopherol, Beta Carotene Cancer Prevention study: RR 1.18 (95% CI, 0.62-2.27);\nGruppo Italiano per lo Studio della Sopravivenza nell’ Infarto miocardico Prevenzione study: RR 0.95 (95% CI, 0.86-1.05);\nHeart Outcomes Prevention Evaluation study: RR 1.05 (95% CI, 0.95-1.16);\nPrimary Prevention Project: RR 1.07 (95% CI, 0.74-1.56);\nHeart Protection Study: RR 1.06 (95% CI, 0.95-1.18)."
+  },
+  {
+    "objectID": "03-experimentalDesign.html#observational-versus-experimental-studies",
+    "href": "03-experimentalDesign.html#observational-versus-experimental-studies",
+    "title": "3. Some concepts on experimental design",
+    "section": "6.3 Observational versus experimental studies",
+    "text": "6.3 Observational versus experimental studies\n\nObservational studies typically suffer from confounding.\nCorrection for confounding is of course only possible for the factors that have been measured.\nThis makes observational studies more limited for drawing causal conclusions.\nRandomized studies ‘in principle’ exclude the existence of such factors.\nThey are therefore the gold standard for causal conclusions, but they are not always feasible or possible."
   },
   {
     "objectID": "04_1_NHANES.html",

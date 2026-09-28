@@ -305,9 +305,9 @@ NHANES |>
 # Normal approximation
 
 
-- Biological and chemical data are often Normally distributed upon transformation.
+- Biological and chemical data are often Normally distributed (upon transformation).
 
-- If this is the case we can get a lot of insight in the data using just two descriptive statistics: mean $\mu$ and standard deviation $\sigma$.
+- If this is the case we can get a lot of insight in the data using just two descriptive statistics (upon transformation): mean $\mu$ and standard deviation $\sigma$.
 
 ---
 
