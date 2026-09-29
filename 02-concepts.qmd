@@ -557,142 +557,227 @@ mean(NHANES$gender)
 
 ---
 
-# Direct cholesterol example
+# Height example
 
 ## Empirical distribution
 
-- We can estimate the direct cholesterol distribution of females using a histogram
+- We can estimate the distribution of the height of adult females using a histogram.
 
 ```{r}
 NHANES |>
-  filter(Gender == "female") |>
-  ggplot(aes(x = DirectChol)) +
+  filter(Gender == "female" & !is.na(Height) & Age > 18) |>
+  ggplot(aes(x = Height)) +
   geom_histogram()
 ```
-
-- Note, that the distribution is skewed with a tail to the right.
 
 - We can estimate the cumulative distribution function using the empirical cumulative distribution function.
     - Every observation in the sample is observed once.
     - So the empirical distribution of the sample is a discrete distribution with probability of 1/n on every observation.
-    - The empirical cumulative distribution function then becomes
+    - The empirical cumulative distribution function (ECDF) then becomes
     $$ECDF(x) = \sum\limits_{x_i \leq x} \frac{1}{n} = \frac{\# (x_i \leq x)}{n}$$
 
 ```{r}
-fem <- NHANES |> filter(Gender == "female" & !is.na(DirectChol))
-fem |>
-  ggplot(aes(x = DirectChol)) +
+NHANES |>
+  filter(Gender == "female" & !is.na(Height) & Age > 18) |>
+  ggplot(aes(x = Height)) +
   stat_ecdf()
 ```
 
-  - We also illustrate this for a sample with sample size 10
+- We can use the empirical cumulative distribution function to calculate probabilities.
+What is the probability that a woman is smaller than 150 cm?
 
 ```{r}
-set.seed(1)
+ecdfFem <- NHANES |>
+  filter(Gender == "female" & !is.na(Height) & Age > 18) |>
+  pull(Height) |>
+  ecdf()
+ecdfFem(150)
+```
+
+- We also illustrate this for a sample with sample size 10
+
+```{r}
+set.seed(502)
 fem10 <- NHANES |>
-  filter(Gender == "female" & !is.na(DirectChol)) |>
+  filter(Gender == "female" & !is.na(Height) & Age > 18) |>
   sample_n(size = 10)
-fem10 |> ggplot(aes(x = DirectChol)) +
+
+fem10 |>
+  ggplot(aes(x = Height)) +
   stat_ecdf()
+```
+
+```{r}
+ecdfFem10 <- fem10 |>
+  pull(Height) |>
+  ecdf()
+ecdfFem10(150)
+```
+
+- Note, that this probability is poorly estimated based on the small sample.
+
+- Note, that we could also have estimated this probability by calculating the fraction of height measurements that are smaller than or equal to 150 cm.
+
+```{r}
+NHANES |>
+  filter(Gender == "female" & !is.na(Height) & Age > 18) |>
+  count(Height <= 150) |>
+  mutate(prob = n / sum(n))
+
+ecdfFem(150)
+```
+
+```{r}
+fem10 |>
+  count(Height <= 150) |>
+  mutate(prob = n / sum(n))
+
+ecdfFem10(150)
 ```
 
 ---
 
 ## Normal approximation
 
-- In the introduction we have seen that the log transformed direct cholesterol levels had a nice bell shape.
+- In the introduction we have seen that the height measurements had a nice bell shape.
+
+- So we can assume that the measurements are approximately normally distributed.
+
+- We can approximate the distribution of the height measurements using a normal distribution.
+
+- We only have to estimate two parameters:
+    - the mean using the sample mean ($\hat\mu = \bar x$)
+    - the variance using the sample variance ($\hat\sigma^2 = s^2$) or the standard deviation using the sample standard deviation ($\hat\sigma = s$).
 
 ```{r}
-fem |> ggplot(aes(x = DirectChol |> log2())) +
+HeightSum <- NHANES |>
+  filter(Gender == "female" & !is.na(Height) & Age > 18) |>
+  summarize(mean = mean(Height), sd = sd(Height))
+HeightSum
+```
+
+- We see that the approximation works well:
+
+```{r}
+NHANES |>
+  filter(Gender == "female" & !is.na(Height) & Age > 18) |>
+  ggplot(aes(x = Height)) +
   geom_histogram(aes(y = ..density.., fill = ..count..)) +
-  xlab("Direct Cholesterol (log2)") +
-  stat_function(fun = dnorm, color = "red", args = list(mean = mean(fem$DirectChol |> log2()), sd = sd(fem$DirectChol |> log2())))
+  xlab("Height (cm)") +
+  stat_function(
+    fun = dnorm,
+    color = "red",
+    args = list(
+      mean = HeightSum$mean[1],
+      sd = HeightSum$sd[1]
+    )
+  )
 ```
-
-- We can now approximate the distribution of log2 transformed direct cholesterol levels using a normal distribution.
-
-- We only have to estimate two parameters: the mean and the variance. We can do this based on the sample mean ($\bar x$) and sample variance ($s^2$) or sample standard deviation ($s$).
-
-
-```{r}
-xBar <- mean(fem$DirectChol |> log2())
-sdBar <- sd(fem$DirectChol |> log2())
-xBar
-sdBar
-```
-
 
 - We can do the same thing for the small sample with 10 women.
 
 ```{r}
-fem10 |> ggplot(aes(x = DirectChol |> log2())) +
-  geom_histogram(aes(y = ..density.., fill = ..count..), bins = 10) +
-  xlab("Direct Cholesterol (log2)") +
-  stat_function(fun = dnorm, color = "red", args = list(mean = mean(fem10$DirectChol |> log2()), sd = sd(fem10$DirectChol |> log2()))) +
-  xlim(-2, 2)
+HeightSum10 <- fem10 |>
+  summarize(mean = mean(Height), sd = sd(Height))
+HeightSum10
 ```
-
 
 ```{r}
-xBar10 <- mean(fem10$DirectChol |> log2())
-sdBar10 <- sd(fem10$DirectChol |> log2())
-xBar10
-sdBar10
+fem10 |>
+  ggplot(aes(x = Height)) +
+  geom_histogram(aes(y = ..density.., fill = ..count..), bins = 10) +
+  xlab("Height (cm)") +
+  stat_function(
+    fun = dnorm,
+    color = "red",
+    args = list(
+      mean = HeightSum10$mean[1],
+      sd = HeightSum10$sd[1]
+    )
+  ) +
+  xlim(130, 190)
 ```
+
+- We can now also use the normal approximation to calculate the probability that a woman is smaller than 150 cm: $P(X \leq 150)$.
+
+- We do this based on the large sample and compare it with the result based on the ECDF.
+
+```{r}
+pnorm(150, HeightSum$mean[1], HeightSum$sd[1])
+ecdfFem(150)
+```
+
+- Based on the small sample:
+
+```{r}
+pnorm(150, HeightSum10$mean[1], HeightSum10$sd[1])
+ecdfFem10(150)
+```
+
+- For the small sample, the probability estimated with the empirical distribution is much less precise.
+
+- Indeed, extreme quantiles estimated from a small sample are quite uncertain as they only use a fraction of the data.
+
+- The estimate based on the normal distribution allows us to use all the data to estimate the model parameters.
 
 ---
 
 ## Reference intervals
 
-- Normal values for the cholesterol levels in the population can be calculated using a reference interval. Typically a 95% reference interval is used, so that 95% of the subjects in the population are expected to have a value for the characteristic that falls into the reference interval.
+- Normal values for the height in the population can be obtained using a reference interval.
 
-- We can do this based on the empirical distribution using the quantile function. We need to calculate the quantiles $\hat{F}(x_{2.5\%})=0.025$ and $\hat{F}(x_{97.5\%})=0.975$ so that 95% of the values are located in the interval [$x_{2.5\%}$, $x_{97.5\%}$] .
+- Typically a 95% reference interval is used, so that 95% of the subjects in the population are expected to have a value for the characteristic that falls into the reference interval.
+
+- We can do this again based on the empirical distribution. We need to calculate the quantiles $\hat{F}(x_{2.5\%})=0.025$ and $\hat{F}(x_{97.5\%})=0.975$ so that 95% of the observations in the sample are located in the interval [$x_{2.5\%}$, $x_{97.5\%}$].
+
+- This can be done with the `quantile` function.
 
 - Large sample
 
 ```{r}
-quantile(fem$DirectChol, prob = c(0.025, 0.975))
+NHANES |>
+  filter(Gender == "female" & !is.na(Height) & Age > 18) |>
+  pull(Height) |>
+  quantile(prob = c(0.025, 0.975))
 ```
 
-- So based on the large sample, we estimate that 95% of the females in the population have a direct cholesterol level in the interval [`r quantile(fem$DirectChol,prob=c(0.025,0.975))`].
+- So based on the large sample, we estimate that 95% of the females in the population have a height in the interval [`r NHANES |> filter(Gender == "female" & !is.na(Height) & Age > 18) |> pull(Height) |> quantile(prob = c(0.025, 0.975))`] cm.
 
 - Small sample
 
 ```{r}
-quantile(fem10$DirectChol, prob = c(0.025, 0.975))
+fem10 |>
+  pull(Height) |>
+  quantile(prob = c(0.025, 0.975))
 ```
 
-- Note, that this estimate is very crude. In the small sample,  We do not have enough observations to have a good approximation of the extreme quantiles.
+- Note, that this estimate is very crude. In the small sample, we do not have enough observations to have a good approximation of the extreme quantiles.
 
 ### Normal approximation
 
 - We can use the function qnorm to calculate quantiles from the normal distribution.
 
-- We also know that a 95% reference interval is located rougly in two standard deviations around the mean.
-
-- We will have to use the function `2^` to transform the result back to the direct cholesterol domain.
+- We also know that a 95% reference interval is located roughly within two standard deviations around the mean.
 
 - Large sample
 ```{r}
-qnorm(0.025, mean = xBar, sd = sdBar) |> (\(x) 2^x)()
-qnorm(0.975, mean = xBar, sd = sdBar) |> (\(x) 2^x)()
-2^(xBar - 2 * sdBar)
-2^(xBar + 2 * sdBar)
+qnorm(0.025, mean = HeightSum$mean, sd = HeightSum$sd)
+HeightSum$mean - 2 * HeightSum$sd
+qnorm(0.975, mean = HeightSum$mean, sd = HeightSum$sd)
+HeightSum$mean + 2 * HeightSum$sd
 ```
 
 - Small sample
 ```{r}
-qnorm(0.025, mean = xBar10, sd = sdBar10) |> (\(x) 2^x)()
-qnorm(0.975, mean = xBar10, sd = sdBar10) |> (\(x) 2^x)()
-2^(xBar10 - 2 * sdBar10)
-2^(xBar10 + 2 * sdBar10)
+qnorm(0.025, mean = HeightSum10$mean, sd = HeightSum10$sd)
+qnorm(0.975, mean = HeightSum10$mean, sd = HeightSum10$sd)
 ```
 
 ---
 
 ## Conclusions
 
-- For the large sample, the empirical distribution (quantile function) and the normal approximation gives us approximately the same result.
+- For the large sample, the empirical distribution (quantile function) and the normal approximation give us approximately the same result.
 
 - For the small sample, however, the normal approximation works much better than the one based on the empirical distribution.
 
