@@ -70,7 +70,7 @@ Files
 
   `https://raw.githubusercontent.com/statOmics/PSLSData/main/wbcon.csv`
 
-<!--
+<!---->
 - Solution: [Solution2](./04_2_pertussis_sol.html)
 <!---->
 

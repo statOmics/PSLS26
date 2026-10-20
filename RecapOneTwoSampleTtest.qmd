@@ -1,0 +1,224 @@
+---
+title: "Recap: One-sample vs. Two-sample t-test"
+lang: en
+format:
+  pdf:
+    documentclass: article
+    papersize: a4
+    fontsize: 10pt
+    geometry:
+      - margin=1.5cm
+    pdf-engine: xelatex
+    toc: false
+    number-sections: false
+    colorlinks: false
+    include-in-header:
+      text: |
+        \usepackage{titlesec}
+        \usepackage{xcolor}
+        \usepackage{enumitem}
+        \definecolor{brandgreen}{HTML}{4F704F}
+        \titlespacing{\section}{0pt}{8pt}{3pt}
+        \titleformat{\section}{\normalfont\bfseries\color{brandgreen}\large}{}{0em}{}
+        \setlength{\parindent}{0pt}
+        \setlength{\parskip}{2pt}
+        \setlist{noitemsep, topsep=1pt, parsep=0pt, partopsep=0pt, leftmargin=1.2em}
+        \setlist[itemize,2]{label=$\circ$}
+        \newcommand{\twocol}[2]{\noindent\begin{minipage}[t]{0.485\textwidth}#1\end{minipage}\hfill\begin{minipage}[t]{0.485\textwidth}#2\end{minipage}\par\medskip}
+---
+
+## Dataset -- research question -- design
+
+```{=latex}
+\twocol{
+\begin{minipage}[t][1.0cm][t]{\linewidth}\textbf{One-sample t-test / Paired t-test - one-sample t-test on difference (Captopril)}\end{minipage}
+\begin{itemize}
+\item Is there an effect of administering captopril on the blood pressure of patients with hypertension?
+\item 15 persons at random
+\item blood pressure before and after treatment on the same patient (pretest/posttest, paired measurements)
+\end{itemize}
+$\Rightarrow$ difference $Y=\text{BP}_\text{after}-\text{BP}_\text{before}$.
+}{
+\begin{minipage}[t][1.0cm][t]{\linewidth}\textbf{Two-sample t-test (Armpit microbiome)}\end{minipage}
+\begin{itemize}
+\item
+Is there an effect of microbiome transplantation on the relative abundance of \textit{Staphylococcus}?
+\item 20 persons at random
+\item divided over 2 \textbf{independent} groups (10 placebo, 10 transplantation).
+\end{itemize}
+}
+```
+
+## Translating the research question into an effect size in the population
+
+```{=latex}
+\twocol{
+\[\delta=\mu-\mu_0\]
+\begin{itemize}
+\item difference between the population mean $\mu$ and a prespecified value $\mu_0$
+\item for captopril / paired data
+\begin{itemize}
+\item  $\mu$: average difference after - before in the population
+\item $\mu_0=0$
+\end{itemize}
+\end{itemize}
+}{
+\[\delta = \mu_1-\mu_2\]
+\begin{itemize}
+\item difference between group means
+\end{itemize}
+}
+```
+
+## Point estimator
+
+```{=latex}
+\twocol{
+\[\hat\delta = \hat{\mu} - \mu_0, \quad\quad\hat\mu=\bar Y\]
+}{
+\[\hat\delta=\hat\mu_1-\hat\mu_2=\bar Y_1-\bar Y_2\]
+}
+```
+
+## Model / distribution
+
+```{=latex}
+\twocol{
+\begin{eqnarray*}
+Y\sim N(\mu,\sigma^2) &\Longrightarrow& \bar Y\sim N\!\left(\mu,\frac{\sigma^2}{n}\right)
+\end{eqnarray*}
+}{
+\begin{eqnarray*}
+Y_{ij}\sim N(\mu_j,\sigma^2)&\Longrightarrow& \bar Y_{j} \sim N\left(\mu_j,\frac{\sigma^2}{n_j}\right)\\
+&\Longrightarrow& \bar Y_1-\bar Y_2\sim N\!\left(\mu_1-\mu_2,\ \sigma^2\left(\tfrac1{n_1}+\tfrac1{n_2}\right)\right)
+\end{eqnarray*}
+}
+```
+
+## Assumptions
+
+```{=latex}
+\twocol{
+\begin{itemize}
+\item Representative sample: $E[\bar Y]=\mu$
+\item Normality
+\item Independence (between subjects)
+\end{itemize}
+}{
+\begin{itemize}
+\item Representative sample: $E[\bar Y_j]=\mu_j$
+\item Normality
+\item Independence \textbf{and} equal variances between the 2 groups ($\sigma_1^2=\sigma_2^2=\sigma^2$)
+\end{itemize}
+}
+```
+
+## Variance/SE estimator
+
+```{=latex}
+\twocol{
+\begin{minipage}[t][1.3cm][c]{\linewidth}\centering$\hat\sigma^2=S^2=\dfrac{\sum_{i=1}^n(Y_i-\bar Y)^2}{n-1}$\end{minipage}
+\begin{minipage}[t][1.0cm][c]{\linewidth}\centering$SE_{\bar Y}=\dfrac{S}{\sqrt n}$\end{minipage}
+}{
+\begin{minipage}[t][1.3cm][c]{\linewidth}\centering$S_p^2=\dfrac{\sum_{j=1}^2\sum_{i=1}^{n_j}(Y_{ij}-\bar Y_j)^2}{n_1+n_2-2}$\end{minipage}
+\begin{minipage}[t][1.0cm][c]{\linewidth}\centering$SE_{\bar Y_1-\bar Y_2}=S_p\sqrt{\tfrac1{n_1}+\tfrac1{n_2}}$\end{minipage}
+}
+```
+
+## Pivotal statistic
+
+```{=latex}
+\twocol{
+\[T=\frac{\bar Y-\mu}{SE_{\bar Y}}\sim t_{n-1}\]
+}{
+\[T=\frac{(\bar Y_1-\bar Y_2)-(\mu_1-\mu_2)}{SE_{\bar Y_1-\bar Y_2}}\sim t_{n_1+n_2-2}\]
+}
+```
+
+## Confidence interval
+
+```{=latex}
+\twocol{
+\[\bar Y\pm t_{n-1,\alpha/2}\,SE_{\bar Y}\]
+}{
+\[(\bar Y_1-\bar Y_2)\pm t_{n_1+n_2-2,\alpha/2}\,SE_{\bar Y_1-\bar Y_2}\]
+}
+```
+
+## Hypothesis test
+
+```{=latex}
+\twocol{
+\[H_0:\mu=\mu_0 \quad\text{vs}\quad H_1:\mu\neq\mu_0\]
+(or one-sided: $\mu<\mu_0$ or $\mu>\mu_0$)
+
+\vspace{0.4cm}
+
+Test statistic under $H_0$:
+\[T=\frac{\bar Y-\mu_0}{SE_{\bar Y}}\sim t_{n-1}\]
+for captopril $\mu_0 =0$
+}{
+\[H_0:\mu_1-\mu_2=0 \quad\text{vs}\quad H_1:\mu_1-\mu_2\neq0\]
+(or one-sided: $\mu_1-\mu_2<0$ or $\mu_1-\mu_2>0$)
+
+\vspace{0.4cm}
+
+Test statistic under $H_0$:
+\[T=\frac{\bar Y_1-\bar Y_2}{SE_{\bar Y_1-\bar Y_2}}\sim t_{n_1+n_2-2}\]
+}
+```
+
+\begin{itemize}
+\item Both statistics are a \textbf{signal-to-noise ratio}: $T=\hat\delta/SE_{\hat\delta}$, with $\hat\delta=\bar Y-\mu_0$ (one-sample) and $\hat\delta=\bar Y_1-\bar Y_2$ (two-sample). 
+\item The p-value is the probability to obtain, under the null hypothesis ($H_0$), in a random sample with the same design, a test statistic that is as extreme or more extreme than the one observed in the experiment (more extreme $\rightarrow$ in the direction of $H_1$).
+\end{itemize}
+
+## R function
+
+```{=latex}
+\twocol{
+\texttt{t.test(x, mu = mu0)}\\
+or paired: \texttt{t.test(x1, x2, paired = TRUE)}
+}{
+\texttt{t.test(y \textasciitilde{} group, var.equal = TRUE)}
+}
+```
+
+## When the assumptions are not met
+
+```{=latex}
+\twocol{
+\begin{itemize}
+\item No normality, large $n$: central limit theorem
+\item No normality, small $n$: permutation test (permute the sign of $Y-\mu_0$, $2^n$ possibilities)
+\end{itemize}
+}{
+\begin{itemize}
+\item Unequal variances: Welch two-sample t-test
+\item No normality, large $n$ in both groups: central limit theorem
+\item No normality, small $n$: nonparametric test (Wilcoxon-Mann-Whitney, Chapter 9)
+\end{itemize}
+}
+```
+
+## Design aspects: what does the power depend on?
+
+```{=latex}
+\twocol{
+\begin{minipage}[t][1.4cm][c]{\linewidth}\centering$T=\dfrac{\bar Y-\mu_0}{S/\sqrt n}$\end{minipage}
+\begin{itemize}
+\item $S$: not under our control, depends on the variability in the population
+\item $n$: most important design parameter
+\item significance level (usually 5\%)
+\item true effect size $\mu-\mu_0$: not under our control, so we have to assess it upfront to determine the minimal $n$ needed to pick up the minimal effect size $\delta$ that is scientifically relevant.
+\end{itemize}
+}{
+\begin{minipage}[t][1.4cm][c]{\linewidth}\centering$T=\dfrac{\bar Y_1-\bar Y_2}{S_p\sqrt{\tfrac1{n_1}+\tfrac1{n_2}}}$\end{minipage}
+\begin{itemize}
+\item $S_p$: not under our control, depends on the variability in the population
+\item $n_1,n_2$: most important design parameters; for a fixed total $n_1+n_2$ the $SE$ is minimal when $n_1=n_2$
+\item significance level (usually 5\%)
+\item true effect size $\mu_1-\mu_2$: not under our control, so we have to assess it upfront to determine the minimal $n$ needed to pick up the minimal effect size $\delta$ that is scientifically relevant.
+\end{itemize}
+}
+```

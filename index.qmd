@@ -108,6 +108,7 @@ source("https://raw.githubusercontent.com/statOmics/PSLS/master/install.R")
 
     - [5.1. Statistical Inference](./05-statisticalInference.html)
     - [5.2. Two sample t-test](./05-statisticalInference-twosampleT.html)
+    - [Recap: one-sample vs. two-sample t-test (pdf)](./RecapOneTwoSampleTtest.pdf)
     - [Exercises](./05_exercises.html)
 
 6. [Linear Regression](./06-linearRegression.html)
