@@ -51,7 +51,7 @@ Files:
 
   `https://raw.githubusercontent.com/statOmics/PSLSData/main/freshweight_lettuce.txt`
 
-<!--
+<!---->
 - Solution: [Solution1](./07_1_lettuce_sol.html)
 <!---->
 
@@ -78,7 +78,7 @@ foster parent has an effect on the average length of the cuckoo eggs.
 
   `https://raw.githubusercontent.com/statOmics/PSLSData/main/Cuckoo.txt`
 
-<!--
+<!---->
 - Solution: [Solution2](./07_2_cuckoo_sol.html)
 <!---->
 
@@ -101,6 +101,6 @@ categories. To this end, we will use an ANOVA analysis.
 
   `https://raw.githubusercontent.com/statOmics/PSLSData/main/NHANES.csv`
 
-<!--
+<!---->
 - Solution: [Solution3](./07_3_NHANES_sol.html)
 <!---->

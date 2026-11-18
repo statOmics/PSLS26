@@ -47,7 +47,7 @@ Files:
 
   `https://raw.githubusercontent.com/statOmics/PSLSData/main/diabetes.txt`
 
-<!--
+<!---->
 - Solution: [Solution1](./05_1_diabetes_sol.html)
 <!---->
 
@@ -84,7 +84,7 @@ Files
 
   `https://raw.githubusercontent.com/statOmics/PSLSData/main/wbcon.csv`
 
-<!--
+<!---->
 - Solution: [Solution2](./05_2_pertussis_sol.html)
 <!---->
 
@@ -125,7 +125,7 @@ Files:
 
   `https://raw.githubusercontent.com/statOmics/PSLSData/main/Cuckoo.txt`
 
-<!--
+<!---->
 - Solution: [Solution3](./05_3_cuckoo_sol.html)
 <!---->
 
@@ -153,6 +153,6 @@ This exercise aims to further sharpen your skills in
 
   `https://raw.githubusercontent.com/statOmics/PSLSData/main/shrimps.txt`
 
-<!--
+<!---->
 - Solution: [Solution4](./05_4_shrimps_sol.html)
 <!---->
