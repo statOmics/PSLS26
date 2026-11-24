@@ -198,7 +198,7 @@ Hence, in case of a significant interaction we should study the effect of the po
 - III-I: $H_0: \beta_{III}+\beta_{III:C}=0$
 - III-II: $H_0: \beta_{III}+\beta_{III:C}-\beta_{II}-\beta_{II:C}=0$
 
-4. For treatment C we would have to assess the following comparisons:
+4. For treatment D we would have to assess the following comparisons:
 
 - II-I: $H_0: \beta_{II}+\beta_{II:D}=0$
 - III-I: $H_0: \beta_{III}+\beta_{III:D}=0$
@@ -228,7 +228,7 @@ The same holds for assessing the effect of the treatment, which should be done f
 
 - B-A: $H_0: \beta_{B}+\beta_{III:B}=0$
 - C-A: $H_0: \beta_{C}+\beta_{III:C}=0$
-- D-A: $H_0: \beta_{D}+\beta_{II:D}=0$
+- D-A: $H_0: \beta_{D}+\beta_{III:D}=0$
 - C-B: $H_0: \beta_{C}+\beta_{III:C}-\beta_{B}-\beta_{III:B}=0$
 - D-B: $H_0: \beta_{D}+\beta_{III:D}-\beta_{B}-\beta_{III:B}=0$
 - D-C: $H_0: \beta_{D}+\beta_{III:D}-\beta_{C}-\beta_{III:C}=0$
@@ -288,7 +288,7 @@ e.g. for poison III vs poison II that would result in
 
 - III-II:
 $$H_0:
-\frac{(\beta_{III}-\beta_{II}) + (\beta_{III} + \beta_{III:B}-\beta_{II} - \beta_{II:B}) + (\beta_{III} + \beta_{III:C}-\beta_{II} - \beta_{II:C} + + (\beta_{III} + \beta_{III:D}-\beta_{II} - \beta_{II:D}) ) }{4}=0
+\frac{(\beta_{III}-\beta_{II}) + (\beta_{III} + \beta_{III:B}-\beta_{II} - \beta_{II:B}) + (\beta_{III} + \beta_{III:C}-\beta_{II} - \beta_{II:C}) + (\beta_{III} + \beta_{III:D}-\beta_{II} - \beta_{II:D})}{4}=0
 $$
 $$
 H_0:\beta_{III} + \frac{1}{4} \times \beta_{III:B} +  \frac{1}{4} \times\beta_{III:C} +  \frac{1}{4} \times\beta_{III:D}
@@ -323,7 +323,7 @@ Note, that the standard errors differ slightly.
 Indeed the errors of both models will differ as well as the remaining degrees of freedom of the errors $n-p$.
 
 ```{r}
-data.frame(Additive_coef = summary(comparisons)$test$coef, Additive_se = summary(comparisons)$test$sigma, Int_coef = summary(comparisonsInt2)$test$coef, int_se = summary(comparisonsInt2)$test$sigma) |> round(3)
+data.frame(Additive_coef = summary(comparisons)$test$coef, Additive_se = summary(comparisons)$test$sigma, Int_coef = summary(comparisonsInt2)$test$coef, int_se = summary(comparisonsInt2)$test$sigma) |> round(4)
 ```
 
 # Conclusion
@@ -332,7 +332,7 @@ There is an extremely significant effect of the Poison and Treatment on the rate
 
 The effect of the poison does not significantly differ according to the treatment and vice versa (p = `r  Anova(rats3,type="III")["poison:treat","Pr(>F)"] |> round(3)`).
 
-The rate of dying is on average `r confint(comparisonsInt2)$confint[contrastNames=="III-I",1] |> round(2)`h$^{-1}$  and `r confint(comparisonsInt2)$confint[contrastNames=="III-II",1] |> round(2)`h$^{-1}$ higher for rats that are exposed to poison III that those exposed to poison I and II, respectively (both p << 0.001, 95% CI III-I: [`r paste(round(confint(comparisonsInt2)$confint[contrastNames=="III-I",-1],2),collapse=", ")`]h$^{-1}$, 95% CI III-II: [`r paste(round(confint(comparisonsInt2)$confint[contrastNames=="III-II",-1],2),collapse=", ")`]h$^{-1}$)
+The rate of dying is on average `r confint(comparisonsInt2)$confint[contrastNames=="III-I",1] |> round(2)`h$^{-1}$  and `r confint(comparisonsInt2)$confint[contrastNames=="III-II",1] |> round(2)`h$^{-1}$ higher for rats that are exposed to poison III than those exposed to poison I and II, respectively (both p << 0.001, 95% CI III-I: [`r paste(round(confint(comparisonsInt2)$confint[contrastNames=="III-I",-1],2),collapse=", ")`]h$^{-1}$, 95% CI III-II: [`r paste(round(confint(comparisonsInt2)$confint[contrastNames=="III-II",-1],2),collapse=", ")`]h$^{-1}$)
 The average rate of dying was not significantly different between rats exposed to poison I and poison II (p=`r round(summary(comparisonsInt2)$test$pvalues[contrastNames=="II-I"],3)`).
 
 The rate of dying is on average `r confint(comparisonsInt2)$confint[contrastNames=="B-A",1] |> round(2) |> abs()`h$^{-1}$ and `r confint(comparisonsInt2)$confint[contrastNames=="D-A",1] |> round(2) |> abs()`h$^{-1}$ higher upon treatment A than upon treatment B and D, respectively (p << 0.001, 95% CI B-A: [`r paste(round(confint(comparisonsInt2)$confint[contrastNames=="B-A",-1],2),collapse=", ")`]h$^{-1}$, 95% CI D-A: [`r paste(round(confint(comparisonsInt2)$confint[contrastNames=="D-A",-1],2),collapse=", ")`]h$^{-1}$).

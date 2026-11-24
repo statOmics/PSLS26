@@ -686,15 +686,15 @@ Fit: lm(formula = 1/time ~ poison + treat, data = rats)
 
 Linear Hypotheses:
                       Estimate Std. Error t value Pr(&gt;|t|)    
-poison: II - I == 0    0.04686    0.01744   2.688  0.07350 .  
-poison: III - I == 0   0.19964    0.01744  11.451  &lt; 1e-04 ***
-poison: III - II == 0  0.15278    0.01744   8.763  &lt; 1e-04 ***
-treat: B - A == 0     -0.16574    0.02013  -8.233  &lt; 1e-04 ***
-treat: C - A == 0     -0.05721    0.02013  -2.842  0.05093 .  
-treat: D - A == 0     -0.13583    0.02013  -6.747  &lt; 1e-04 ***
-treat: C - B == 0      0.10853    0.02013   5.391  &lt; 1e-04 ***
-treat: D - B == 0      0.02991    0.02013   1.485  0.61546    
-treat: D - C == 0     -0.07862    0.02013  -3.905  0.00276 ** 
+poison: II - I == 0    0.04686    0.01744   2.688   0.0735 .  
+poison: III - I == 0   0.19964    0.01744  11.451   &lt;0.001 ***
+poison: III - II == 0  0.15278    0.01744   8.763   &lt;0.001 ***
+treat: B - A == 0     -0.16574    0.02013  -8.233   &lt;0.001 ***
+treat: C - A == 0     -0.05721    0.02013  -2.842   0.0509 .  
+treat: D - A == 0     -0.13583    0.02013  -6.747   &lt;0.001 ***
+treat: C - B == 0      0.10853    0.02013   5.391   &lt;0.001 ***
+treat: D - B == 0      0.02991    0.02013   1.485   0.6155    
+treat: D - C == 0     -0.07862    0.02013  -3.905   0.0028 ** 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
@@ -712,21 +712,21 @@ Multiple Comparisons of Means: Tukey Contrasts
 
 Fit: lm(formula = 1/time ~ poison + treat, data = rats)
 
-Quantile = 2.8486
+Quantile = 2.85
 95% family-wise confidence level
  
 
 Linear Hypotheses:
-                      Estimate   lwr        upr       
-poison: II - I == 0    0.0468641 -0.0028015  0.0965297
-poison: III - I == 0   0.1996425  0.1499769  0.2493081
-poison: III - II == 0  0.1527784  0.1031128  0.2024439
-treat: B - A == 0     -0.1657402 -0.2230891 -0.1083914
-treat: C - A == 0     -0.0572135 -0.1145624  0.0001353
-treat: D - A == 0     -0.1358338 -0.1931827 -0.0784850
-treat: C - B == 0      0.1085267  0.0511778  0.1658756
-treat: D - B == 0      0.0299064 -0.0274425  0.0872553
-treat: D - C == 0     -0.0786203 -0.1359692 -0.0212714</code></pre>
+                      Estimate  lwr       upr      
+poison: II - I == 0    0.046864 -0.002826  0.096555
+poison: III - I == 0   0.199642  0.149952  0.249333
+poison: III - II == 0  0.152778  0.103088  0.202469
+treat: B - A == 0     -0.165740 -0.223118 -0.108363
+treat: C - A == 0     -0.057214 -0.114591  0.000164
+treat: D - A == 0     -0.135834 -0.193211 -0.078456
+treat: C - B == 0      0.108527  0.051149  0.165904
+treat: D - B == 0      0.029906 -0.027471  0.087284
+treat: D - C == 0     -0.078620 -0.135998 -0.021243</code></pre>
 </div>
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -789,7 +789,7 @@ treat: D - C == 0     -0.0786203 -0.1359692 -0.0212714</code></pre>
 <li>III-II: <span class="math inline">\(H_0: \beta_{III}+\beta_{III:C}-\beta_{II}-\beta_{II:C}=0\)</span></li>
 </ul>
 <ol start="4" type="1">
-<li>For treatment C we would have to assess the following comparisons:</li>
+<li>For treatment D we would have to assess the following comparisons:</li>
 </ol>
 <ul>
 <li>II-I: <span class="math inline">\(H_0: \beta_{II}+\beta_{II:D}=0\)</span></li>
@@ -825,7 +825,7 @@ treat: D - C == 0     -0.0786203 -0.1359692 -0.0212714</code></pre>
 <ul>
 <li>B-A: <span class="math inline">\(H_0: \beta_{B}+\beta_{III:B}=0\)</span></li>
 <li>C-A: <span class="math inline">\(H_0: \beta_{C}+\beta_{III:C}=0\)</span></li>
-<li>D-A: <span class="math inline">\(H_0: \beta_{D}+\beta_{II:D}=0\)</span></li>
+<li>D-A: <span class="math inline">\(H_0: \beta_{D}+\beta_{III:D}=0\)</span></li>
 <li>C-B: <span class="math inline">\(H_0: \beta_{C}+\beta_{III:C}-\beta_{B}-\beta_{III:B}=0\)</span></li>
 <li>D-B: <span class="math inline">\(H_0: \beta_{D}+\beta_{III:D}-\beta_{B}-\beta_{III:B}=0\)</span></li>
 <li>D-C: <span class="math inline">\(H_0: \beta_{D}+\beta_{III:D}-\beta_{C}-\beta_{III:C}=0\)</span></li>
@@ -892,7 +892,7 @@ treat: D - C == 0     -0.0786203 -0.1359692 -0.0212714</code></pre>
 <p>e.g.&nbsp;for poison III vs poison II that would result in</p>
 <ul>
 <li>III-II: <span class="math display">\[H_0:
-\frac{(\beta_{III}-\beta_{II}) + (\beta_{III} + \beta_{III:B}-\beta_{II} - \beta_{II:B}) + (\beta_{III} + \beta_{III:C}-\beta_{II} - \beta_{II:C} + + (\beta_{III} + \beta_{III:D}-\beta_{II} - \beta_{II:D}) ) }{4}=0
+\frac{(\beta_{III}-\beta_{II}) + (\beta_{III} + \beta_{III:B}-\beta_{II} - \beta_{II:B}) + (\beta_{III} + \beta_{III:C}-\beta_{II} - \beta_{II:C}) + (\beta_{III} + \beta_{III:D}-\beta_{II} - \beta_{II:D})}{4}=0
 \]</span> <span class="math display">\[
 H_0:\beta_{III} + \frac{1}{4} \times \beta_{III:B} +  \frac{1}{4} \times\beta_{III:C} +  \frac{1}{4} \times\beta_{III:D}
 -\beta_{II} - \frac{1}{4} \times\beta_{II:B} -  \frac{1}{4} \times\beta_{II:C}  - \frac{1}{4} \times\beta_{II:D}=0
@@ -933,12 +933,12 @@ H_0:\beta_{III} + \frac{1}{4} \times \beta_{III:B} +  \frac{1}{4} \times\beta_{I
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Additive_coef =</span> <span class="fu">summary</span>(comparisons)<span class="sc">$</span>test<span class="sc">$</span>coef, <span class="at">Additive_se =</span> <span class="fu">summary</span>(comparisons)<span class="sc">$</span>test<span class="sc">$</span>sigma, <span class="at">Int_coef =</span> <span class="fu">summary</span>(comparisonsInt2)<span class="sc">$</span>test<span class="sc">$</span>coef, <span class="at">int_se =</span> <span class="fu">summary</span>(comparisonsInt2)<span class="sc">$</span>test<span class="sc">$</span>sigma) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Additive_coef =</span> <span class="fu">summary</span>(comparisons)<span class="sc">$</span>test<span class="sc">$</span>coef, <span class="at">Additive_se =</span> <span class="fu">summary</span>(comparisons)<span class="sc">$</span>test<span class="sc">$</span>sigma, <span class="at">Int_coef =</span> <span class="fu">summary</span>(comparisonsInt2)<span class="sc">$</span>test<span class="sc">$</span>coef, <span class="at">int_se =</span> <span class="fu">summary</span>(comparisonsInt2)<span class="sc">$</span>test<span class="sc">$</span>sigma) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Additive_coef"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Additive_se"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Int_coef"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["int_se"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.047","2":"0.017","3":"0.047","4":"0.017","_rn_":"poison: II - I"},{"1":"0.200","2":"0.017","3":"0.200","4":"0.017","_rn_":"poison: III - I"},{"1":"0.153","2":"0.017","3":"0.153","4":"0.017","_rn_":"poison: III - II"},{"1":"-0.166","2":"0.020","3":"-0.166","4":"0.020","_rn_":"treat: B - A"},{"1":"-0.057","2":"0.020","3":"-0.057","4":"0.020","_rn_":"treat: C - A"},{"1":"-0.136","2":"0.020","3":"-0.136","4":"0.020","_rn_":"treat: D - A"},{"1":"0.109","2":"0.020","3":"0.109","4":"0.020","_rn_":"treat: C - B"},{"1":"0.030","2":"0.020","3":"0.030","4":"0.020","_rn_":"treat: D - B"},{"1":"-0.079","2":"0.020","3":"-0.079","4":"0.020","_rn_":"treat: D - C"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Additive_coef"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Additive_se"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Int_coef"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["int_se"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.0469","2":"0.0174","3":"0.0469","4":"0.0173","_rn_":"poison: II - I"},{"1":"0.1996","2":"0.0174","3":"0.1996","4":"0.0173","_rn_":"poison: III - I"},{"1":"0.1528","2":"0.0174","3":"0.1528","4":"0.0173","_rn_":"poison: III - II"},{"1":"-0.1657","2":"0.0201","3":"-0.1657","4":"0.0200","_rn_":"treat: B - A"},{"1":"-0.0572","2":"0.0201","3":"-0.0572","4":"0.0200","_rn_":"treat: C - A"},{"1":"-0.1358","2":"0.0201","3":"-0.1358","4":"0.0200","_rn_":"treat: D - A"},{"1":"0.1085","2":"0.0201","3":"0.1085","4":"0.0200","_rn_":"treat: C - B"},{"1":"0.0299","2":"0.0201","3":"0.0299","4":"0.0200","_rn_":"treat: D - B"},{"1":"-0.0786","2":"0.0201","3":"-0.0786","4":"0.0200","_rn_":"treat: D - C"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -949,7 +949,7 @@ H_0:\beta_{III} + \frac{1}{4} \times \beta_{III:B} +  \frac{1}{4} \times\beta_{I
 <h1 data-number="5"><span class="header-section-number">5</span> Conclusion</h1>
 <p>There is an extremely significant effect of the Poison and Treatment on the rate of dying of the rats (p &lt;&lt; 0.001).</p>
 <p>The effect of the poison does not significantly differ according to the treatment and vice versa (p = 0.387).</p>
-<p>The rate of dying is on average 0.2h<span class="math inline">\(^{-1}\)</span> and 0.15h<span class="math inline">\(^{-1}\)</span> higher for rats that are exposed to poison III that those exposed to poison I and II, respectively (both p &lt;&lt; 0.001, 95% CI III-I: [0.15, 0.25]h<span class="math inline">\(^{-1}\)</span>, 95% CI III-II: [0.1, 0.2]h<span class="math inline">\(^{-1}\)</span>) The average rate of dying was not significantly different between rats exposed to poison I and poison II (p=0.074).</p>
+<p>The rate of dying is on average 0.2h<span class="math inline">\(^{-1}\)</span> and 0.15h<span class="math inline">\(^{-1}\)</span> higher for rats that are exposed to poison III than those exposed to poison I and II, respectively (both p &lt;&lt; 0.001, 95% CI III-I: [0.15, 0.25]h<span class="math inline">\(^{-1}\)</span>, 95% CI III-II: [0.1, 0.2]h<span class="math inline">\(^{-1}\)</span>) The average rate of dying was not significantly different between rats exposed to poison I and poison II (p=0.074).</p>
 <p>The rate of dying is on average 0.17h<span class="math inline">\(^{-1}\)</span> and 0.14h<span class="math inline">\(^{-1}\)</span> higher upon treatment A than upon treatment B and D, respectively (p &lt;&lt; 0.001, 95% CI B-A: [-0.22, -0.11]h<span class="math inline">\(^{-1}\)</span>, 95% CI D-A: [-0.19, -0.08]h<span class="math inline">\(^{-1}\)</span>). The rate of dying is on average 0.11h<span class="math inline">\(^{-1}\)</span> and 0.08h<span class="math inline">\(^{-1}\)</span> higher upon treatment C than upon treatment B and D, respectively (C-B: p &lt;&lt; 0.001, 95% CI [0.05, 0.17]h<span class="math inline">\(^{-1}\)</span> , D-C: p = 0.003, 95% CI [-0.14, -0.02]h<span class="math inline">\(^{-1}\)</span>). The average rate of dying was not significantly different between treatment C and A (p = 0.051), and, between treatment B and D (p = 0.61).</p>
 <p>All p-values are corrected for multiple testing.</p>
 
@@ -1610,7 +1610,7 @@ H_0:\beta_{III} + \frac{1}{4} \times \beta_{III:B} +  \frac{1}{4} \times\beta_{I
 <span id="cb24-216"><a href="#cb24-216" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>III-I: $H_0: \beta_{III}+\beta_{III:C}=0$</span>
 <span id="cb24-217"><a href="#cb24-217" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>III-II: $H_0: \beta_{III}+\beta_{III:C}-\beta_{II}-\beta_{II:C}=0$</span>
 <span id="cb24-218"><a href="#cb24-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-219"><a href="#cb24-219" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>For treatment C we would have to assess the following comparisons:</span>
+<span id="cb24-219"><a href="#cb24-219" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>For treatment D we would have to assess the following comparisons:</span>
 <span id="cb24-220"><a href="#cb24-220" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-221"><a href="#cb24-221" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>II-I: $H_0: \beta_{II}+\beta_{II:D}=0$</span>
 <span id="cb24-222"><a href="#cb24-222" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>III-I: $H_0: \beta_{III}+\beta_{III:D}=0$</span>
@@ -1640,7 +1640,7 @@ H_0:\beta_{III} + \frac{1}{4} \times \beta_{III:B} +  \frac{1}{4} \times\beta_{I
 <span id="cb24-246"><a href="#cb24-246" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-247"><a href="#cb24-247" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>B-A: $H_0: \beta_{B}+\beta_{III:B}=0$</span>
 <span id="cb24-248"><a href="#cb24-248" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>C-A: $H_0: \beta_{C}+\beta_{III:C}=0$</span>
-<span id="cb24-249"><a href="#cb24-249" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>D-A: $H_0: \beta_{D}+\beta_{II:D}=0$</span>
+<span id="cb24-249"><a href="#cb24-249" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>D-A: $H_0: \beta_{D}+\beta_{III:D}=0$</span>
 <span id="cb24-250"><a href="#cb24-250" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>C-B: $H_0: \beta_{C}+\beta_{III:C}-\beta_{B}-\beta_{III:B}=0$</span>
 <span id="cb24-251"><a href="#cb24-251" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>D-B: $H_0: \beta_{D}+\beta_{III:D}-\beta_{B}-\beta_{III:B}=0$</span>
 <span id="cb24-252"><a href="#cb24-252" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>D-C: $H_0: \beta_{D}+\beta_{III:D}-\beta_{C}-\beta_{III:C}=0$</span>
@@ -1700,7 +1700,7 @@ H_0:\beta_{III} + \frac{1}{4} \times \beta_{III:B} +  \frac{1}{4} \times\beta_{I
 <span id="cb24-306"><a href="#cb24-306" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-307"><a href="#cb24-307" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>III-II:</span>
 <span id="cb24-308"><a href="#cb24-308" aria-hidden="true" tabindex="-1"></a>$$H_0:</span>
-<span id="cb24-309"><a href="#cb24-309" aria-hidden="true" tabindex="-1"></a>\frac{(\beta_{III}-\beta_{II}) + (\beta_{III} + \beta_{III:B}-\beta_{II} - \beta_{II:B}) + (\beta_{III} + \beta_{III:C}-\beta_{II} - \beta_{II:C} + + (\beta_{III} + \beta_{III:D}-\beta_{II} - \beta_{II:D}) ) }{4}=0</span>
+<span id="cb24-309"><a href="#cb24-309" aria-hidden="true" tabindex="-1"></a>\frac{(\beta_{III}-\beta_{II}) + (\beta_{III} + \beta_{III:B}-\beta_{II} - \beta_{II:B}) + (\beta_{III} + \beta_{III:C}-\beta_{II} - \beta_{II:C}) + (\beta_{III} + \beta_{III:D}-\beta_{II} - \beta_{II:D})}{4}=0</span>
 <span id="cb24-310"><a href="#cb24-310" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb24-311"><a href="#cb24-311" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb24-312"><a href="#cb24-312" aria-hidden="true" tabindex="-1"></a>H_0:\beta_{III} + \frac{1}{4} \times \beta_{III:B} +  \frac{1}{4} \times\beta_{III:C} +  \frac{1}{4} \times\beta_{III:D}</span>
@@ -1735,7 +1735,7 @@ H_0:\beta_{III} + \frac{1}{4} \times \beta_{III:B} +  \frac{1}{4} \times\beta_{I
 <span id="cb24-343"><a href="#cb24-343" aria-hidden="true" tabindex="-1"></a>Indeed the errors of both models will differ as well as the remaining degrees of freedom of the errors $n-p$.</span>
 <span id="cb24-344"><a href="#cb24-344" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-347"><a href="#cb24-347" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb24-348"><a href="#cb24-348" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Additive_coef =</span> <span class="fu">summary</span>(comparisons)<span class="sc">$</span>test<span class="sc">$</span>coef, <span class="at">Additive_se =</span> <span class="fu">summary</span>(comparisons)<span class="sc">$</span>test<span class="sc">$</span>sigma, <span class="at">Int_coef =</span> <span class="fu">summary</span>(comparisonsInt2)<span class="sc">$</span>test<span class="sc">$</span>coef, <span class="at">int_se =</span> <span class="fu">summary</span>(comparisonsInt2)<span class="sc">$</span>test<span class="sc">$</span>sigma) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb24-348"><a href="#cb24-348" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Additive_coef =</span> <span class="fu">summary</span>(comparisons)<span class="sc">$</span>test<span class="sc">$</span>coef, <span class="at">Additive_se =</span> <span class="fu">summary</span>(comparisons)<span class="sc">$</span>test<span class="sc">$</span>sigma, <span class="at">Int_coef =</span> <span class="fu">summary</span>(comparisonsInt2)<span class="sc">$</span>test<span class="sc">$</span>coef, <span class="at">int_se =</span> <span class="fu">summary</span>(comparisonsInt2)<span class="sc">$</span>test<span class="sc">$</span>sigma) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">4</span>)</span>
 <span id="cb24-349"><a href="#cb24-349" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb24-350"><a href="#cb24-350" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-351"><a href="#cb24-351" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusion</span></span>
@@ -1744,7 +1744,7 @@ H_0:\beta_{III} + \frac{1}{4} \times \beta_{III:B} +  \frac{1}{4} \times\beta_{I
 <span id="cb24-354"><a href="#cb24-354" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-355"><a href="#cb24-355" aria-hidden="true" tabindex="-1"></a>The effect of the poison does not significantly differ according to the treatment and vice versa (p = <span class="in">`r  Anova(rats3,type="III")["poison:treat","Pr(&gt;F)"] |&gt; round(3)`</span>).</span>
 <span id="cb24-356"><a href="#cb24-356" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-357"><a href="#cb24-357" aria-hidden="true" tabindex="-1"></a>The rate of dying is on average <span class="in">`r confint(comparisonsInt2)$confint[contrastNames=="III-I",1] |&gt; round(2)`</span>h$^{-1}$  and <span class="in">`r confint(comparisonsInt2)$confint[contrastNames=="III-II",1] |&gt; round(2)`</span>h$^{-1}$ higher for rats that are exposed to poison III that those exposed to poison I and II, respectively (both p &lt;&lt; 0.001, 95% CI III-I: <span class="co">[</span><span class="ot">`r paste(round(confint(comparisonsInt2)$confint[contrastNames=="III-I",-1],2),collapse=", ")`</span><span class="co">]</span>h$^{-1}$, 95% CI III-II: <span class="co">[</span><span class="ot">`r paste(round(confint(comparisonsInt2)$confint[contrastNames=="III-II",-1],2),collapse=", ")`</span><span class="co">]</span>h$^{-1}$)</span>
+<span id="cb24-357"><a href="#cb24-357" aria-hidden="true" tabindex="-1"></a>The rate of dying is on average <span class="in">`r confint(comparisonsInt2)$confint[contrastNames=="III-I",1] |&gt; round(2)`</span>h$^{-1}$  and <span class="in">`r confint(comparisonsInt2)$confint[contrastNames=="III-II",1] |&gt; round(2)`</span>h$^{-1}$ higher for rats that are exposed to poison III than those exposed to poison I and II, respectively (both p &lt;&lt; 0.001, 95% CI III-I: <span class="co">[</span><span class="ot">`r paste(round(confint(comparisonsInt2)$confint[contrastNames=="III-I",-1],2),collapse=", ")`</span><span class="co">]</span>h$^{-1}$, 95% CI III-II: <span class="co">[</span><span class="ot">`r paste(round(confint(comparisonsInt2)$confint[contrastNames=="III-II",-1],2),collapse=", ")`</span><span class="co">]</span>h$^{-1}$)</span>
 <span id="cb24-358"><a href="#cb24-358" aria-hidden="true" tabindex="-1"></a>The average rate of dying was not significantly different between rats exposed to poison I and poison II (p=<span class="in">`r round(summary(comparisonsInt2)$test$pvalues[contrastNames=="II-I"],3)`</span>).</span>
 <span id="cb24-359"><a href="#cb24-359" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-360"><a href="#cb24-360" aria-hidden="true" tabindex="-1"></a>The rate of dying is on average <span class="in">`r confint(comparisonsInt2)$confint[contrastNames=="B-A",1] |&gt; round(2) |&gt; abs()`</span>h$^{-1}$ and <span class="in">`r confint(comparisonsInt2)$confint[contrastNames=="D-A",1] |&gt; round(2) |&gt; abs()`</span>h$^{-1}$ higher upon treatment A than upon treatment B and D, respectively (p &lt;&lt; 0.001, 95% CI B-A: <span class="co">[</span><span class="ot">`r paste(round(confint(comparisonsInt2)$confint[contrastNames=="B-A",-1],2),collapse=", ")`</span><span class="co">]</span>h$^{-1}$, 95% CI D-A: <span class="co">[</span><span class="ot">`r paste(round(confint(comparisonsInt2)$confint[contrastNames=="D-A",-1],2),collapse=", ")`</span><span class="co">]</span>h$^{-1}$).</span>
