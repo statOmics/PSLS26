@@ -135,6 +135,8 @@ source("https://raw.githubusercontent.com/statOmics/PSLS/master/install.R")
 
 10. [Categorical Data Analysis](./10-categoricalDataAnalysis.html)
 
+11. [Formulary (pdf)](./formulary.pdf)
+
 ---
 
 ## Instructors

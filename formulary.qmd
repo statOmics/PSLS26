@@ -1,0 +1,210 @@
+---
+title: "Formulary PSLS"
+lang: en
+format:
+  pdf:
+    documentclass: article
+    papersize: a4
+    fontsize: 10pt
+    geometry:
+      - margin=1.1cm
+    pdf-engine: xelatex
+    toc: false
+    number-sections: false
+    colorlinks: false
+    include-in-header:
+      text: |
+        \usepackage{multicol}
+        \usepackage{titlesec}
+        \usepackage{xcolor}
+        \usepackage{enumitem}
+        \definecolor{brandgreen}{HTML}{4F704F}
+        \titlespacing{\section}{0pt}{6pt}{2pt}
+        \titlespacing{\subsection}{0pt}{4pt}{1pt}
+        \titleformat{\section}{\normalfont\bfseries\color{brandgreen}\large}{\thesection}{0.5em}{}
+        \titleformat{\subsection}{\normalfont\bfseries\color{brandgreen}}{\thesubsection}{0.5em}{}
+        \setlength{\parindent}{0pt}
+        \setlength{\parskip}{2pt}
+        \setlist{noitemsep, topsep=1pt, parsep=0pt, partopsep=0pt, leftmargin=1.1em}
+        \setlength{\columnsep}{16pt}
+        \setlength{\columnseprule}{0.3pt}
+---
+
+```{=latex}
+\footnotesize
+\begin{multicols}{2}
+```
+
+# 2. Concepts
+
+**Notation.** Population parameters: Greek symbols ($\mu,\sigma^2,\pi$). Random variables: capitals ($X_1,\ldots,X_n$; statistics $\bar X, S^2$). Observed values: small letters ($x_1,\ldots,x_n$; $\bar x, s^2$). Estimates: $\hat\mu=\bar x$, $\hat\sigma^2=s^2$.
+
+**Bernoulli distribution.** $X\sim B(\pi)$: $B(\pi)=\pi^x(1-\pi)^{1-x}$, $x\in\{0,1\}$. $E[X]=\pi$; $\text{Var}[X]=\pi(1-\pi)$.
+
+**Cumulative distribution function.** $F(x)=P(X\le x)$; discrete: $F(x)=\sum_{X\le x}P(X)$; continuous: $F(x)=\int_{-\infty}^x f(x)\,dx$.
+
+**Expected value.** Discrete: $E[X]=\sum_{x\in\Omega}xP(X=x)$. Continuous: $E[X]=\int_{x\in\Omega}xf(x)\,dx$.
+
+**Variance.** $\text{Var}[X]=E[(X-E[X])^2]$. Discrete: $\sum_{x\in\Omega}(x-E[X])^2P(X=x)$. Continuous: $\int_{x\in\Omega}(x-E[X])^2f(x)\,dx$. $SD=\sqrt{\text{Var}[X]}$.
+
+**Normal density.** $f(x)=\dfrac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$, $X\sim N(\mu,\sigma^2)$; $E[X]=\mu$, $\text{Var}[X]=\sigma^2$.
+
+**68%--95% rule.** $P(\mu-\sigma<X<\mu+\sigma)\approx0.68$; $P(\mu-2\sigma<X<\mu+2\sigma)\approx0.95$.
+
+**Standardisation.** $z=\dfrac{x-\mu}{\sigma}$, $Z\sim N(0,1)$. $P(a\le X\le b)=F_Z\!\left(\frac{b-\mu}{\sigma}\right)-F_Z\!\left(\frac{a-\mu}{\sigma}\right)$.
+
+**Quantiles.** $x_{a\%}$: $F(x_{a\%})=a\%$. Upper quantile $z_{\alpha}$: $P(Z\ge z_{\alpha})=\alpha$; $P(-z_{\alpha/2}\le Z\le z_{\alpha/2})=1-\alpha$; $z_{0.025}=1.96$.
+
+**ECDF.** $ECDF(x)=\sum_{x_i\le x}\frac1n=\dfrac{\#(x_i\le x)}{n}$.
+
+**Independence.** $P(X_j,X_k)=P(X_j)P(X_k)$.
+
+# 4. Data exploration
+
+**Sample mean.** $\bar x=\dfrac1n\sum_{i=1}^n x_i$.
+
+**Geometric mean.** $\sqrt[n]{\prod_i x_i}=\exp\left\{\frac1n\sum_i\log(x_i)\right\}$ = back-transformed mean of log-transformed data.
+
+**Log fold change.** $\log(B)-\log(A)=\log\left(\frac{B}{A}\right)=\log(FC_{B\text{ vs }A})$; with $\log_2$: difference of 1 $\leftrightarrow$ $FC=2$.
+
+**Sample variance / SD.** $s_X^2=\displaystyle\sum_{i=1}^n\frac{(X_i-\bar X)^2}{n-1}$; $s_X=\sqrt{s_X^2}$.
+
+**Reference intervals** (normal data). 68%: $[\bar x-s_x,\ \bar x+s_x]$; 95%: $[\bar x-2s_x,\ \bar x+2s_x]$; in general $[\bar x-z_{\alpha/2}s_x,\ \bar x+z_{\alpha/2}s_x]$.
+
+**Interquartile range.** $IQR=x_{75\%}-x_{25\%}$.
+
+**Covariance.** $\text{Covar}(X,Y)=E[(X-E[X])(Y-E[Y])]$.
+
+**Pearson correlation.** $\text{Cor}(X,Y)=\dfrac{\text{Covar}(X,Y)}{\sqrt{\text{Var}[X]\text{Var}[Y]}}$; sample: $\text{Cor}(X,Y)=\dfrac{\sum_i(X_i-\bar X)(Y_i-\bar Y)}{(n-1)s_Xs_Y}\in[-1,1]$. Only captures linear association; sensitive to outliers.
+
+# 5. Statistical inference
+
+**Variance of the sample mean.** $\bar X=\frac1n\sum_{i=1}^nX_i$; $\sigma^2_{\bar X}=\dfrac{\sigma^2}{n}$; $\text{SE}_{\bar X}=\dfrac{\sigma}{\sqrt n}$, estimated by $\dfrac{S}{\sqrt n}$.
+
+**Variance of a sum.** $\text{Var}[X_1+X_2]=\text{Var}[X_1]+\text{Var}[X_2]+2\,\text{Covar}[X_1,X_2]$; in general $\text{Var}[aX_1+bX_2]=a^2\text{Var}[X_1]+b^2\text{Var}[X_2]+2ab\,\text{Covar}[X_1,X_2]$.
+
+**Normal data / CLT.** $X_i\sim N(\mu,\sigma^2)\Rightarrow\bar X\sim N(\mu,\sigma^2/n)$; by the central limit theorem this holds approximately for large $n$, whatever the distribution of $X_i$.
+
+**CI mean, $\sigma$ known.** $\left[\bar X-z_{\alpha/2}\frac{\sigma}{\sqrt n},\ \bar X+z_{\alpha/2}\frac{\sigma}{\sqrt n}\right]$.
+
+**t-distribution.** $T=\dfrac{\bar X-\mu}{S/\sqrt n}\sim t_{n-1}$.
+
+**CI mean, $\sigma$ unknown.** $\left[\bar X-t_{n-1,\alpha/2}\frac{S}{\sqrt n},\ \bar X+t_{n-1,\alpha/2}\frac{S}{\sqrt n}\right]$.
+
+---
+
+**One-sample t-test.** $X_1,\ldots,X_n$ i.i.d. $N(\mu,\sigma^2)$; $H_0:\mu=\mu_0$; $T=\dfrac{\bar X-\mu_0}{\text{SE}_{\bar X}}\sim t_{n-1}$ under $H_0$.
+
+**p-value.** $H_1:\mu>\mu_0$: $p=\text{P}_0[T\ge t]$; $H_1:\mu<\mu_0$: $p=\text{P}_0[T\le t]$; $H_1:\mu\ne\mu_0$: $p=2\times\text{P}_0[T\ge|t|]$.
+
+**Decision.** Reject $H_0$ if $p<\alpha$, or (two-sided) if $|t|>t_{n-1,\alpha/2}$.
+
+**Errors and power.** $\text{P}[\text{type I error}]=\text{P}[\text{reject }H_0\mid H_0]=\alpha$; $\text{P}[\text{type II error}]=\beta$; power $=1-\beta=\text{P}[p<\alpha\mid H_1]$.
+
+**Paired design.** Analyse the differences $X_i=Y_{i2}-Y_{i1}$ with a one-sample t-test ($H_0:\mu=0$).
+
+---
+
+**Two-sample model.** $Y_{ij}$ i.i.d. $N(\mu_j,\sigma^2)$, $i=1,\ldots,n_j$, $j=1,2$; $H_0:\mu_1=\mu_2$. Estimator $\hat\mu_1-\hat\mu_2=\bar Y_1-\bar Y_2$; $\sigma_{\bar Y_1-\bar Y_2}=\sigma\sqrt{\frac1{n_1}+\frac1{n_2}}$.
+
+**Group variances.** $S_j^2=\dfrac{1}{n_j-1}\sum_{i=1}^{n_j}(Y_{ij}-\bar Y_j)^2$.
+
+**Pooled variance.** $S_p^2=\dfrac{(n_1-1)S_1^2+(n_2-1)S_2^2}{n_1+n_2-2}$.
+
+**Two-sample t-test (equal variances).** $T=\dfrac{\bar Y_1-\bar Y_2}{S_p\sqrt{\frac1{n_1}+\frac1{n_2}}}\sim t_{n_1+n_2-2}$ under $H_0$. CI: $\bar Y_1-\bar Y_2\pm t_{n_1+n_2-2,\alpha/2}\,S_p\sqrt{\frac1{n_1}+\frac1{n_2}}$.
+
+**Welch t-test (unequal variances).** $T=\dfrac{\bar Y_1-\bar Y_2}{\sqrt{\frac{S_1^2}{n_1}+\frac{S_2^2}{n_2}}}$, approximately $t$-distributed (Welch--Satterthwaite df).
+
+# 6. Linear regression
+
+**Model.** $Y_i=\beta_0+\beta_1X_i+\epsilon_i$, $\epsilon_i$ i.i.d. $N(0,\sigma^2)$, i.e. $Y_i\mid X_i\sim N(\beta_0+\beta_1X_i,\sigma^2)$. $E[Y\mid X=x+\delta]-E[Y\mid X=x]=\beta_1\delta$.
+
+**Least squares.** Minimise $SSE=\sum_i(y_i-\beta_0-\beta_1x_i)^2$: $\hat\beta_1=\dfrac{\sum_i(y_i-\bar y)(x_i-\bar x)}{\sum_i(x_i-\bar x)^2}=\dfrac{\text{Cor}(x,y)\,s_y}{s_x}$; $\hat\beta_0=\bar y-\hat\beta_1\bar x$.
+
+**Residuals / MSE.** $e_i=y_i-\hat\beta_0-\hat\beta_1x_i$; $\hat\sigma^2=\text{MSE}=\dfrac{\sum_ie_i^2}{n-2}$.
+
+**Standard errors.** $\text{SE}_{\hat\beta_1}=\sqrt{\dfrac{\text{MSE}}{\sum_i(X_i-\bar X)^2}}$; $\text{SE}_{\hat\beta_0}=\sqrt{\dfrac{\sum_iX_i^2}{\sum_i(X_i-\bar X)^2}\times\dfrac{\text{MSE}}{n}}$.
+
+**Test / CI slope.** $T=\dfrac{\hat\beta_1-\beta_1}{\text{SE}_{\hat\beta_1}}\sim t_{n-2}$; $H_0:\beta_1=0$; CI: $\hat\beta_1\pm t_{n-2,\alpha/2}\text{SE}_{\hat\beta_1}$.
+
+**CI on the mean outcome.** $\hat g(x)=\hat\beta_0+\hat\beta_1x$; $\text{SE}_{\hat g(x)}=\sqrt{\text{MSE}\left\{\frac1n+\frac{(x-\bar X)^2}{\sum_i(X_i-\bar X)^2}\right\}}$; $\frac{\hat g(x)-g(x)}{\text{SE}_{\hat g(x)}}\sim t_{n-2}$.
+
+**Prediction interval.** $\text{SE}_{\hat Y(x)}=\sqrt{\text{MSE}\left\{1+\frac1n+\frac{(x-\bar X)^2}{\sum_i(X_i-\bar X)^2}\right\}}$ (wider than CI: extra term 1 for $\epsilon^*$).
+
+**Log transformation.** $\log_2$ outcome: $2^{\beta_1}$ = fold change in the (geometric) mean outcome per unit increase in $x$. $\log_2$ outcome and $\log_2$ predictor: $\frac{\hat\mu_2}{\hat\mu_1}=\left[\frac{x_2}{x_1}\right]^{\beta_1}$, so a doubling of $x$ multiplies the mean by $2^{\beta_1}$ and a 1% increase by $1.01^{\beta_1}\approx1+\beta_1/100$.
+
+**Sums of squares.** $\text{SSTot}=\sum_i(Y_i-\bar Y)^2$; $\text{SSR}=\sum_i(\hat Y_i-\bar Y)^2$; $\text{SSE}=\sum_i(Y_i-\hat Y_i)^2$; $\text{SSTot}=\text{SSR}+\text{SSE}$.
+
+**$R^2$ and F-test.** $R^2=1-\dfrac{\text{SSE}}{\text{SSTot}}=\dfrac{\text{SSR}}{\text{SSTot}}$; $F=\dfrac{\text{MSR}}{\text{MSE}}=\dfrac{\text{SSR}/1}{\text{SSE}/(n-2)}\sim F_{1,n-2}$ under $H_0:\beta_1=0$; $p=\text{P}_0[F\ge f]$.
+
+**Dummy variable (2 groups).** $Y_i=\beta_0+\beta_1x_i+\epsilon_i$, $x_i\in\{0,1\}$; $\beta_1=E[Y_i\mid x_i=1]-E[Y_i\mid x_i=0]$; $\hat\beta_0=\bar Y_1$ (reference group), $\hat\beta_1=\bar Y_2-\bar Y_1$, $\text{MSE}=S_p^2$ $\Rightarrow$ two-sample t-test.
+
+**Polynomial regression.** $Y_i=\beta_0+\beta_1X_i+\beta_2X_i^2+\ldots+\epsilon_i$.
+
+# 7. Analysis of variance (ANOVA)
+
+**Model.** $Y_i\mid\text{group }j\sim N(\mu_j,\sigma^2)$, $j=1,\ldots,g$; as a linear model with $g-1$ dummy variables: $Y_i=\beta_0+\beta_1x_{i1}+\ldots+\beta_{g-1}x_{i,g-1}+\epsilon_i$, $\mu_1=\beta_0$, $\mu_j=\beta_0+\beta_{j-1}$.
+
+**Omnibus test.** $H_0:\mu_1=\ldots=\mu_g$ ($\Leftrightarrow\beta_1=\ldots=\beta_{g-1}=0$) vs $H_1:\exists\,j,k:\mu_j\ne\mu_k$.
+
+**Sums of squares.** $\text{SST}=\sum_{j=1}^gn_j(\bar Y_j-\bar Y)^2$ (treatment, $g-1$ df); $\text{SSTot}=\text{SST}+\text{SSE}$; $\text{MSE}=\dfrac{\text{SSE}}{n-g}=\sum_j\dfrac{(n_j-1)S_j^2}{n-g}$.
+
+**F-test.** $F=\dfrac{\text{MST}}{\text{MSE}}=\dfrac{\text{SST}/(g-1)}{\text{SSE}/(n-g)}\sim F_{g-1,n-g}$ under $H_0$.
+
+**Post-hoc pairwise test.** $H_{0jk}:\mu_j=\mu_k$; $T_{jk}=\dfrac{\bar Y_j-\bar Y_k}{\sqrt{\text{MSE}\left(\frac1{n_j}+\frac1{n_k}\right)}}\sim t_{n-g}$.
+
+**Multiple testing.** FWER $=\text{P}[\text{at least 1 false positive}]$, controlled at $\alpha_F$. Bonferroni: $\alpha=\alpha_F/m$ per test, or adjusted p-value $\tilde p=\min(m\times p,1)$. Tukey: exact FWER control for all pairwise comparisons (less conservative).
+
+# 8. Multiple regression
+
+**Additive model.** $Y_i=\beta_0+\beta_1X_{i1}+\ldots+\beta_{p-1}X_{i,p-1}+\epsilon_i$, $\epsilon_i$ i.i.d. $N(0,\sigma^2)$; $p$ = number of model parameters.
+
+**Interpretation $\beta_j$.** $E(Y\mid\ldots,X_j{=}x_j{+}\delta,\ldots)-E(Y\mid\ldots,X_j{=}x_j,\ldots)=\beta_j\delta$, other predictors held constant.
+
+**MSE.** $\hat\sigma^2=\text{MSE}=\dfrac{\sum_ie_i^2}{n-p}$.
+
+**Test / CI parameter.** $T_k=\dfrac{\hat\beta_k-\beta_k}{\text{SE}(\hat\beta_k)}\sim t_{n-p}$; CI: $\hat\beta_j\pm t_{n-p,\alpha/2}\text{SE}_{\hat\beta_j}$.
+
+**Matrix form.** $\mathbf Y=\mathbf X\boldsymbol\beta+\boldsymbol\epsilon$; $\hat{\boldsymbol\beta}=(\mathbf X^T\mathbf X)^{-1}\mathbf X^T\mathbf Y$; $\hat{\boldsymbol\Sigma}_{\hat{\boldsymbol\beta}}=(\mathbf X^T\mathbf X)^{-1}\hat\sigma^2$.
+
+**Contrast.** $\mathbf L^T\boldsymbol\beta=l_0\beta_0+\ldots+l_{p-1}\beta_{p-1}$; $H_0:\mathbf L^T\boldsymbol\beta=0$; $T=\dfrac{\mathbf L^T\hat{\boldsymbol\beta}-0}{\text{SE}_{\mathbf L^T\hat{\boldsymbol\beta}}}\sim t_{n-p}$, with $\text{SE}_{\mathbf L^T\hat{\boldsymbol\beta}}=\sqrt{\mathbf L^T(\mathbf X^T\mathbf X)^{-1}\mathbf L\,\hat\sigma^2}$.
+
+**Interaction (2 continuous).** $Y_i=\beta_0+\beta_vx_{iv}+\beta_wx_{iw}+\beta_sx_{is}+\beta_{vw}x_{iv}x_{iw}+\epsilon_i$; effect of $+1$ in $X_v$: $\beta_v+\beta_{vw}x_w$.
+
+**Interaction (continuous $\times$ dummy).** $Y=\beta_0+\beta_vX_v+\beta_wX_w+\beta_sX_s+\beta_{vs}X_vX_s+\beta_{ws}X_wX_s+\epsilon$; $X_s=0$: $Y=\beta_0+\beta_vX_v+\beta_wX_w+\epsilon$; $X_s=1$: $Y=(\beta_0+\beta_s)+(\beta_v+\beta_{vs})X_v+(\beta_w+\beta_{ws})X_w+\epsilon$.
+
+**Sums of squares, $R^2$, F.** As in §6 with $p-1$ df for SSR: $F=\text{MSR}/\text{MSE}\sim F_{p-1,n-p}$.
+
+**Extra sum of squares.** Model 1 nested in model 2: $\text{SSR}_{2\mid1}=\text{SSE}_1-\text{SSE}_2=\text{SSR}_2-\text{SSR}_1$; $\text{SSTot}=\text{SSR}_1+\text{SSR}_{2\mid1}+\text{SSE}$. Type I (sequential): $\text{SSTot}=\text{SSR}_1+\text{SSR}_{2\mid1}+\ldots+\text{SSR}_{p-1\mid1,\ldots,p-2}+\text{SSE}$ (order dependent). Type III: $\text{SSR}_{j\mid1,\ldots,j-1,j+1,\ldots,p-1}=\text{SSE}_{\text{without }x_j}-\text{SSE}_{\text{full}}$ (order independent); $F=\dfrac{\text{SSR}_{\text{extra}}/\#\text{extra parameters}}{\text{MSE}_{\text{full}}}$.
+
+**VIF.** $\text{VIF}_j=(1-R_j^2)^{-1}$, $R_j^2$ from regressing $X_j$ on the other predictors; $\text{VIF}_j>10$: severe multicollinearity.
+
+**Leverage.** Detects observations with an extreme covariate pattern.
+
+**Cook's distance.** $D_i=\dfrac{\sum_{j=1}^n(\hat Y_j-\hat Y_{j(i)})^2}{p\,\text{MSE}}$; influential if $D_i>$ 50% quantile of $F_{p,n-p}$.
+
+**DFBETAS.** $\text{DFBETAS}_{j(i)}=\dfrac{\hat\beta_j-\hat\beta_{j(i)}}{\text{SD}(\hat\beta_j)}$.
+
+## 8.2 Factorial designs
+
+**Two-factor model** (e.g. poison I, II, III $\times$ treatment A--D; references I and A): $Y_i=\beta_0+\beta_{II}x_{iII}+\beta_{III}x_{iIII}+\beta_Bx_{iB}+\beta_Cx_{iC}+\beta_Dx_{iD}+\sum\beta_{k:l}x_{ik}x_{il}+\epsilon_i$, with $\beta_{k:l}$ the interaction terms ($k\in\{II,III\}$, $l\in\{B,C,D\}$).
+
+**Effects with interaction.** Effect of poison III vs I for treatment A: $\beta_{III}$; for treatment B: $\beta_{III}+\beta_{III:B}$. III vs II for treatment B: $\beta_{III}+\beta_{III:B}-\beta_{II}-\beta_{II:B}$.
+
+**Average contrast** (non-significant interaction): average over the levels of the other factor, e.g. III vs II averaged over the 4 treatments: $\beta_{III}+\tfrac14(\beta_{III:B}+\beta_{III:C}+\beta_{III:D})-\beta_{II}-\tfrac14(\beta_{II:B}+\beta_{II:C}+\beta_{II:D})$. Balanced design: identical to the estimate of the additive model.
+
+# 9. Non-parametric statistics
+
+**Ranks.** $R_i=R(Y_i)=\#\{Y_j:Y_j\le Y_i;\ j=1,\ldots,n\}$; ties get midranks.
+
+**Wilcoxon rank-sum test.** $H_0:f_1=f_2$. $S_1=\sum_{i=1}^{n_1}R(Y_{i1})$; $S_1+S_2=\frac12n(n+1)$. Under $H_0$: $\text{E}_0[S_1]=\frac12n_1(n+1)$, $\text{Var}_0[S_1]=\frac1{12}n_1n_2(n+1)$; $T=\dfrac{S_1-\text{E}_0[S_1]}{\sqrt{\text{Var}_0[S_1]}}\rightarrow N(0,1)$.
+
+**Mann--Whitney.** $U_1=\sum_{i=1}^{n_1}\sum_{k=1}^{n_2}\text{I}\{Y_{i1}\ge Y_{k2}\}=S_1-\frac12n_1(n_1+1)$ (returned by `wilcox.test`).
+
+**Probabilistic index.** $\frac{1}{n_1n_2}\text{E}[U_1]=\text{P}[Y_1\ge Y_2]$; $H_0:F_1=F_2$ vs $H_1:\text{P}[Y_1\ge Y_2]\ne0.5$.
+
+**Kruskal--Wallis.** $\bar R=\frac{n+1}{2}$; $KW=\dfrac{12}{n(n+1)}\sum_{j=1}^gn_j\left(\bar R_j-\frac{n+1}{2}\right)^2\rightarrow\chi^2_{g-1}$ under $H_0:f_1=\ldots=f_g$; $H_1:\exists\,j,k:\text{P}[Y_j\ge Y_k]\ne0.5$. Post-hoc: pairwise WMW tests with multiple testing correction.
+
+```{=latex}
+\end{multicols}
+```
